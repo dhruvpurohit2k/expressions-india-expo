@@ -1,0 +1,17 @@
+export const theme = {
+  backgroundColor: "hsl(0,0%,95%)",
+  backgroundColorDark: "hsl(0,0%,90%)",
+  backgroundColorLight: "hsl(0,0%,100%)",
+  background: "hsl(0,0%,100%)",
+  // backgroundColor: "hsl(0,0%,5%)",
+  // backgroundColorDark: "hsl(0,00%,0%)",
+  // backgroundColorLight: "hsl(0,0%,10%)",
+  text: "hsl(0,0%,30%)",
+  // text: "hsl(0,0%,70%)",
+  font: "Inter_400Regular",
+  fontBold: "Inter_700Bold",
+  TITLEFONT: "GloriaHallelujah_400Regular",
+  sectionHeadingSize: 30,
+  fontSize: 16,
+  sectionHeadingColor: "hsl(4 84.2% 41.9%)",
+};
