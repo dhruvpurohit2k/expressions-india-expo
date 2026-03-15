@@ -8,17 +8,18 @@ export default function App() {
     <Tabs
       screenOptions={{
         tabBarStyle: {
-          backgroundColor: theme.backgroundColorLight,
+          backgroundColor: theme.sectionHeadingColor,
           height: 60 + insets.bottom,
           paddingBottom: insets.bottom,
-          elevation: 5,
+          borderTopWidth: 0,
+          elevation: 0,
         },
         tabBarLabelStyle: {
           fontSize: theme.fontSize,
         },
-        tabBarActiveBackgroundColor: theme.backgroundColorLight,
+        // tabBarActiveBackgroundColor: theme.sectionHeadingColor,
         tabBarInactiveBackgroundColor: theme.backgroundColor,
-        tabBarActiveTintColor: "#DD6666",
+        tabBarActiveTintColor: "white",
       }}
     >
       <Tabs.Screen
@@ -27,6 +28,15 @@ export default function App() {
           headerShown: false,
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="home" color={color} size={size} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="programs"
+        options={{
+          headerShown: false,
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="calendar-clear-outline" color={color} size={size} />
           ),
         }}
       />

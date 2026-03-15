@@ -1,323 +1,126 @@
 import { styleFactory } from "@/src/styleFactory";
 import { theme } from "@/src/theme";
-import {
-  Text,
-  View,
-  ScrollView,
-  Image,
-  useWindowDimensions,
-  Pressable,
-  FlatList,
-} from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { LinearGradient } from "expo-linear-gradient";
-import { BlurView } from "expo-blur";
+import { Link } from "expo-router";
+import { Text, View, ScrollView, Image, Pressable } from "react-native";
 import * as Linking from "expo-linking";
-import { latestActivites } from "@/data/home";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { useState } from "react";
+import LatestActivities from "@/src/components/LatestActivites";
+
 export default function Home() {
   const globalStyle = styleFactory();
-  const { width } = useWindowDimensions();
-  const buttons = ["Latest Activities", "Brochures", "Media"];
-  const [currentView, setCurrentView] = useState(0);
-  const LatestNews = (
-    <View
-      style={{
-        marginBottom: 20,
-        marginHorizontal: 15,
-        // padding: 20,
-        borderRadius: 10,
-        borderWidth: 1,
-        backgroundColor: theme.backgroundColorDark,
-        borderColor: theme.backgroundColorLight,
-        elevation: 2,
-        marginVertical: "auto",
-      }}
-    >
-      <BlurView intensity={20}>
-        <LinearGradient
-          colors={[
-            "hsla(000, 0%, 95%,1)",
-            "hsla(000, 0%, 95%,1)",
-            "hsla(000, 0%, 95%,1)",
-          ]}
-          start={{ x: 1, y: 0 }}
-          end={{ x: 0, y: 1 }}
-          locations={[0.3, 0.5, 0.9]}
-          style={{
-            padding: 20,
-            margin: 0,
-            borderRadius: 10,
-          }}
-          dither={true}
-        >
-          <Text style={[globalStyle.sectionHeading]}>Latest Activites</Text>
-          {latestActivites.map((item, idx) => (
-            <View key={idx} style={{ marginVertical: 5 }}>
-              <Pressable
-                onPress={() => {
-                  Linking.openURL(item.link);
-                }}
-              >
-                <View
-                  style={{
-                    paddingVertical: 5,
-                    paddingHorizontal: 10,
-                    borderRadius: 10,
-                    borderWidth: 1,
-                    borderColor: theme.backgroundColorLight,
-                    elevation: 1,
-                    backgroundColor: theme.backgroundColorLight,
-                  }}
-                >
-                  <Text style={[globalStyle.text]}>{item.title}</Text>
-                </View>
-              </Pressable>
-            </View>
-          ))}
-        </LinearGradient>
-      </BlurView>
-    </View>
-  );
-  const brochures = (
-    <View style={{ marginVertical: "auto" }}>
-      <ScrollView
-        horizontal={true}
-        pagingEnabled={true}
-        decelerationRate={"fast"}
-        contentContainerStyle={{ padding: 0 }}
-        // style={{ paddingHorizontal: 20 }}
-        contentInset={{ top: 0, bottom: 0, left: 0, right: 0 }}
-      >
-        <View
-          style={[
-            globalStyle.container,
-            { width: width - 30, marginHorizontal: 15 },
-          ]}
-        >
-          <Image
-            source={require("@/assets/images/home/icdah.png")}
-            style={{ marginHorizontal: "auto", width: "85%" }}
-            resizeMode="cover"
-          />
-          <Text style={[globalStyle.text, { textAlign: "center" }]}>
-            Center for Child Development & Adolescent Wellbeing (ICDH)
-          </Text>
-        </View>
-        <View
-          style={[
-            globalStyle.container,
-            { width: width - 30, marginHorizontal: 15 },
-          ]}
-        >
-          <Image
-            source={require("@/assets/images/home/brochure.png")}
-            style={{ marginHorizontal: "auto", width: "85%" }}
-            resizeMode="cover"
-          />
-          <Text style={[globalStyle.text, { textAlign: "center" }]}>
-            Brochure:{" "}
-            <Text style={globalStyle.companyName}>Expressions India</Text>
-          </Text>
-        </View>
-      </ScrollView>
-    </View>
-  );
-  const media = (
-    <View>
-      <ScrollView
-        // horizontal={true}
-        pagingEnabled={true}
-        decelerationRate={"fast"}
-        contentContainerStyle={{ padding: 0 }}
-        style={{ paddingHorizontal: 20 }}
-        contentInset={{ top: 0, bottom: 0, left: 0, right: 0 }}
-      >
-        <View
-          style={[
-            globalStyle.container,
-            { width: width - 30, marginHorizontal: 15 },
-          ]}
-        >
-          <Image
-            source={require("@/assets/images/home/photogallery.gif")}
-            style={{
-              marginHorizontal: "auto",
-              marginVertical: "auto",
-              borderWidth: 4,
-              borderColor: "#77aa77",
-              width: "85%",
-            }}
-            resizeMode="cover"
-          />
-          <Text style={[globalStyle.text, { textAlign: "center" }]}>
-            Photo Gallery
-          </Text>
-        </View>
-        <View
-          style={[
-            globalStyle.container,
-            { width: width - 30, marginHorizontal: 15 },
-          ]}
-        >
-          <Image
-            source={require("@/assets/images/home/video.png")}
-            style={{
-              marginHorizontal: "auto",
-              marginVertical: "auto",
-              borderWidth: 4,
-              borderColor: "#77aa77",
-              // height: "auto",
-              width: "85%",
-              // height: "60%",
-            }}
-            resizeMode="cover"
-          />
-          <Text style={[globalStyle.text, { textAlign: "center" }]}>
-            Videos
-          </Text>
-        </View>
-        <View
-          style={[
-            globalStyle.container,
-            { width: width - 30, marginHorizontal: 15 },
-          ]}
-        >
-          <Image
-            source={require("@/assets/images/home/media_image.gif")}
-            style={{
-              marginHorizontal: "auto",
-              marginVertical: "auto",
-              borderWidth: 4,
-              borderColor: "#77aa77",
-              width: "85%",
-            }}
-            resizeMode="cover"
-          />
-          <Text style={[globalStyle.text, { textAlign: "center" }]}>Media</Text>
-        </View>
-      </ScrollView>
-    </View>
-  );
-  const views = [LatestNews, brochures, media];
   return (
     <SafeAreaView
-      style={[
-        { backgroundColor: theme.backgroundColorDark, flex: 1 },
-        // globalStyle.screen,
-        // { backgroundColor: theme.backgroundColorLight },
-      ]}
+      style={[{ backgroundColor: theme.backgroundColorLight, flex: 1 }]}
       edges={["top", "left", "right"]}
     >
-      <Text
-        style={[
-          globalStyle.companyName,
-          {
-            fontSize: 30,
-            fontFamily: "Inter_700Bold",
-            paddingHorizontal: 10,
-            paddingVertical: 30,
-            marginVertical: 20,
-          },
-        ]}
-      >
-        Expressions India
-      </Text>
-      <ScrollView
-        style={{ margin: 0, flex: 1 }}
-        contentInset={{ top: 0, bottom: 0, left: 0, right: 0 }}
-        contentContainerStyle={{ padding: 0 }}
-      >
-        <View
-          style={{
-            flexDirection: "row",
-            gap: 10,
-            width: width - 20,
-            marginHorizontal: 10,
-            marginBottom: 50,
-            justifyContent: "space-around",
-          }}
+      <ScrollView>
+        <Text
+          style={[
+            globalStyle.companyName,
+            {
+              backgroundColor: theme.sectionHeadingColor,
+              color: "white",
+              fontSize: 30,
+              fontFamily: "Inter_700Bold",
+              paddingHorizontal: 20,
+              paddingVertical: 20,
+            },
+          ]}
         >
-          {buttons.map((button, index) => (
-            <Pressable
-              key={index}
-              onPress={() => {
-                setCurrentView(index);
-              }}
-              style={[
-                {
+          Expressions India
+        </Text>
+        <View style={[globalStyle.container]}>
+          <Text style={[globalStyle.text, { fontSize: 18 }]}>
+            Expressions India is a national initiative empowering students with
+            vital life skills, mental health awareness, and emotional resilience
+            for a healthier future.
+          </Text>
+          <Link href="/about" asChild>
+            <Pressable>
+              <Text
+                style={{
+                  color: "white",
+                  fontFamily: "Inter_700Bold",
+                  alignSelf: "flex-start",
+                  padding: 5,
+                  borderRadius: 5,
                   backgroundColor: theme.sectionHeadingColor,
-                  paddingHorizontal: 10,
-                  paddingVertical: 2,
-                  borderRadius: 10,
-                  flex: 1,
-                },
-                index === currentView ? { backgroundColor: "white" } : null,
-              ]}
-            >
-              <View>
-                <Text
-                  style={[
-                    globalStyle.text,
-                    {
-                      color: "white",
-                      fontFamily: "Inter_700Bold ",
-                      textAlign: "center",
-                      textAlignVertical: "center",
-                    },
-                    index === currentView
-                      ? { color: theme.sectionHeadingColor }
-                      : null,
-                  ]}
-                >
-                  {button}
-                </Text>
-              </View>
+                }}
+              >
+                Know More
+              </Text>
             </Pressable>
-          ))}
+          </Link>
         </View>
-        {views[currentView]}
-        {/* <View>
-          <ScrollView
-            horizontal={true}
-            pagingEnabled={true}
-            decelerationRate={"fast"}
-            contentContainerStyle={{ padding: 0 }}
-            // style={{ paddingHorizontal: 20 }}
-            contentInset={{ top: 0, bottom: 0, left: 0, right: 0 }}
+        <LatestActivities />
+        <View style={globalStyle.container}>
+          <Text style={globalStyle.sectionHeading}>Almanac 2026</Text>
+          <Text style={globalStyle.text}>
+            Our 2026 Almanac which features our programs and development
+            trainings and outcomes of national and global headlines for
+            enrichment of child centric pedagogy, school leadership, and
+            training resource enrichment.
+          </Text>
+          <Pressable
+            onPress={() => {
+              Linking.openURL(
+                "https://expressionsindia.org/images/almanac_2026.pdf",
+              );
+            }}
           >
             <View
-              style={[
-                globalStyle.container,
-                { width: width - 30, marginHorizontal: 15 },
-              ]}
-            >
-              <Image
-                source={require("@/assets/images/home/journal_image.png")}
-                style={{ marginHorizontal: "auto", width: "85%" }}
-                resizeMode="cover"
-              />
-              <Text style={[globalStyle.text, { textAlign: "center" }]}>
-                Indian Journal of School Health & Wellbeing
-              </Text>
-            </View>
-            <View
-              style={[
-                globalStyle.container,
-                { width: width - 30, marginHorizontal: 15 },
-              ]}
+              style={{
+                elevation: 5,
+                backgroundColor: "black",
+                alignSelf: "center",
+                borderRadius: 10,
+              }}
             >
               <Image
                 source={require("@/assets/images/home/almanac_image.png")}
-                style={{ marginHorizontal: "auto", width: "85%" }}
+                style={{
+                  width: 250,
+                  height: 250,
+                  borderRadius: 10,
+                }}
+                resizeMode="contain"
+              />
+            </View>
+          </Pressable>
+        </View>
+        <View style={globalStyle.container}>
+          <Text style={globalStyle.sectionHeading}>Brochure</Text>
+          <Text style={globalStyle.text}>
+            Check out our brochure for more details.
+          </Text>
+          <Pressable
+            onPress={() => {
+              Linking.openURL(
+                "https://expressionsindia.org/images/home/brochure.pdf",
+              );
+            }}
+          >
+            <View
+              style={{
+                elevation: 5,
+                backgroundColor: "black",
+                alignSelf: "center",
+                borderRadius: 10,
+              }}
+            >
+              <Image
+                source={require("@/assets/images/home/brochure.png")}
+                style={{
+                  width: 250,
+                  height: 250,
+                  borderRadius: 10,
+                }}
                 resizeMode="cover"
               />
-              <Text style={[globalStyle.text, { textAlign: "center" }]}>
-                Almanac 2026
-              </Text>
             </View>
-          </ScrollView>
-        </View>*/}
+          </Pressable>
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
