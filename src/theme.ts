@@ -1,5 +1,5 @@
 export const theme = {
-  backgroundColor: "hsl(0,0%,95%)",
+  backgroundColor: "hsl(0,0%,97%)",
   backgroundColorDark: "hsl(0,0%,90%)",
   backgroundColorLight: "hsl(0,0%,100%)",
   background: "hsl(0,0%,100%)",

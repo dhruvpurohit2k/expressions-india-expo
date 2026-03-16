@@ -1,5 +1,6 @@
 import AboutUs from "@/src/components/AboutUs";
 import Director from "@/src/components/Director";
+import Team from "@/src/components/Team";
 import { styleFactory } from "@/src/styleFactory";
 import { theme } from "@/src/theme";
 import { useState } from "react";
@@ -11,7 +12,7 @@ export default function About() {
   const sectionMap: Record<number, React.JSX.Element> = {
     0: <AboutUs />,
     1: <Director />,
-    2: <></>,
+    2: <Team />,
   };
   return (
     <SafeAreaView style={[{ flex: 1 }]} edges={["top"]}>

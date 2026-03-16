@@ -4,7 +4,6 @@ import { Link } from "expo-router";
 import { Text, View, ScrollView, Image, Pressable } from "react-native";
 import * as Linking from "expo-linking";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useState } from "react";
 import LatestActivities from "@/src/components/LatestActivites";
 
 export default function Home() {
@@ -17,7 +16,6 @@ export default function Home() {
       <ScrollView>
         <Text
           style={[
-            globalStyle.companyName,
             {
               backgroundColor: theme.sectionHeadingColor,
               color: "white",
@@ -36,7 +34,7 @@ export default function Home() {
             vital life skills, mental health awareness, and emotional resilience
             for a healthier future.
           </Text>
-          <Link href="/about" asChild>
+          <Link href="/modal" asChild>
             <Pressable>
               <Text
                 style={{

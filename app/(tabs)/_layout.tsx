@@ -27,7 +27,7 @@ export default function App() {
         options={{
           headerShown: false,
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="home" color={color} size={size} />
+            <Ionicons name="home-outline" color={color} size={size} />
           ),
         }}
       />
@@ -41,11 +41,35 @@ export default function App() {
         }}
       />
       <Tabs.Screen
+        name="foryou"
+        options={{
+          title: "For You",
+          headerShown: false,
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="person-circle-outline" color={color} size={size} />
+          ),
+        }}
+      />
+      <Tabs.Screen
         name="about"
         options={{
           headerShown: false,
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="people" color={color} size={size} />
+            <Ionicons
+              name="information-circle-outline"
+              color={color}
+              size={size}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="contact"
+        options={{
+          headerShown: false,
+          title: "contact",
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="call-outline" color={color} size={size} />
           ),
         }}
       />

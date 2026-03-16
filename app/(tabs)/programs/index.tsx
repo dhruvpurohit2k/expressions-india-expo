@@ -7,8 +7,10 @@ import Events from "@/src/components/Events";
 import WorkShops from "@/src/components/WorkShops";
 
 export default function Program() {
-  const [isEvents, setIsEvents] = useState(false);
+  const [isEvents, setIsEvents] = useState(true);
   const globalStyle = styleFactory();
+  // const screenHeight = Dimensions.get("screen").height;
+  // const screenWidth = Dimensions.get("screen").width;
   return (
     <SafeAreaView
       style={{ backgroundColor: theme.backgroundColorLight, flex: 1 }}

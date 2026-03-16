@@ -12,7 +12,7 @@ export default function LatestActivites() {
         globalStyle.container,
         {
           elevation: 5,
-          backgroundColor: theme.backgroundColorLight,
+          backgroundColor: theme.backgroundColor,
           borderRadius: 10,
         },
       ]}

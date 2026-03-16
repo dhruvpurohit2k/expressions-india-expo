@@ -1,4 +1,11 @@
-import { View, Text, Image, ScrollView, Dimensions } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  ScrollView,
+  Dimensions,
+  Pressable,
+} from "react-native";
 import { styleFactory } from "../styleFactory";
 import { theme } from "../theme";
 import events from "@/data/events/events";
@@ -7,6 +14,8 @@ import Animated, {
   useSharedValue,
 } from "react-native-reanimated";
 import AnimatedDots from "./AnimatedDots";
+import { useImageContext } from "../context/imageContext";
+import { Link } from "expo-router";
 
 const globalStyle = styleFactory();
 const screenWidth = Dimensions.get("window").width;
@@ -35,13 +44,14 @@ export default function Events() {
 
 function Event({ event }: { event: { name: string; images: any[] } }) {
   const scrollX = useSharedValue<number>(0);
+  const { setImage } = useImageContext();
   return (
     <View
       style={{
         padding: 10,
         paddingHorizontal: 15,
         elevation: 5,
-        backgroundColor: theme.backgroundColorLight,
+        backgroundColor: theme.backgroundColor,
         borderRadius: 10,
         marginVertical: 20,
         marginHorizontal: 10,
@@ -74,14 +84,18 @@ function Event({ event }: { event: { name: string; images: any[] } }) {
               marginVertical: 10,
             }}
           >
-            <Image
-              source={image}
-              style={{
-                width: screenWidth - 110,
-                height: 300,
-              }}
-              resizeMode="contain"
-            />
+            <Link href="/modal" asChild>
+              <Pressable onPress={() => setImage(image)}>
+                <Image
+                  source={image}
+                  style={{
+                    width: screenWidth - 110,
+                    height: 300,
+                  }}
+                  resizeMode="contain"
+                />
+              </Pressable>
+            </Link>
           </View>
         ))}
       </Animated.ScrollView>

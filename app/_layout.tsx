@@ -11,6 +11,7 @@ import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import { ImageProvider } from "@/src/context/imageContext";
 export default function RootLayout() {
   const [loaded] = useFonts({
     Delius_400Regular,
@@ -29,9 +30,12 @@ export default function RootLayout() {
   return (
     <SafeAreaProvider>
       <StatusBar backgroundColor={theme.sectionHeadingColor} style="light" />
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      </Stack>
+      <ImageProvider>
+        <Stack>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen name="modal" options={{ headerShown: false }} />
+        </Stack>
+      </ImageProvider>
     </SafeAreaProvider>
   );
 }

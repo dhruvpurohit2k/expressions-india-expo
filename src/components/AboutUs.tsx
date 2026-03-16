@@ -20,14 +20,21 @@ export default function AboutUs() {
 
   return (
     <SafeAreaView
-      style={{ flex: 1, backgroundColor: theme.backgroundColorLight }}
-      edges={["top", "left", "right"]}
+      style={{
+        flex: 1,
+        backgroundColor: theme.backgroundColorLight,
+      }}
+      edges={["top"]}
     >
       <Animated.ScrollView
         contentContainerStyle={{ flexGrow: 1 }}
-        style={{ flex: 1, backgroundColor: theme.backgroundColorLight }}
+        style={{
+          flex: 1,
+          backgroundColor: theme.backgroundColorLight,
+          marginTop: 0,
+        }}
         contentInset={{ top: 0, bottom: 0, left: 0, right: 0 }}
-        // style={[{ paddingBottom: 50 }]}
+        // style={[{ padding: 0 }]}
         horizontal={true}
         pagingEnabled={true}
         decelerationRate={"fast"}
@@ -64,7 +71,7 @@ function AboutTheOrg() {
       <Animated.ScrollView
         contentInset={{ top: 0, bottom: 0, right: 0, left: 0 }}
         style={{
-          backgroundColor: theme.backgroundColorLight,
+          backgroundColor: theme.backgroundColor,
           paddingHorizontal: 10,
         }}
         onScroll={useAnimatedScrollHandler((event) => {

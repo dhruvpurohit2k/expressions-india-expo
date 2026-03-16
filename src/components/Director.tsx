@@ -10,7 +10,7 @@ export default function Director() {
         style={[
           globalStyle.container,
           { marginHorizontal: 0, paddingHorizontal: 10 },
-          { backgroundColor: theme.backgroundColorLight, elevation: 5 },
+          // { backgroundColor: theme.backgroundColorLight, elevation: 5 },
         ]}
       >
         <Text style={[globalStyle.sectionHeading]}>DIRECTOR</Text>

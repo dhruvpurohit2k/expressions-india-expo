@@ -1,13 +1,11 @@
-import { StyleSheet } from "react-native";
+import { Dimensions, StyleSheet } from "react-native";
 import { theme } from "./theme";
-import { Dimensions } from "react-native";
 
 export const styleFactory = () => {
   return StyleSheet.create({
     screen: {
       flex: 1,
       backgroundColor: theme.backgroundColorLight,
-      paddingHorizontal: 20,
       //   paddingVertical: 20,
     },
     title: {
@@ -24,14 +22,14 @@ export const styleFactory = () => {
     },
 
     container: {
-      // backgroundColor: theme.backgroundColor,
+      backgroundColor: theme.backgroundColor,
       padding: 15,
       borderRadius: 10,
       marginVertical: 10,
       marginHorizontal: 12,
-      // elevation: 2,
-      // borderWidth: 1,
-      // borderColor: theme.backgroundColorLight,
+      elevation: 2,
+      borderWidth: 1,
+      borderColor: theme.backgroundColorLight,
     },
     text: {
       fontSize: theme.fontSize,
@@ -43,12 +41,13 @@ export const styleFactory = () => {
     aboutCard: {
       paddingVertical: 10,
       paddingHorizontal: 20,
-      backgroundColor: theme.backgroundColorLight,
+      backgroundColor: theme.backgroundColor,
       margin: 15,
+      marginTop: 0,
       borderRadius: 10,
-      elevation: 3,
-      // borderWidth: 1,
-      // borderColor: theme.backgroundColorLight,
+      elevation: 5,
+      borderWidth: 1,
+      borderColor: theme.backgroundColorLight,
     },
     companyName: {
       fontFamily: "Delius_400Regular",
@@ -83,6 +82,20 @@ export const styleFactory = () => {
       width: 7,
       height: 7,
       borderRadius: 20,
+    },
+    whoAreYouOption: {
+      backgroundColor: theme.sectionHeadingColor,
+      width: 300,
+      elevation: 3,
+      paddingVertical: 20,
+      paddingHorizontal: 20,
+      borderRadius: 5,
+    },
+    whoAreYouOptionText: {
+      color: "white",
+      fontFamily: theme.fontBold,
+      fontSize: theme.fontSize,
+      textAlign: "center",
     },
   });
 };
