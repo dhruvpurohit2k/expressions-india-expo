@@ -97,5 +97,15 @@ export const styleFactory = () => {
       fontSize: theme.fontSize,
       textAlign: "center",
     },
+    inputField: {
+      backgroundColor: theme.backgroundColorLight,
+      paddingHorizontal: 10,
+      paddingVertical: 5,
+      borderRadius: 5,
+      borderWidth: 1,
+      color: theme.text,
+      fontSize: 16,
+      borderColor: theme.backgroundColorDark,
+    },
   });
 };

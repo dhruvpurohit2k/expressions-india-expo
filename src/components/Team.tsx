@@ -5,7 +5,7 @@ export default function Team() {
   const globalStyle = styleFactory();
   const screenWidth = Dimensions.get("window").width;
   return (
-    <ScrollView style={[globalStyle.screen]}>
+    <ScrollView style={[globalStyle.screen, { paddingHorizontal: 20 }]}>
       <Text style={[globalStyle.sectionHeading]}>Our Team</Text>
       <Text style={[globalStyle.text]}>
         Over the last thirteen years,{" "}

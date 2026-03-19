@@ -34,7 +34,7 @@ export default function Home() {
             vital life skills, mental health awareness, and emotional resilience
             for a healthier future.
           </Text>
-          <Link href="/modal" asChild>
+          <Link href="/about" asChild>
             <Pressable>
               <Text
                 style={{
