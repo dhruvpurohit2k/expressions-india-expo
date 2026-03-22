@@ -1,0 +1,131 @@
+import { Link, useLocalSearchParams } from "expo-router";
+import { SafeAreaView } from "react-native-safe-area-context";
+import {
+  Text,
+  View,
+  Image,
+  StyleSheet,
+  Pressable,
+  Dimensions,
+} from "react-native";
+import { styleFactory } from "@/src/styleFactory";
+import { theme } from "@/src/theme";
+import { useEvent } from "@/src/hooks/useEvent";
+import { Month } from "@/src/utils";
+import AnimatedDots from "@/src/components/AnimatedDots";
+import Animated, {
+  useAnimatedScrollHandler,
+  useSharedValue,
+} from "react-native-reanimated";
+import { useImageContext } from "@/src/context/imageContext";
+
+export default function EventScreen() {
+  const { id } = useLocalSearchParams<{ id: string }>();
+  const globalStyle = styleFactory();
+  const scrollX = useSharedValue(0);
+  const { setImage } = useImageContext();
+  const scrollHandler = useAnimatedScrollHandler((event) => {
+    scrollX.value = event.contentOffset.x;
+  });
+  const screenWidth = Dimensions.get("window").width;
+  const { data, loading, err } = useEvent(id);
+  if (err) return <Text>Error: {err.message}</Text>;
+  return (
+    <SafeAreaView style={[globalStyle.screen]}>
+      <View style={[globalStyle.container, { flex: 1 }]}>
+        <Text style={[globalStyle.sectionHeading]}>EVENT</Text>
+        <View style={[{ gap: 5 }]}>
+          {!loading && data && (
+            <>
+              <View style={[style.textContainer]}>
+                <Text style={[style.textHeading]}>Title</Text>
+                <Text style={[style.text]}>{data.title}</Text>
+              </View>
+              <View style={[style.textContainer]}>
+                <Text style={[style.textHeading]}>Description</Text>
+                <Text style={[style.text]}>{data.description}</Text>
+              </View>
+              <View style={[style.textContainer]}>
+                <Text style={[style.textHeading]}>Dates</Text>
+                <View style={{ flexDirection: "row", gap: 5 }}>
+                  <Text
+                    style={[style.text]}
+                  >{`${data.startDate.getDate()} ${Month[data.startDate.getMonth()]} ${data.startDate.getFullYear()}`}</Text>
+                  {data.endDate && (
+                    <>
+                      <Text style={[style.text]}>-</Text>
+                      <Text
+                        style={[style.text]}
+                      >{`${data.endDate.getDate()} ${Month[data.endDate.getMonth()]} ${data.endDate.getFullYear()}`}</Text>
+                    </>
+                  )}
+                </View>
+              </View>
+              <View style={{ alignItems: "center" }}>
+                <Animated.ScrollView
+                  horizontal={true}
+                  pagingEnabled={true}
+                  decelerationRate={"fast"}
+                  showsHorizontalScrollIndicator={false}
+                  onScroll={scrollHandler}
+                  style={{
+                    // marginHorizontal: 10,
+                    borderRadius: 10,
+                  }}
+                >
+                  {data.mediaLink.map((image, i) => (
+                    <View
+                      key={i}
+                      style={{
+                        elevation: 2,
+                        padding: 10,
+                        backgroundColor: theme.backgroundColorLight,
+                        borderRadius: 10,
+                        marginHorizontal: 10,
+                        marginVertical: 10,
+                      }}
+                    >
+                      <Link href="/modal" asChild>
+                        <Pressable onPress={() => setImage(image)}>
+                          <Image
+                            source={{ uri: image }}
+                            style={{
+                              width: screenWidth - 110,
+                              height: 300,
+                            }}
+                            resizeMode="contain"
+                          />
+                        </Pressable>
+                      </Link>
+                    </View>
+                  ))}
+                </Animated.ScrollView>
+                <AnimatedDots scrollX={scrollX} count={data.mediaLink.length} />
+              </View>
+            </>
+          )}
+        </View>
+      </View>
+    </SafeAreaView>
+  );
+}
+
+const style = StyleSheet.create({
+  textContainer: {
+    backgroundColor: theme.backgroundColorLight,
+    elevation: 1,
+    paddingHorizontal: 5,
+    paddingVertical: 5,
+    borderRadius: 10,
+  },
+  textHeading: {
+    color: "hsl(0,0%,50%)",
+    fontSize: 14,
+    fontFamily: theme.fontBold,
+  },
+  text: {
+    fontSize: 28,
+    color: "hsl(0,0%,30%)",
+    fontFamily: theme.font,
+  },
+});

@@ -4,10 +4,14 @@ import { Link } from "expo-router";
 import { Text, View, ScrollView, Image, Pressable } from "react-native";
 import * as Linking from "expo-linking";
 import { SafeAreaView } from "react-native-safe-area-context";
-import LatestActivities from "@/src/components/LatestActivites";
+import LatestActivities from "@/src/components/LatestEvents";
+import { EventListItem } from "@/src/types";
+import { useState } from "react";
+import LatestEvents from "@/src/components/LatestEvents";
 
 export default function Home() {
   const globalStyle = styleFactory();
+
   return (
     <SafeAreaView
       style={[{ backgroundColor: theme.backgroundColorLight, flex: 1 }]}
@@ -51,7 +55,7 @@ export default function Home() {
             </Pressable>
           </Link>
         </View>
-        <LatestActivities />
+        <LatestEvents />
         <View style={globalStyle.container}>
           <Text style={globalStyle.sectionHeading}>Almanac 2026</Text>
           <Text style={globalStyle.text}>

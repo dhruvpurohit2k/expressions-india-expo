@@ -35,6 +35,7 @@ export default function App() {
         name="programs"
         options={{
           headerShown: false,
+          popToTopOnBlur: true,
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="calendar-clear-outline" color={color} size={size} />
           ),

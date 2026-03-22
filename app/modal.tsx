@@ -58,6 +58,7 @@ export default function Modal() {
     };
   });
   if (!image) return null;
+  const source = typeof image === "string" ? { uri: image } : image;
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaView
@@ -79,7 +80,7 @@ export default function Modal() {
             ]}
           >
             <Animated.Image
-              source={image}
+              source={source}
               style={{
                 width: "100%",
               }}
