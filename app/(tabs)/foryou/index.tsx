@@ -1,3 +1,4 @@
+import Header from "@/src/components/Header";
 import { styleFactory } from "@/src/styleFactory";
 import { theme } from "@/src/theme";
 import { Link } from "expo-router";
@@ -10,18 +11,19 @@ export default function ForYou() {
     <SafeAreaView
       style={[globalStyles.screen, { paddingHorizontal: 0, margin: 0 }]}
     >
-      <Text
-        style={{
-          backgroundColor: theme.sectionHeadingColor,
-          color: "white",
-          fontSize: 30,
-          fontFamily: "Inter_700Bold",
-          paddingHorizontal: 20,
-          paddingVertical: 20,
-        }}
-      >
-        Who are you ?{" "}
-      </Text>
+      <Header>
+        <Text
+          style={{
+            backgroundColor: theme.sectionHeadingColor,
+            color: "white",
+            fontSize: 30,
+            paddingHorizontal: 15,
+            fontFamily: "Inter_700Bold",
+          }}
+        >
+          Who are you ?{" "}
+        </Text>
+      </Header>
       <View
         style={[
           { alignItems: "center", flex: 1, justifyContent: "center", gap: 20 },

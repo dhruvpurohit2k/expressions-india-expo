@@ -5,7 +5,7 @@ import { View, Text, Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Events from "@/src/components/Events";
 import WorkShops from "@/src/components/WorkShops";
-
+import Header from "@/src/components/Header";
 export default function Program() {
   const [isEvents, setIsEvents] = useState(true);
   const globalStyle = styleFactory();
@@ -16,51 +16,60 @@ export default function Program() {
       style={{ backgroundColor: theme.backgroundColorLight, flex: 1 }}
       edges={["top"]}
     >
+      <Header>
+        <View
+          style={{
+            flexDirection: "row",
+            height: "100%",
+            justifyContent: "space-around",
+          }}
+        >
+          <Pressable
+            style={[
+              globalStyle.stackButton,
+              isEvents && {
+                backgroundColor: theme.sectionHeadingColor,
+              },
+            ]}
+            onPress={() => setIsEvents(true)}
+          >
+            <Text
+              style={[
+                globalStyle.stackButtonText,
+                isEvents && { color: "white" },
+              ]}
+            >
+              {" "}
+              EVENTS
+            </Text>
+          </Pressable>
+          <Pressable
+            onPress={() => setIsEvents(false)}
+            style={[
+              globalStyle.stackButton,
+              !isEvents && {
+                backgroundColor: theme.sectionHeadingColor,
+              },
+            ]}
+          >
+            <Text
+              style={[
+                globalStyle.stackButtonText,
+                !isEvents && { color: "white" },
+              ]}
+            >
+              WORKSHOPS
+            </Text>
+          </Pressable>
+        </View>
+      </Header>
       <View
         style={{
-          flexDirection: "row",
-          justifyContent: "space-around",
+          flex: 1,
+          marginTop: 20,
+          paddingHorizontal: 10,
         }}
       >
-        <Pressable
-          style={[
-            globalStyle.stackButton,
-            isEvents && {
-              backgroundColor: theme.sectionHeadingColor,
-            },
-          ]}
-          onPress={() => setIsEvents(true)}
-        >
-          <Text
-            style={[
-              globalStyle.stackButtonText,
-              isEvents && { color: "white" },
-            ]}
-          >
-            {" "}
-            EVENTS
-          </Text>
-        </Pressable>
-        <Pressable
-          onPress={() => setIsEvents(false)}
-          style={[
-            globalStyle.stackButton,
-            !isEvents && {
-              backgroundColor: theme.sectionHeadingColor,
-            },
-          ]}
-        >
-          <Text
-            style={[
-              globalStyle.stackButtonText,
-              !isEvents && { color: "white" },
-            ]}
-          >
-            WORKSHOPS
-          </Text>
-        </Pressable>
-      </View>
-      <View style={{ flex: 1, marginTop: 20, paddingHorizontal: 10 }}>
         {isEvents ? <Events /> : <WorkShops />}
       </View>
     </SafeAreaView>

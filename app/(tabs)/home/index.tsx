@@ -8,6 +8,8 @@ import LatestActivities from "@/src/components/LatestEvents";
 import { EventListItem } from "@/src/types";
 import { useState } from "react";
 import LatestEvents from "@/src/components/LatestEvents";
+import Header from "@/src/components/Header";
+import Button from "@/src/components/ui/button";
 
 export default function Home() {
   const globalStyle = styleFactory();
@@ -18,20 +20,21 @@ export default function Home() {
       edges={["top", "left", "right"]}
     >
       <ScrollView>
-        <Text
-          style={[
-            {
-              backgroundColor: theme.sectionHeadingColor,
-              color: "white",
-              fontSize: 30,
-              fontFamily: "Inter_700Bold",
-              paddingHorizontal: 20,
-              paddingVertical: 20,
-            },
-          ]}
-        >
-          Expressions India
-        </Text>
+        <Header>
+          <Text
+            style={[
+              {
+                backgroundColor: theme.sectionHeadingColor,
+                color: "white",
+                paddingHorizontal: 15,
+                fontSize: 30,
+                fontFamily: "Inter_700Bold",
+              },
+            ]}
+          >
+            Expressions India
+          </Text>
+        </Header>
         <View style={[globalStyle.container]}>
           <Text style={[globalStyle.text, { fontSize: 18 }]}>
             Expressions India is a national initiative empowering students with
@@ -39,7 +42,8 @@ export default function Home() {
             for a healthier future.
           </Text>
           <Link href="/about" asChild>
-            <Pressable>
+            <Button>Know More</Button>
+            {/*<Pressable>
               <Text
                 style={{
                   color: "white",
@@ -52,7 +56,7 @@ export default function Home() {
               >
                 Know More
               </Text>
-            </Pressable>
+            </Pressable>*/}
           </Link>
         </View>
         <LatestEvents />

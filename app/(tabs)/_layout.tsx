@@ -2,6 +2,7 @@ import { Tabs } from "expo-router";
 import { theme } from "@/src/theme";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
+import { styleFactory } from "@/src/styleFactory";
 export default function App() {
   const insets = useSafeAreaInsets();
   return (

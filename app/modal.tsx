@@ -83,6 +83,7 @@ export default function Modal() {
               source={source}
               style={{
                 width: "100%",
+                aspectRatio: 1,
               }}
               resizeMode="contain"
             />

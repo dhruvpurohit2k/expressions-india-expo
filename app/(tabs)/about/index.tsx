@@ -1,5 +1,6 @@
 import AboutUs from "@/src/components/AboutUs";
 import Director from "@/src/components/Director";
+import Header from "@/src/components/Header";
 import Team from "@/src/components/Team";
 import { styleFactory } from "@/src/styleFactory";
 import { theme } from "@/src/theme";
@@ -16,62 +17,65 @@ export default function About() {
   };
   return (
     <SafeAreaView style={[{ flex: 1 }]} edges={["top"]}>
-      <View style={{ flexDirection: "row" }}>
-        <Pressable
-          style={[
-            globalStyle.stackButton,
-            sectionNumber === 0 && {
-              backgroundColor: theme.sectionHeadingColor,
-            },
-          ]}
-          onPress={() => setSectionNumber(0)}
-        >
-          <Text
+      <Header>
+        <View style={{ flexDirection: "row", height: "100%" }}>
+          <Pressable
             style={[
-              globalStyle.stackButtonText,
-              sectionNumber === 0 && { color: "white" },
+              globalStyle.stackButton,
+              sectionNumber === 0 && {
+                backgroundColor: theme.sectionHeadingColor,
+              },
             ]}
+            onPress={() => setSectionNumber(0)}
           >
-            ABOUT US
-          </Text>
-        </Pressable>
-        <Pressable
-          style={[
-            globalStyle.stackButton,
-            sectionNumber === 1 && {
-              backgroundColor: theme.sectionHeadingColor,
-            },
-          ]}
-          onPress={() => setSectionNumber(1)}
-        >
-          <Text
+            <Text
+              style={[
+                globalStyle.stackButtonText,
+                sectionNumber === 0 && { color: "white" },
+              ]}
+            >
+              ABOUT US
+            </Text>
+          </Pressable>
+          <Pressable
             style={[
-              globalStyle.stackButtonText,
-              sectionNumber === 1 && { color: "white" },
+              globalStyle.stackButton,
+              sectionNumber === 1 && {
+                backgroundColor: theme.sectionHeadingColor,
+              },
             ]}
+            onPress={() => setSectionNumber(1)}
           >
-            MEET THE DIRECTOR
-          </Text>
-        </Pressable>
-        <Pressable
-          style={[
-            globalStyle.stackButton,
-            sectionNumber === 2 && {
-              backgroundColor: theme.sectionHeadingColor,
-            },
-          ]}
-          onPress={() => setSectionNumber(2)}
-        >
-          <Text
+            <Text
+              style={[
+                globalStyle.stackButtonText,
+                sectionNumber === 1 && { color: "white" },
+                { fontSize: 12 },
+              ]}
+            >
+              MEET THE DIRECTOR
+            </Text>
+          </Pressable>
+          <Pressable
             style={[
-              globalStyle.stackButtonText,
-              sectionNumber === 2 && { color: "white" },
+              globalStyle.stackButton,
+              sectionNumber === 2 && {
+                backgroundColor: theme.sectionHeadingColor,
+              },
             ]}
+            onPress={() => setSectionNumber(2)}
           >
-            TEAM
-          </Text>
-        </Pressable>
-      </View>
+            <Text
+              style={[
+                globalStyle.stackButtonText,
+                sectionNumber === 2 && { color: "white" },
+              ]}
+            >
+              TEAM
+            </Text>
+          </Pressable>
+        </View>
+      </Header>
       {sectionMap[sectionNumber]}
     </SafeAreaView>
   );

@@ -30,6 +30,7 @@ export default function EventScreen() {
   const screenWidth = Dimensions.get("window").width;
   const { data, loading, err } = useEvent(id);
   if (err) return <Text>Error: {err.message}</Text>;
+  // return null;
   return (
     <SafeAreaView style={[globalStyle.screen]}>
       <View style={[globalStyle.container, { flex: 1 }]}>

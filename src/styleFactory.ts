@@ -3,6 +3,11 @@ import { theme } from "./theme";
 
 export const styleFactory = () => {
   return StyleSheet.create({
+    headerStyle: {
+      fontSize: 30,
+      backgroundColor: theme.sectionHeadingColor,
+      color: "white",
+    },
     screen: {
       flex: 1,
       backgroundColor: theme.backgroundColorLight,
@@ -23,11 +28,12 @@ export const styleFactory = () => {
 
     container: {
       backgroundColor: theme.backgroundColor,
-      padding: 15,
+      paddingVertical: 5,
+      paddingHorizontal: 10,
       borderRadius: 10,
       marginVertical: 10,
       marginHorizontal: 12,
-      elevation: 2,
+      // elevation: 2,
       borderWidth: 1,
       borderColor: theme.backgroundColorLight,
     },

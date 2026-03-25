@@ -13,22 +13,13 @@ export default function LatestEvents() {
   const globalStyle = styleFactory();
   const { data: events, loading } = useLatestEvents();
   return (
-    <View
-      style={[
-        globalStyle.container,
-        {
-          elevation: 5,
-          backgroundColor: theme.backgroundColor,
-          borderRadius: 10,
-        },
-      ]}
-    >
+    <View style={[globalStyle.container]}>
       <Text style={[globalStyle.sectionHeading]}>Latest Activites</Text>
       {!loading &&
         events &&
         events.map((item, idx) => (
           <View key={idx} style={{ marginVertical: 5 }}>
-            <Link href={`/programs/event/${item.id}`} asChild>
+            <Link href={`/event/${item.id}`} asChild>
               <Pressable>
                 <View
                   style={{
