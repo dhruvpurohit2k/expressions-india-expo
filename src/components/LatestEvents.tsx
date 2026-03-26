@@ -1,21 +1,78 @@
 import { View, Text, Pressable } from "react-native";
 import { theme } from "../theme";
 import { styleFactory } from "../styleFactory";
-import { latestActivites } from "../../data/home";
-import * as Linking from "expo-linking";
-import { useEffect, useState } from "react";
-import { EventListItem } from "../types";
-import { useLatestEvents } from "../hooks/useLatestEvents";
 import { Month } from "../utils";
 import { Link } from "expo-router";
 
 export default function LatestEvents() {
   const globalStyle = styleFactory();
-  const { data: events, loading } = useLatestEvents();
+  // const { data: events, loading } = useLatestEvents();
   return (
     <View style={[globalStyle.container]}>
       <Text style={[globalStyle.sectionHeading]}>Latest Activites</Text>
-      {!loading &&
+      <View style={[{ gap: 2, paddingVertical: 10 }]}>
+        <View
+          style={[
+            {
+              backgroundColor: theme.backgroundColorLight,
+              padding: 5,
+              borderWidth: 1,
+              borderColor: "#ddd",
+              borderRadius: 5,
+            },
+          ]}
+        >
+          <Text style={[globalStyle.text, { fontSize: 14 }]}>
+            First Aid, Cpr Training & Emergencies Care in Schools & Universities
+          </Text>
+        </View>
+        <View
+          style={[
+            {
+              backgroundColor: theme.backgroundColorLight,
+              padding: 5,
+              borderWidth: 1,
+              borderColor: "#ddd",
+              borderRadius: 5,
+            },
+          ]}
+        >
+          <Text style={[globalStyle.text, { fontSize: 14 }]}>
+            First Aid, Cpr Training & Emergencies Care in Schools & Universities
+          </Text>
+        </View>
+        <View
+          style={[
+            {
+              backgroundColor: theme.backgroundColorLight,
+              padding: 5,
+              borderWidth: 1,
+              borderColor: "#ddd",
+              borderRadius: 5,
+            },
+          ]}
+        >
+          <Text style={[globalStyle.text, { fontSize: 14 }]}>
+            First Aid, Cpr Training & Emergencies Care in Schools & Universities
+          </Text>
+        </View>
+        <View
+          style={[
+            {
+              backgroundColor: theme.backgroundColorLight,
+              padding: 5,
+              borderWidth: 1,
+              borderColor: "#ddd",
+              borderRadius: 5,
+            },
+          ]}
+        >
+          <Text style={[globalStyle.text, { fontSize: 14 }]}>
+            First Aid, Cpr Training & Emergencies Care in Schools & Universities
+          </Text>
+        </View>
+      </View>
+      {/*{!loading &&
         events &&
         events.map((item, idx) => (
           <View key={idx} style={{ marginVertical: 5 }}>
@@ -58,7 +115,7 @@ export default function LatestEvents() {
               </Pressable>
             </Link>
           </View>
-        ))}
+        ))}*/}
     </View>
   );
 }

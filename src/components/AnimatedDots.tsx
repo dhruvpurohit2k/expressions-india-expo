@@ -11,12 +11,14 @@ import { Dimensions, View } from "react-native";
 export default function AnimatedDots({
   scrollX,
   count,
+  itemWidth,
 }: {
   scrollX: SharedValue<number>;
   count: number;
+  itemWidth?: number;
 }) {
   const globalStyle = styleFactory();
-  const screenWidth = Dimensions.get("window").width;
+  const screenWidth = itemWidth || Dimensions.get("window").width;
   function AnimatedDot({ index, width }: { index: number; width: number }) {
     const animatedDotStyle = useAnimatedStyle(() => {
       const inputRange = [

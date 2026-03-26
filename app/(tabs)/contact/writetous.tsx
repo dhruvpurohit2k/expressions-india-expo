@@ -10,7 +10,7 @@ import {
   Platform,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-
+import Button from "@/src/components/ui/button";
 export default function WriteToUs() {
   const globalStyle = styleFactory();
   const [name, setName] = useState<string>("");
@@ -96,6 +96,9 @@ export default function WriteToUs() {
               onChangeText={setEnquiry}
             />
           </KeyboardAvoidingView>
+          <Button style={{ marginVertical: 20, alignSelf: "center" }}>
+            Submit
+          </Button>
         </View>
       </ScrollView>
     </SafeAreaView>

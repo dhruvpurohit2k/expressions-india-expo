@@ -68,3 +68,23 @@ export const WorkshopListSchema = z.object({
 });
 export type WorkshopList = z.infer<typeof WorkshopListSchema>;
 export type WorkshopListItem = z.infer<typeof WorkshopListItemSchema>;
+
+export const WorkshopSchema = z.object({
+  id: z.string(),
+  title: z.string(),
+  type: z.string().nullable().optional(),
+  description: z.string().nullable().optional(),
+  perks: z.record(z.string(), z.any()).nullable().optional(),
+  start_date: z.string(),
+  end_date: z.string().nullable().optional(),
+  start_time: z.string().nullable().optional(),
+  end_time: z.string().nullable().optional(),
+  location: z.string().nullable().optional(),
+  is_paid: z.boolean(),
+  status: z.enum(["upcoming", "completed", "cancelled"]).default("upcoming"),
+  price: z.number().int().nullable().optional(),
+  uploaded_media: z.array(UploadedMediaSchema).nullable().default([]),
+  registrationLink: z.string().nullable().optional(),
+});
+
+export type Workshop = z.infer<typeof WorkshopSchema>;

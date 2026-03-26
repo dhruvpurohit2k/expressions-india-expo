@@ -14,11 +14,21 @@ export default function UpcomingEvents() {
       {isLoading ? (
         <Text>Loading...</Text>
       ) : (
-        <View style={[globalStyle.container, { gap: 5 }]}>
+        <View style={[globalStyle.container, { gap: 5, paddingVertical: 10 }]}>
           {upcomingEvents?.map((event) => (
             <Link key={event.id} href={`/event/${event.id}`} asChild>
               <Pressable>
-                <View style={[{ backgroundColor: "white", padding: 10 }]}>
+                <View
+                  style={[
+                    {
+                      backgroundColor: "white",
+                      padding: 10,
+                      borderWidth: 1,
+                      borderRadius: 5,
+                      borderColor: "#ccc",
+                    },
+                  ]}
+                >
                   <View>
                     <Text>{event.title}</Text>
                     <View>

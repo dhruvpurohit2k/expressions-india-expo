@@ -76,6 +76,9 @@ export default function Modal() {
               animatedStyle,
               {
                 width: Dimensions.get("window").width,
+                backgroundColor: "black",
+                alignItems: "center",
+                justifyContent: "center",
               },
             ]}
           >

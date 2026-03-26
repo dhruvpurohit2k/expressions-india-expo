@@ -14,8 +14,7 @@ export default function ForYou() {
       <Header>
         <Text
           style={{
-            backgroundColor: theme.sectionHeadingColor,
-            color: "white",
+            color: theme.red,
             fontSize: 30,
             paddingHorizontal: 15,
             fontFamily: "Inter_700Bold",

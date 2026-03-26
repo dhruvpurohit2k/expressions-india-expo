@@ -10,6 +10,7 @@ export default function EventLayout() {
   return (
     <Stack>
       <Stack.Screen name="[id]" options={{ headerShown: false }} />
+      <Stack.Screen name="pastevents" options={{ headerShown: false }} />
     </Stack>
   );
 }

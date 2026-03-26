@@ -4,6 +4,7 @@ import { styleFactory } from "@/src/styleFactory";
 import { theme } from "@/src/theme";
 import * as Linking from "expo-linking";
 import { Link } from "expo-router";
+import Header from "@/src/components/Header";
 export default function Contact() {
   const globalStyle = styleFactory();
   return (
@@ -11,20 +12,20 @@ export default function Contact() {
       style={{ flex: 1, backgroundColor: theme.backgroundColorLight }}
     >
       <ScrollView>
-        <Text
-          style={[
-            globalStyle.sectionHeading,
-            {
-              marginVertical: 0,
-              backgroundColor: theme.sectionHeadingColor,
-              color: "white",
-              padding: 20,
-              fontSize: 30,
-            },
-          ]}
-        >
-          Contact Us
-        </Text>
+        <Header>
+          <Text
+            style={[
+              {
+                color: theme.red,
+                paddingHorizontal: 20,
+                fontFamily: theme.fontBold,
+                fontSize: 30,
+              },
+            ]}
+          >
+            Contact Us
+          </Text>
+        </Header>
         <View style={globalStyle.container}>
           <Text style={[globalStyle.sectionHeading, globalStyle.companyName]}>
             Expressions India

@@ -1,18 +1,24 @@
 import { styleFactory } from "@/src/styleFactory";
 import { theme } from "@/src/theme";
-import { Link } from "expo-router";
-import { Text, View, ScrollView, Image, Pressable } from "react-native";
+import {
+  Text,
+  View,
+  ScrollView,
+  Image,
+  Pressable,
+  ActivityIndicator,
+} from "react-native";
 import * as Linking from "expo-linking";
 import { SafeAreaView } from "react-native-safe-area-context";
-import LatestActivities from "@/src/components/LatestEvents";
-import { EventListItem } from "@/src/types";
-import { useState } from "react";
 import LatestEvents from "@/src/components/LatestEvents";
 import Header from "@/src/components/Header";
-import Button from "@/src/components/ui/button";
+import Carousel from "@/src/components/Carousel";
+import { useQuery } from "@tanstack/react-query";
 
 export default function Home() {
   const globalStyle = styleFactory();
+  const { data: images = [], isPending: homePageImagesPending } =
+    useHomePageImageQuery();
 
   return (
     <SafeAreaView
@@ -20,12 +26,11 @@ export default function Home() {
       edges={["top", "left", "right"]}
     >
       <ScrollView>
-        <Header>
+        <Header style={{ marginBottom: 20 }}>
           <Text
             style={[
               {
-                backgroundColor: theme.sectionHeadingColor,
-                color: "white",
+                color: theme.red,
                 paddingHorizontal: 15,
                 fontSize: 30,
                 fontFamily: "Inter_700Bold",
@@ -35,13 +40,13 @@ export default function Home() {
             Expressions India
           </Text>
         </Header>
-        <View style={[globalStyle.container]}>
-          <Text style={[globalStyle.text, { fontSize: 18 }]}>
+        {/*<View style={[globalStyle.container]}>*/}
+        {/*<Text style={[globalStyle.text, { fontSize: 18 }]}>
             Expressions India is a national initiative empowering students with
             vital life skills, mental health awareness, and emotional resilience
             for a healthier future.
-          </Text>
-          <Link href="/about" asChild>
+          </Text>*/}
+        {/*<Link href="/about" asChild>
             <Button>Know More</Button>
             {/*<Pressable>
               <Text
@@ -57,8 +62,17 @@ export default function Home() {
                 Know More
               </Text>
             </Pressable>*/}
-          </Link>
-        </View>
+        {/*</Link>*/}
+        {/*</View>*/}
+        {homePageImagesPending ? (
+          <View>
+            <ActivityIndicator />
+            <Text>Loading...</Text>
+          </View>
+        ) : (
+          <Carousel images={images} />
+        )}
+        {/*<Carousel images={images} />*/}
         <LatestEvents />
         <View style={globalStyle.container}>
           <Text style={globalStyle.sectionHeading}>Almanac 2026</Text>
@@ -131,3 +145,25 @@ export default function Home() {
     </SafeAreaView>
   );
 }
+
+// const images = [
+//   // "http://192.168.1.12:9000/expressions-india/workshop/9461eefa9b19f0a23b166f412d5d0825ea819237eca6f034e2b7bde43aa2b246",
+//   require("@/assets/images/events/CBSE Regional Adolescent Summit 2024 - (9 and 10 December 2024)/1.jpg"),
+//   require("@/assets/images/events/CBSE Regional Adolescent Summit 2024 - (9 and 10 December 2024)/2.jpg"),
+//   require("@/assets/images/events/CBSE Regional Adolescent Summit 2024 - (9 and 10 December 2024)/3.jpg"),
+//   require("@/assets/images/events/CBSE Regional Adolescent Summit 2024 - (9 and 10 December 2024)/4.jpg"),
+// ];
+const fetchHomePageImages = async () => {
+  try {
+    const response = await fetch("http://192.168.1.12:5000/api/home/images");
+    const data = await response.json();
+    return data as string[];
+  } catch (error) {}
+};
+
+const useHomePageImageQuery = () => {
+  return useQuery({
+    queryKey: ["homeImages"],
+    queryFn: fetchHomePageImages,
+  });
+};
