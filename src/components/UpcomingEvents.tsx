@@ -12,9 +12,22 @@ export default function UpcomingEvents() {
     <View style={[]}>
       <Text style={globalStyle.sectionHeading}>Upcoming Events</Text>
       {isLoading ? (
-        <Text>Loading...</Text>
+        <View style={[globalStyle.container, { height: 300, justifyContent: "center", alignItems: "center", borderWidth: 1, borderColor: "#ccc" }]}>
+          <Text>Loading...</Text>
+        </View>
       ) : (
-        <View style={[globalStyle.container, { gap: 5, paddingVertical: 10 }]}>
+        <ScrollView
+          style={[
+            globalStyle.container,
+            {
+              gap: 10,
+              height: 300,
+              paddingVertical: 10,
+              borderWidth: 1,
+              borderColor: "#ccc",
+            },
+          ]}
+        >
           {upcomingEvents?.map((event) => (
             <Link key={event.id} href={`/event/${event.id}`} asChild>
               <Pressable>
@@ -49,7 +62,7 @@ export default function UpcomingEvents() {
               </Pressable>
             </Link>
           ))}
-        </View>
+        </ScrollView>
       )}
     </View>
   );
@@ -59,7 +72,7 @@ const UpcomingEventSchema = z.object({
   id: z.uuidv7(),
   title: z.string(),
   startDate: z.coerce.date(),
-  endDate: z.coerce.date(),
+  endDate: z.coerce.date().nullable(),
 });
 
 async function fetchUpcomingEvents() {
@@ -77,6 +90,8 @@ function useGetUpcomingEvents() {
     queryKey: ["upcoming-events"],
     queryFn: fetchUpcomingEvents,
     retry: 3,
+    refetchInterval: 60000,
+    refetchIntervalInBackground: false,
   });
 }
 function formatDate(date: Date) {

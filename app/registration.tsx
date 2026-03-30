@@ -33,7 +33,18 @@ export default function Registration() {
       <ScrollView contentContainerStyle={{ padding: 16 }}>
         <Text style={globalStyles.sectionHeading}>Registration</Text>
 
-        <View style={[globalStyles.container, { gap: 14 }]}>
+        <View
+          style={[
+            globalStyles.container,
+            {
+              gap: 14,
+              borderWidth: 1,
+              borderColor: "#ddd",
+              paddingVertical: 10,
+              elevation: 1,
+            },
+          ]}
+        >
           <form.Field
             name="name"
             validators={{ onChange: FormSchema.shape.name }}

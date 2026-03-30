@@ -10,6 +10,10 @@ import { styleFactory } from "../styleFactory";
 import { theme } from "../theme";
 import events from "@/data/events/events";
 import Animated, {
+  Easing,
+  FadeInLeft,
+  SlideInDown,
+  SlideInLeft,
   useAnimatedScrollHandler,
   useSharedValue,
 } from "react-native-reanimated";
@@ -18,15 +22,25 @@ import { useImageContext } from "../context/imageContext";
 import { Link } from "expo-router";
 import UpcomingEvents from "./UpcomingEvents";
 import PastEvents from "./PastEvents";
+import { useIsFocused } from "@react-navigation/native";
 
 const globalStyle = styleFactory();
 const screenWidth = Dimensions.get("window").width;
 export default function Events() {
+  // const isFocused = useIsFocused();
+  // if (!isFocused) return null;
   return (
-    <View style={[globalStyle.screen]}>
+    <Animated.View
+      style={[globalStyle.screen]}
+      // entering={FadeInLeft.duration(500).delay(500)}
+    >
       {/*<Text style={[globalStyle.sectionHeading]}>EVENTS</Text>*/}
-      <UpcomingEvents />
-      <PastEvents />
+      <Animated.View entering={SlideInLeft.duration(700).delay(50)}>
+        <UpcomingEvents />
+      </Animated.View>
+      <Animated.View entering={SlideInDown.duration(700).delay(200)}>
+        <PastEvents />
+      </Animated.View>
       {/*<Text
         style={[
           globalStyle.text,
@@ -42,7 +56,7 @@ export default function Events() {
       {/*{events.map((event, index) => {
         return <Event key={index} event={event} />;
       })}*/}
-    </View>
+    </Animated.View>
   );
 }
 

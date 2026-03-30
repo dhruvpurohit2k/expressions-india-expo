@@ -3,9 +3,13 @@ import Animated, {
   useAnimatedScrollHandler,
   useSharedValue,
   useDerivedValue,
+  useAnimatedStyle,
+  interpolate,
+  SharedValue,
 } from "react-native-reanimated";
 import AnimatedDots from "./AnimatedDots";
 import { useEffect, useRef, useMemo } from "react";
+import { theme } from "../theme";
 
 export default function Carousel({ images }: { images: string[] }) {
   const scrollX = useSharedValue(0);
@@ -74,9 +78,19 @@ export default function Carousel({ images }: { images: string[] }) {
   // If no images exist, exit early
   if (count === 0) return null;
 
+  const renderItem = ({ item, index }: { item: any; index: number }) => {
+    return (
+      <CarouselItem
+        item={item}
+        index={index}
+        scrollX={scrollX}
+        itemWidth={ITEM_WIDTH}
+      />
+    );
+  };
+
   return (
-    <View style={{ height: 300 }}>
-      {/* We use AnimatedFlatList to correctly capture onScroll */}
+    <View style={{ height: 320, paddingVertical: 10 }}>
       <Animated.FlatList
         ref={flatListRef}
         data={extendedImages}
@@ -88,7 +102,7 @@ export default function Carousel({ images }: { images: string[] }) {
         scrollEventThrottle={16}
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={{
-          paddingHorizontal: SPACING, // This centers the current item and lets adjacent items peek
+          paddingHorizontal: SPACING,
         }}
         getItemLayout={(_, index) => ({
           length: ITEM_WIDTH,
@@ -102,22 +116,92 @@ export default function Carousel({ images }: { images: string[] }) {
           );
           currentIndexRef.current = newIndex;
         }}
-        style={{ flex: 1, borderRadius: 10 }}
-        renderItem={({ item, index }) => (
-          <View style={{ width: ITEM_WIDTH, paddingHorizontal: 5 }}>
-            <Image
-              source={typeof item === "string" ? { uri: item } : (item as any)}
-              style={{ width: "100%", height: "100%", borderRadius: 10 }}
-              resizeMode="cover"
-            />
-          </View>
-        )}
+        style={{
+          flex: 1,
+        }}
+        renderItem={renderItem}
       />
-      <AnimatedDots
-        scrollX={normalizedScrollX}
-        count={count}
-        itemWidth={ITEM_WIDTH}
-      />
+      <View style={{ marginTop: 10 }}>
+        <AnimatedDots
+          scrollX={normalizedScrollX}
+          count={count}
+          itemWidth={ITEM_WIDTH}
+        />
+      </View>
     </View>
+  );
+}
+
+function CarouselItem({
+  item,
+  index,
+  scrollX,
+  itemWidth,
+}: {
+  item: string;
+  index: number;
+  scrollX: SharedValue<number>;
+  itemWidth: number;
+}) {
+  const animatedStyle = useAnimatedStyle(() => {
+    const position = index * itemWidth;
+    const inputRange = [
+      position - itemWidth,
+      position,
+      position + itemWidth,
+    ];
+
+    const scale = interpolate(
+      scrollX.value,
+      inputRange,
+      [0.85, 1, 0.85],
+      "clamp"
+    );
+    const opacity = interpolate(
+      scrollX.value,
+      inputRange,
+      [0.6, 1, 0.6],
+      "clamp"
+    );
+
+    return {
+      transform: [{ scale }],
+      opacity,
+    };
+  });
+
+  return (
+    <Animated.View
+      style={[
+        {
+          width: itemWidth,
+          justifyContent: "center",
+          alignItems: "center",
+          paddingVertical: 10,
+        },
+        animatedStyle,
+      ]}
+    >
+      <View
+        style={{
+          width: "95%",
+          height: "100%",
+          borderRadius: 20,
+          overflow: "hidden",
+          backgroundColor: theme.backgroundColorLight,
+          shadowColor: "#000",
+          shadowOffset: { width: 0, height: 6 },
+          shadowOpacity: 0.25,
+          shadowRadius: 8,
+          elevation: 8,
+        }}
+      >
+        <Image
+          source={typeof item === "string" ? { uri: item } : (item as any)}
+          style={{ width: "100%", height: "100%", borderRadius: 20 }}
+          resizeMode="cover"
+        />
+      </View>
+    </Animated.View>
   );
 }

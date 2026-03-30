@@ -9,7 +9,7 @@ export default function App() {
     <Tabs
       screenOptions={{
         tabBarStyle: {
-          backgroundColor: theme.sectionHeadingColor,
+          // backgroundColor: theme.sectionHeadingColor,
           height: 60 + insets.bottom,
           paddingBottom: insets.bottom,
           borderTopWidth: 0,
@@ -18,9 +18,9 @@ export default function App() {
         tabBarLabelStyle: {
           fontSize: theme.fontSize,
         },
-        // tabBarActiveBackgroundColor: theme.sectionHeadingColor,
-        tabBarInactiveBackgroundColor: theme.backgroundColor,
-        tabBarActiveTintColor: "white",
+        tabBarActiveBackgroundColor: theme.backgroundColorLight,
+        tabBarInactiveBackgroundColor: theme.backgroundColorLight,
+        tabBarActiveTintColor: theme.red,
       }}
     >
       <Tabs.Screen

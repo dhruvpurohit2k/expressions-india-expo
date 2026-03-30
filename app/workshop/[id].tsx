@@ -1,27 +1,29 @@
+import { useImageContext } from "@/src/context/imageContext";
 import { styleFactory } from "@/src/styleFactory";
 import { theme } from "@/src/theme";
 import { WorkshopSchema } from "@/src/types";
+import { Ionicons } from "@expo/vector-icons";
+import { useQuery } from "@tanstack/react-query";
+import { format as formatDate, parse } from "date-fns";
 import { Link, router, useLocalSearchParams } from "expo-router";
 import { IndianRupee } from "lucide-react-native";
 import {
-  View,
-  Text,
+  ActivityIndicator,
   Dimensions,
   Pressable,
-  ActivityIndicator,
+  Text,
+  View,
 } from "react-native";
 import Animated, {
   Extrapolation,
   interpolate,
+  SlideInDown,
+  SlideInUp,
   useAnimatedScrollHandler,
   useAnimatedStyle,
   useSharedValue,
 } from "react-native-reanimated";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useQuery } from "@tanstack/react-query";
-import { useImageContext } from "@/src/context/imageContext";
-import { Ionicons } from "@expo/vector-icons";
-import { format as formatDate, parse } from "date-fns";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 const HERO_HEIGHT = SCREEN_HEIGHT - 90;
@@ -68,8 +70,8 @@ export default function WorkshopDetail() {
 
   const { data: workshop, isLoading, error } = useWorkshop(id);
 
-  const heroImage = workshop?.uploaded_media?.[0]?.url
-    ? toAbsoluteUrl(workshop.uploaded_media[0].url)
+  const heroImage = workshop?.uploadedMedia?.[0]?.url
+    ? toAbsoluteUrl(workshop.uploadedMedia[0].url)
     : null;
 
   const onScroll = useAnimatedScrollHandler((event) => {
@@ -153,7 +155,7 @@ export default function WorkshopDetail() {
 
   return (
     <SafeAreaView style={globalStyle.screen}>
-      <View style={{ flex: 1, backgroundColor: theme.backgroundColorDark }}>
+      <View style={{ flex: 1, backgroundColor: theme.backgroundColorLight }}>
         <View
           style={{
             position: "absolute",
@@ -162,7 +164,7 @@ export default function WorkshopDetail() {
             right: 0,
             height: HERO_HEIGHT,
             overflow: "hidden",
-            backgroundColor: theme.backgroundColorDark,
+            backgroundColor: theme.backgroundColorLight,
           }}
         >
           {heroImage ? (
@@ -177,6 +179,9 @@ export default function WorkshopDetail() {
                   heroAnimatedStyle,
                 ]}
                 resizeMode="contain"
+                entering={SlideInUp.duration(1000)
+                  .delay(50)
+                  .withInitialValues({ opacity: 0, translateY: 100 })}
               />
               <Animated.View
                 pointerEvents="none"
@@ -210,6 +215,9 @@ export default function WorkshopDetail() {
           onScroll={onScroll}
           scrollEventThrottle={16}
           showsVerticalScrollIndicator={false}
+          entering={SlideInDown.duration(1000)
+            .delay(200)
+            .withInitialValues({ opacity: 0, translateY: -100 })}
           bounces
           style={{ flex: 1 }}
           contentContainerStyle={{
@@ -305,40 +313,21 @@ export default function WorkshopDetail() {
             <Text style={[{ fontSize: 20, color: "#777" }]}>Perks</Text>
             <View>
               {workshop.perks &&
-                Object.entries(workshop.perks).map(([key, value], index) => {
+                workshop.perks.map((value, index) => {
                   return (
                     <View key={index}>
-                      {typeof value === "string" ? (
-                        <View
-                          style={[
-                            { flexDirection: "row", alignItems: "flex-start" },
-                          ]}
-                        >
-                          <Ionicons
-                            name="checkmark-circle"
-                            size={16}
-                            color="#070"
-                          />
-                          <Text>{value}</Text>
-                        </View>
-                      ) : Array.isArray(value) ? (
-                        value.map((v, i) => (
-                          <View
-                            key={i}
-                            style={{
-                              flexDirection: "row",
-                              alignItems: "flex-start",
-                            }}
-                          >
-                            <Ionicons
-                              name="checkmark-circle"
-                              size={16}
-                              color="#070"
-                            />
-                            <Text>{v}</Text>
-                          </View>
-                        ))
-                      ) : null}
+                      <View
+                        style={[
+                          { flexDirection: "row", alignItems: "flex-start" },
+                        ]}
+                      >
+                        <Ionicons
+                          name="checkmark-circle"
+                          size={16}
+                          color="#070"
+                        />
+                        <Text>{value}</Text>
+                      </View>
                     </View>
                   );
                 })}
@@ -351,19 +340,19 @@ export default function WorkshopDetail() {
                 Date &amp; Time
               </Text>
               <Text style={[]}>
-                {formatDate(workshop.start_date, "do MMM, yy")}
-                {workshop.end_date
-                  ? ` - ${formatDate(workshop.end_date, "do MMM, yy")}`
+                {formatDate(workshop.startDate, "do MMM, yy")}
+                {workshop.endDate
+                  ? ` - ${formatDate(workshop.endDate, "do MMM, yy")}`
                   : ""}
               </Text>
               <Text style={[]}>
-                {workshop.start_time &&
+                {workshop.startTime &&
                   formatDate(
-                    parse(workshop.start_time, "HH:mm:ss", new Date()),
+                    parse(workshop.startTime, "HH:mm:ss", new Date()),
                     "hh:mm a",
                   )}
-                {workshop.end_time
-                  ? ` - ${formatDate(parse(workshop.end_time, "HH:mm:ss", new Date()), "hh:mm a")}`
+                {workshop.endTime
+                  ? ` - ${formatDate(parse(workshop.endTime, "HH:mm:ss", new Date()), "hh:mm a")}`
                   : ""}
               </Text>
             </View>
@@ -386,7 +375,7 @@ export default function WorkshopDetail() {
                 Fee
               </Text>
               <Text style={[]}>
-                {workshop.is_paid ? (
+                {workshop.isPaid ? (
                   <View style={{ flexDirection: "row", alignItems: "center" }}>
                     <IndianRupee size={12} />
                     <Text style={{ fontSize: 14 }}>{workshop.price ?? 0}</Text>

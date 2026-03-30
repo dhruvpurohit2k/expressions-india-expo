@@ -1,6 +1,8 @@
 import { styleFactory } from "@/src/styleFactory";
 import { theme } from "@/src/theme";
 import { useState } from "react";
+import Animated, { SlideInDown, SlideInUp } from "react-native-reanimated";
+
 import { View, Text, Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Events from "@/src/components/Events";

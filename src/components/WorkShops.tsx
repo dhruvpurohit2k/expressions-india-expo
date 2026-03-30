@@ -12,9 +12,15 @@ import { useState } from "react";
 import { WorkshopListSchema } from "../types";
 import { useQuery } from "@tanstack/react-query";
 import { Link, router } from "expo-router";
+import Animated, {
+  Easing,
+  FadeIn,
+  FadeInUp,
+  SlideInUp,
+} from "react-native-reanimated";
 export default function WorkShops() {
   const globalStyle = styleFactory();
-  const [openedWorkShopType, setOpenedWorkShopType] = useState<number>(0);
+  const [openedWorkShopType, setOpenedWorkShopType] = useState<number>(-1);
   const { data: workshops, isLoading, error } = useWorkshopsQuery();
   if (isLoading) return <Text>Loading...</Text>;
   if (error) return <Text>Error: {error.message}</Text>;
@@ -26,13 +32,17 @@ export default function WorkShops() {
       {Object.entries(workshops.data).map(
         ([workshopType, workshopList], index) => {
           return (
-            <View key={index}>
+            <Animated.View
+              key={index}
+              entering={FadeInUp.duration(250).delay(200)}
+            >
               <Pressable
                 onPress={() => {
                   setOpenedWorkShopType((i) => (i === index ? -1 : index));
                 }}
               >
-                <View
+                <Animated.View
+                  entering={FadeInUp.duration(500).delay(50)}
                   style={[
                     {
                       backgroundColor: theme.backgroundColor,
@@ -56,7 +66,7 @@ export default function WorkShops() {
                   >
                     {workshopType}
                   </Text>
-                </View>
+                </Animated.View>
               </Pressable>
               {openedWorkShopType === index && (
                 <View
@@ -76,7 +86,8 @@ export default function WorkShops() {
                         key={workshop.id}
                         onPress={() => router.push(`/workshop/${workshop.id}`)}
                       >
-                        <View
+                        <Animated.View
+                          entering={FadeInUp.duration(250).delay(index * 100)}
                           style={[
                             {
                               backgroundColor: theme.backgroundColorLight,
@@ -130,13 +141,13 @@ export default function WorkShops() {
                               </Text>
                             )}
                           </View>
-                        </View>
+                        </Animated.View>
                       </Pressable>
                     );
                   })}
                 </View>
               )}
-            </View>
+            </Animated.View>
           );
         },
       )}

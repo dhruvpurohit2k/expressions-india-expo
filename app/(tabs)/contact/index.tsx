@@ -5,6 +5,7 @@ import { theme } from "@/src/theme";
 import * as Linking from "expo-linking";
 import { Link } from "expo-router";
 import Header from "@/src/components/Header";
+import Button from "@/src/components/ui/button";
 export default function Contact() {
   const globalStyle = styleFactory();
   return (
@@ -158,23 +159,9 @@ export default function Contact() {
           </Pressable>
         </View>
         <Link href="/contact/writetous" asChild>
-          <Pressable>
-            <View
-              style={{
-                backgroundColor: theme.sectionHeadingColor,
-                paddingVertical: 5,
-                paddingHorizontal: 15,
-                alignSelf: "center",
-                borderRadius: 10,
-                elevation: 5,
-                margin: 10,
-              }}
-            >
-              <Text style={[globalStyle.text, { color: "white" }]}>
-                Write To Us
-              </Text>
-            </View>
-          </Pressable>
+          <Button style={{ alignSelf: "center", marginVertical: 10 }}>
+            Write To Us
+          </Button>
         </Link>
       </ScrollView>
     </SafeAreaView>

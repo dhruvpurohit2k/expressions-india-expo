@@ -14,6 +14,7 @@ import LatestEvents from "@/src/components/LatestEvents";
 import Header from "@/src/components/Header";
 import Carousel from "@/src/components/Carousel";
 import { useQuery } from "@tanstack/react-query";
+import Animated, { FadeInDown, SlideInDown } from "react-native-reanimated";
 
 export default function Home() {
   const globalStyle = styleFactory();
@@ -29,11 +30,12 @@ export default function Home() {
         <Header style={{ marginBottom: 20 }}>
           <Text
             style={[
+              globalStyle.companyName,
               {
                 color: theme.red,
                 paddingHorizontal: 15,
-                fontSize: 30,
-                fontFamily: "Inter_700Bold",
+                fontSize: 35,
+                // fontFamily: "Inter_700Bold",
               },
             ]}
           >
@@ -73,7 +75,9 @@ export default function Home() {
           <Carousel images={images} />
         )}
         {/*<Carousel images={images} />*/}
-        <LatestEvents />
+        <Animated.View entering={FadeInDown.duration(500)}>
+          <LatestEvents />
+        </Animated.View>
         <View style={globalStyle.container}>
           <Text style={globalStyle.sectionHeading}>Almanac 2026</Text>
           <Text style={globalStyle.text}>
@@ -165,5 +169,8 @@ const useHomePageImageQuery = () => {
   return useQuery({
     queryKey: ["homeImages"],
     queryFn: fetchHomePageImages,
+    retry: 3,
+    refetchInterval: 60000,
+    refetchIntervalInBackground: false,
   });
 };

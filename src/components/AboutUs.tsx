@@ -71,7 +71,7 @@ function AboutTheOrg() {
       <Animated.ScrollView
         contentInset={{ top: 0, bottom: 0, right: 0, left: 0 }}
         style={{
-          backgroundColor: theme.backgroundColor,
+          backgroundColor: theme.backgroundColorLight,
           paddingHorizontal: 10,
         }}
         onScroll={useAnimatedScrollHandler((event) => {

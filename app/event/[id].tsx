@@ -1,37 +1,37 @@
+import { useImageContext } from "@/src/context/imageContext";
 import { styleFactory } from "@/src/styleFactory";
 import { theme } from "@/src/theme";
 import { EventSchema } from "@/src/types";
+import { Ionicons } from "@expo/vector-icons";
+import { useQuery } from "@tanstack/react-query";
+import { format as formatDate, parse } from "date-fns";
 import { Link, router, useLocalSearchParams } from "expo-router";
 import { IndianRupee } from "lucide-react-native";
 import {
-  View,
-  Text,
+  ActivityIndicator,
   Dimensions,
   Pressable,
-  ActivityIndicator,
+  Text,
+  View,
 } from "react-native";
 import Animated, {
   Extrapolation,
+  FadeInDown,
+  FadeInLeft,
+  FadeInUp,
   interpolate,
+  SlideInDown,
+  SlideInUp,
   useAnimatedScrollHandler,
   useAnimatedStyle,
   useSharedValue,
 } from "react-native-reanimated";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useQuery } from "@tanstack/react-query";
-import { useImageContext } from "@/src/context/imageContext";
-import { Ionicons } from "@expo/vector-icons";
-import { format as formatDate, parse } from "date-fns";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 const HERO_HEIGHT = SCREEN_HEIGHT - 90;
 const CARD_PEEK = 90;
 const API_BASE_URL = "http://192.168.1.12:5000";
-
-function formatTime(time?: string | null) {
-  if (!time) return "TBA";
-  return time;
-}
 
 function toAbsoluteUrl(url?: string | null) {
   if (!url) return null;
@@ -73,8 +73,8 @@ export default function EventDetail() {
 
   const { data: event, isLoading, error } = useEvent(id);
 
-  const heroImage = event?.uploaded_media?.[0]?.url
-    ? toAbsoluteUrl(event.uploaded_media[0].url)
+  const heroImage = event?.uploadedMedia?.[0]?.url
+    ? toAbsoluteUrl(event.uploadedMedia[0].url)
     : null;
 
   const onScroll = useAnimatedScrollHandler((event) => {
@@ -158,7 +158,7 @@ export default function EventDetail() {
 
   return (
     <SafeAreaView style={globalStyle.screen}>
-      <View style={{ flex: 1, backgroundColor: theme.backgroundColorDark }}>
+      <View style={{ flex: 1, backgroundColor: theme.backgroundColorLight }}>
         <View
           style={{
             position: "absolute",
@@ -167,13 +167,16 @@ export default function EventDetail() {
             right: 0,
             height: HERO_HEIGHT,
             overflow: "hidden",
-            backgroundColor: theme.backgroundColorDark,
+            backgroundColor: theme.backgroundColorLight,
           }}
         >
           {heroImage ? (
             <>
               <Animated.Image
                 source={{ uri: heroImage }}
+                entering={SlideInUp.duration(1000)
+                  .delay(200)
+                  .withInitialValues({ opacity: 0, translateY: 100 })}
                 style={[
                   {
                     width: "100%",
@@ -215,6 +218,9 @@ export default function EventDetail() {
           onScroll={onScroll}
           scrollEventThrottle={16}
           showsVerticalScrollIndicator={false}
+          entering={SlideInDown.duration(1000)
+            .delay(500)
+            .withInitialValues({ opacity: 0, translateY: -100 })}
           bounces
           style={{ flex: 1 }}
           contentContainerStyle={{
@@ -299,40 +305,21 @@ export default function EventDetail() {
             <Text style={[{ fontSize: 20, color: "#777" }]}>Perks</Text>
             <View>
               {event.perks &&
-                Object.entries(event.perks).map(([key, value], index) => {
+                event.perks.map((value, index) => {
                   return (
                     <View key={index}>
-                      {typeof value === "string" ? (
-                        <View
-                          style={[
-                            { flexDirection: "row", alignItems: "flex-start" },
-                          ]}
-                        >
-                          <Ionicons
-                            name="checkmark-circle"
-                            size={16}
-                            color="#070"
-                          />
-                          <Text>{value}</Text>
-                        </View>
-                      ) : Array.isArray(value) ? (
-                        value.map((v, i) => (
-                          <View
-                            key={i}
-                            style={{
-                              flexDirection: "row",
-                              alignItems: "flex-start",
-                            }}
-                          >
-                            <Ionicons
-                              name="checkmark-circle"
-                              size={16}
-                              color="#070"
-                            />
-                            <Text>{v}</Text>
-                          </View>
-                        ))
-                      ) : null}
+                      <View
+                        style={[
+                          { flexDirection: "row", alignItems: "flex-start" },
+                        ]}
+                      >
+                        <Ionicons
+                          name="checkmark-circle"
+                          size={16}
+                          color="#070"
+                        />
+                        <Text>{value}</Text>
+                      </View>
                     </View>
                   );
                 })}
@@ -345,19 +332,19 @@ export default function EventDetail() {
                 Date & Time
               </Text>
               <Text style={[]}>
-                {formatDate(event.start_date, "do MMM, yy")}
-                {event.end_date
-                  ? ` - ${formatDate(event.end_date, "do MMM, yy")}`
+                {formatDate(event.startDate, "do MMM, yy")}
+                {event.endDate
+                  ? ` - ${formatDate(event.endDate, "do MMM, yy")}`
                   : ""}
               </Text>
               <Text style={[]}>
-                {event.start_time &&
+                {event.startTime &&
                   formatDate(
-                    parse(event.start_time, "HH:mm:ss", new Date()),
+                    parse(event.startTime, "HH:mm:ss", new Date()),
                     "hh:mm a",
                   )}
-                {event.end_time
-                  ? ` - ${formatDate(parse(event.end_time, "HH:mm:ss", new Date()), "hh:mm a")}`
+                {event.endTime
+                  ? ` - ${formatDate(parse(event.endTime, "HH:mm:ss", new Date()), "hh:mm a")}`
                   : ""}
               </Text>
             </View>
@@ -380,7 +367,7 @@ export default function EventDetail() {
                 Fee
               </Text>
               <Text style={[]}>
-                {event.is_paid ? (
+                {event.isPaid ? (
                   <View style={{ flexDirection: "row", alignItems: "center" }}>
                     <IndianRupee size={12} />
                     <Text style={{ fontSize: 14 }}>{event.price ?? 0}</Text>

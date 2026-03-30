@@ -33,7 +33,11 @@ export default function RootLayout() {
   }
   return (
     <SafeAreaProvider>
-      <StatusBar backgroundColor={theme.sectionHeadingColor} style="light" />
+      <StatusBar
+        backgroundColor="transparent"
+        translucent={true}
+        style="dark"
+      />
       <ImageProvider>
         <QueryClientProvider client={queryClient}>
           <Stack>
