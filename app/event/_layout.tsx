@@ -11,6 +11,8 @@ export default function EventLayout() {
     <Stack>
       <Stack.Screen name="[id]" options={{ headerShown: false }} />
       <Stack.Screen name="pastevents" options={{ headerShown: false }} />
+      <Stack.Screen name="gallery" options={{ headerShown: false }} />
+      <Stack.Screen name="videos" options={{ headerShown: false }} />
     </Stack>
   );
 }

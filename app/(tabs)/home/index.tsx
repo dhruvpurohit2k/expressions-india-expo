@@ -79,7 +79,7 @@ export default function Home() {
           <LatestEvents />
         </Animated.View>
         <View style={globalStyle.container}>
-          <Text style={globalStyle.sectionHeading}>Almanac 2026</Text>
+          <Text style={[globalStyle.sectionHeading]}>Almanac 2026</Text>
           <Text style={globalStyle.text}>
             Our 2026 Almanac which features our programs and development
             trainings and outcomes of national and global headlines for
@@ -159,7 +159,9 @@ export default function Home() {
 // ];
 const fetchHomePageImages = async () => {
   try {
-    const response = await fetch("http://192.168.1.12:5000/api/home/images");
+    const response = await fetch(
+      `${process.env.EXPO_PUBLIC_API_URL}/api/home/images`,
+    );
     const data = await response.json();
     return data as string[];
   } catch (error) {}

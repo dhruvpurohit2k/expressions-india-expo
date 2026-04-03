@@ -16,7 +16,7 @@ export default function App() {
           elevation: 0,
         },
         tabBarLabelStyle: {
-          fontSize: theme.fontSize,
+          fontSize: 10,
         },
         tabBarActiveBackgroundColor: theme.backgroundColorLight,
         tabBarInactiveBackgroundColor: theme.backgroundColorLight,
@@ -33,12 +33,21 @@ export default function App() {
         }}
       />
       <Tabs.Screen
-        name="programs"
+        name="events"
         options={{
           headerShown: false,
           popToTopOnBlur: true,
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="calendar-clear-outline" color={color} size={size} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="resources"
+        options={{
+          headerShown: false,
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="library-outline" color={color} size={size} />
           ),
         }}
       />

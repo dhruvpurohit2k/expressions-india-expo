@@ -1,0 +1,155 @@
+import { View, Text, ScrollView, Pressable } from "react-native";
+import { styleFactory } from "../styleFactory";
+import { useQuery } from "@tanstack/react-query";
+import { Link, router } from "expo-router";
+import z, { uuidv7 } from "zod";
+import { theme } from "../theme";
+import { useUpcomingEventQuery } from "../hooks/useUpcomingEventQuery";
+import Button from "./ui/button";
+import { ArrowRight, Router } from "lucide-react-native";
+
+export default function UpcomingEvents() {
+  const globalStyle = styleFactory();
+  const {
+    data: upcomingEvents,
+    isLoading,
+    error,
+  } = useUpcomingEventQuery({ limit: 5 });
+  return (
+    <View style={[]}>
+      <Text style={[globalStyle.sectionHeading, { marginVertical: 5 }]}>
+        Upcoming Events
+      </Text>
+      {isLoading ? (
+        <View
+          style={[
+            globalStyle.container,
+            {
+              height: 380,
+              justifyContent: "center",
+              alignItems: "center",
+              borderWidth: 1,
+              borderColor: "#ccc",
+            },
+          ]}
+        >
+          <Text>Loading...</Text>
+        </View>
+      ) : !upcomingEvents?.data?.length ? (
+        <View
+          style={[
+            globalStyle.container,
+            {
+              height: 380,
+              justifyContent: "center",
+              alignItems: "center",
+            },
+          ]}
+        >
+          <Text>No upcoming events</Text>
+        </View>
+      ) : (
+        <View
+          style={[
+            globalStyle.container,
+            {
+              gap: 5,
+              height: 380,
+            },
+          ]}
+        >
+          {upcomingEvents?.data?.map((event) => (
+            <Link key={event.id} href={`/event/${event.id}`} asChild>
+              <Pressable>
+                <View
+                  style={[
+                    {
+                      backgroundColor: "hsl(0, 0%, 98%)",
+                      // borderWidth: 1,
+                      // borderColor: "#ccc",
+                      borderRadius: 5,
+                      elevation: 1,
+                      height: 60,
+                      padding: 5,
+                    },
+                  ]}
+                >
+                  <View style={[{ gap: 10 }]}>
+                    <Text numberOfLines={1} ellipsizeMode="tail">
+                      {event.title}
+                    </Text>
+                    <View>
+                      <Text
+                        style={[
+                          {
+                            textAlign: "right",
+                            marginTop: 3,
+                            color: theme.red,
+                            // color: "#888888",
+                          },
+                        ]}
+                      >
+                        {formatDateRange(event.startDate, event.endDate)}
+                      </Text>
+                    </View>
+                  </View>
+                </View>
+              </Pressable>
+            </Link>
+          ))}
+        </View>
+      )}
+      <Pressable
+        onPress={() => router.push("/(tabs)/events/allUpcomingEvents")}
+        style={({ pressed }) => [
+          {
+            flexDirection: "row",
+            alignItems: "center",
+            backgroundColor: theme.red,
+            alignSelf: "flex-start",
+            padding: 10,
+            borderRadius: 10,
+          },
+          pressed && {
+            opacity: 0.9,
+            transform: [{ scale: 0.95 }],
+          },
+        ]}
+      >
+        <Text style={{ color: "white", fontSize: 16 }}>View All Events</Text>
+        <ArrowRight
+          size={20}
+          style={{ marginLeft: 8 }}
+          color={"white"}
+          strokeWidth={2}
+        />
+      </Pressable>
+    </View>
+  );
+}
+
+function formatDate(date: Date) {
+  return `${date.getDate()} ${MONTHS[date.getMonth()]} ${date.getFullYear()}`;
+}
+
+function formatDateRange(startDate: Date, endDate: Date | null) {
+  if (!endDate) {
+    return formatDate(startDate);
+  }
+
+  return `${formatDate(startDate)} - ${formatDate(endDate)}`;
+}
+const MONTHS = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sept",
+  "Oct",
+  "Nov",
+  "Dec",
+];

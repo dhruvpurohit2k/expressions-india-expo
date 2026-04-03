@@ -1,31 +1,24 @@
-import AboutUs from "@/src/components/AboutUs";
-import Director from "@/src/components/Director";
-import Header from "@/src/components/Header";
-import Team from "@/src/components/Team";
 import { styleFactory } from "@/src/styleFactory";
 import { theme } from "@/src/theme";
 import { useState } from "react";
+
 import { View, Text, Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-
-type Tab = "aboutUs" | "meetDir" | "team";
-
-const TABS: { key: Tab; label: string }[] = [
-  { key: "aboutUs", label: "About Us" },
-  { key: "meetDir", label: "Meet the Director" },
-  { key: "team", label: "Team" },
-];
-export default function About() {
+import UpcomingEvents from "@/src/components/UpcomingEvent";
+import CompletedEvents from "@/src/components/CompletedEvents";
+export default function Program() {
   const globalStyle = styleFactory();
-  const [sectionNumber, setSectionNumber] = useState<number>(0);
-  const [activeTab, setActiveTab] = useState<Tab>("aboutUs");
-  // const sectionMap: Record<number, React.JSX.Element> = {
-  //   0: <AboutUs />,
-  //   1: <Director />,
-  //   2: <Team />,
-  // };
+  type Tab = "upcoming" | "completed";
+  const TABS: { key: Tab; label: string }[] = [
+    { key: "upcoming", label: "Upcoming Events" },
+    { key: "completed", label: "Completed Events" },
+  ];
+  const [activeTab, setActiveTab] = useState<Tab>("upcoming");
   return (
-    <SafeAreaView style={[globalStyle.screen]} edges={["top"]}>
+    <SafeAreaView
+      style={{ backgroundColor: theme.backgroundColorLight, flex: 1 }}
+      edges={["top"]}
+    >
       <Text style={[globalStyle.sectionHeading, { marginHorizontal: 15 }]}>
         Resources
       </Text>
@@ -65,10 +58,17 @@ export default function About() {
           </Pressable>
         ))}
       </View>
-      {activeTab === "aboutUs" && <AboutUs />}
-      {activeTab === "meetDir" && <Director />}
-      {activeTab === "team" && <Team />}
+      {activeTab === "upcoming" ? <UpcomingEvents /> : <CompletedEvents />}
+      {/*<Animated.ScrollView
+        style={[globalStyle.screen, { paddingHorizontal: 10 }]}
+      >
+        <Animated.View entering={SlideInLeft.duration(700).delay(50)}>
+          <UpcomingEvents />
+        </Animated.View>
+        <Animated.View entering={SlideInDown.duration(700).delay(200)}>
+          <PastEvents />
+        </Animated.View>
+      </Animated.ScrollView>*/}
     </SafeAreaView>
   );
-  // return <AboutUs />;
 }

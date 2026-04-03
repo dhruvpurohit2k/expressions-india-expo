@@ -157,7 +157,7 @@ export default function WorkShops() {
 
 async function fetchWorkshops() {
   try {
-    const response = await fetch("http://192.168.1.12:5000/workshop");
+    const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/workshop`);
     const data = await response.json();
     console.log(data);
     return WorkshopListSchema.parse(data);

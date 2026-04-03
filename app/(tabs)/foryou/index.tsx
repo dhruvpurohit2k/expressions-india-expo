@@ -11,19 +11,10 @@ export default function ForYou() {
   const globalStyles = styleFactory();
   return (
     <SafeAreaView
-      style={[globalStyles.screen, { paddingHorizontal: 0, margin: 0 }]}
+      style={[globalStyles.screen, { paddingHorizontal: 10, margin: 0 }]}
     >
       <Header>
-        <Text
-          style={{
-            color: theme.red,
-            fontSize: 30,
-            paddingHorizontal: 15,
-            fontFamily: "Inter_700Bold",
-          }}
-        >
-          Who are you ?{" "}
-        </Text>
+        <Text style={[globalStyles.sectionHeading]}>Who are you ? </Text>
       </Header>
       <View
         style={[
@@ -48,8 +39,8 @@ export default function ForYou() {
                       style={[
                         {
                           alignSelf: "flex-start",
-                          borderRadius: 300,
-                          backgroundColor: "#fecccc",
+                          // borderRadius: 300,
+                          // backgroundColor: "#fecccc",
                           padding: 15,
                         },
                       ]}
@@ -74,110 +65,6 @@ export default function ForYou() {
             </Animated.View>
           );
         })}
-        {/*<Link href={"/(tabs)/foryou/forStudent"} asChild>
-          <Pressable>
-            <View style={[globalStyles.whoAreYouOption]}>
-              <View
-                style={[
-                  {
-                    alignSelf: "flex-start",
-                    borderRadius: 300,
-                    backgroundColor: "#fecccc",
-                    padding: 15,
-                  },
-                ]}
-              >
-                <Ionicons name="school-outline" size={24} color={theme.red} />
-              </View>
-              <Text style={[globalStyles.whoAreYouOptionText]}>STUDENT</Text>
-              <Ionicons
-                name="chevron-forward-outline"
-                size={24}
-                color={theme.red}
-              />
-            </View>
-          </Pressable>
-        </Link>
-        <View style={[globalStyles.whoAreYouOption]}>
-          <View
-            style={[
-              {
-                alignSelf: "flex-start",
-                borderRadius: 300,
-                backgroundColor: "#fecccc",
-                padding: 15,
-              },
-            ]}
-          >
-            <Ionicons name="book-outline" size={24} color={theme.red} />
-          </View>
-          <Text style={[globalStyles.whoAreYouOptionText]}>TEACHER</Text>
-          <Ionicons
-            name="chevron-forward-outline"
-            size={24}
-            color={theme.red}
-          />
-        </View>
-        <View style={[globalStyles.whoAreYouOption]}>
-          <View
-            style={[
-              {
-                alignSelf: "flex-start",
-                borderRadius: 300,
-                backgroundColor: "#fecccc",
-                padding: 15,
-              },
-            ]}
-          >
-            <Ionicons name="chatbubbles-outline" size={24} color={theme.red} />
-          </View>
-          <Text style={[globalStyles.whoAreYouOptionText]}>COUNCELLOR</Text>
-          <Ionicons
-            name="chevron-forward-outline"
-            size={24}
-            color={theme.red}
-          />
-        </View>
-        <View style={[globalStyles.whoAreYouOption]}>
-          <View
-            style={[
-              {
-                alignSelf: "flex-start",
-                borderRadius: 300,
-                backgroundColor: "#fecccc",
-                padding: 15,
-              },
-            ]}
-          >
-            <Ionicons name="people-outline" size={24} color={theme.red} />
-          </View>
-          <Text style={[globalStyles.whoAreYouOptionText]}>PARENT</Text>
-          <Ionicons
-            name="chevron-forward-outline"
-            size={24}
-            color={theme.red}
-          />
-        </View>
-        <View style={[globalStyles.whoAreYouOption]}>
-          <View
-            style={[
-              {
-                alignSelf: "flex-start",
-                borderRadius: 300,
-                backgroundColor: "#fecccc",
-                padding: 15,
-              },
-            ]}
-          >
-            <Ionicons name="business-outline" size={24} color={theme.red} />
-          </View>
-          <Text style={[globalStyles.whoAreYouOptionText]}>HEAD OF SCHOOL</Text>
-          <Ionicons
-            name="chevron-forward-outline"
-            size={24}
-            color={theme.red}
-          />
-        </View>*/}
       </View>
     </SafeAreaView>
   );

@@ -1,38 +1,28 @@
+import { usePastEventQuery } from "@/src/hooks/usePastEventQuery";
+import { styleFactory } from "@/src/styleFactory";
+import { theme } from "@/src/theme";
+import { ChevronLeft, ChevronRight } from "lucide-react-native";
 import { useState } from "react";
-import { useUpcomingEventQuery } from "../hooks/useUpcomingEventQuery";
-import { styleFactory } from "../styleFactory";
 import {
-  View,
-  Text,
   ActivityIndicator,
   FlatList,
-  Pressable,
   Image,
+  Pressable,
+  Text,
+  View,
 } from "react-native";
-import { theme } from "../theme";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { Link } from "expo-router";
-import { ChevronLeft, ChevronRight } from "lucide-react-native";
-import { format } from "date-fns";
 
-const LIMIT = 7;
+const LIMIT = 10;
 
 const MONTHS = [
-  "Jan",
-  "Feb",
-  "Mar",
-  "Apr",
-  "May",
-  "Jun",
-  "Jul",
-  "Aug",
-  "Sept",
-  "Oct",
-  "Nov",
-  "Dec",
+  "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+  "Jul", "Aug", "Sept", "Oct", "Nov", "Dec",
 ];
 
 function formatDate(date: Date) {
-  return format(date, "do MMM - yy");
+  return `${date.getDate()} ${MONTHS[date.getMonth()]} ${date.getFullYear()}`;
 }
 
 function formatDateRange(startDate: Date, endDate: Date | null) {
@@ -40,11 +30,11 @@ function formatDateRange(startDate: Date, endDate: Date | null) {
   return `${formatDate(startDate)} – ${formatDate(endDate)}`;
 }
 
-export default function UpcomingEvents() {
+export default function AllPastEvents() {
   const [page, setPage] = useState(1);
   const globalStyle = styleFactory();
 
-  const { data, isLoading, error } = useUpcomingEventQuery({
+  const { data, isLoading, error } = usePastEventQuery({
     limit: LIMIT,
     offset: (page - 1) * LIMIT,
   });
@@ -54,7 +44,11 @@ export default function UpcomingEvents() {
   const totalPages = data?.meta?.totalPages ?? Math.ceil(total / LIMIT);
 
   return (
-    <>
+    <SafeAreaView style={globalStyle.screen}>
+      <Text style={[globalStyle.sectionHeading, { marginHorizontal: 15 }]}>
+        Past Events
+      </Text>
+
       {error && (
         <View style={{ paddingHorizontal: 15 }}>
           <Text style={{ color: theme.red }}>
@@ -62,22 +56,16 @@ export default function UpcomingEvents() {
           </Text>
         </View>
       )}
+
       {isLoading ? (
-        <View
-          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-        >
+        <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
           <ActivityIndicator size="large" color={theme.red} />
         </View>
       ) : (
         <FlatList
           data={events}
           keyExtractor={(item) => item.id}
-          contentContainerStyle={{
-            paddingHorizontal: 15,
-            gap: 16,
-            paddingBottom: 12,
-            marginTop: 16,
-          }}
+          contentContainerStyle={{ paddingHorizontal: 15, gap: 16, paddingBottom: 12, marginTop: 8 }}
           renderItem={({ item }) => (
             <Link href={`/event/${item.id}`} asChild>
               <Pressable>
@@ -94,13 +82,9 @@ export default function UpcomingEvents() {
                         shadowRadius: 6,
                         overflow: "hidden",
                       },
-                      pressed && {
-                        opacity: 0.88,
-                        transform: [{ scale: 0.985 }],
-                      },
+                      pressed && { opacity: 0.88, transform: [{ scale: 0.985 }] },
                     ]}
                   >
-                    {/* Thumbnail */}
                     {item.thumbnailUrl ? (
                       <Image
                         source={{ uri: item.thumbnailUrl }}
@@ -112,25 +96,36 @@ export default function UpcomingEvents() {
                         style={{
                           width: "100%",
                           aspectRatio: 16 / 9,
-                          backgroundColor: theme.sectionHeadingColor,
+                          backgroundColor: "hsl(0, 0%, 85%)",
                           alignItems: "center",
                           justifyContent: "center",
                         }}
                       >
-                        <Text style={{ color: "white", fontSize: 36, opacity: 0.6 }}>
-                          🌸
-                        </Text>
+                        <Text style={{ fontSize: 36, opacity: 0.4 }}>📷</Text>
                       </View>
                     )}
-
-                    {/* Info */}
+                    <View
+                      style={{
+                        position: "absolute",
+                        top: 10,
+                        right: 10,
+                        backgroundColor: "rgba(0,0,0,0.55)",
+                        paddingHorizontal: 8,
+                        paddingVertical: 3,
+                        borderRadius: 5,
+                      }}
+                    >
+                      <Text style={{ color: "white", fontSize: 10, fontFamily: theme.fontBold }}>
+                        COMPLETED
+                      </Text>
+                    </View>
                     <View style={{ padding: 12 }}>
                       <Text
                         numberOfLines={2}
                         ellipsizeMode="tail"
                         style={{
-                          fontSize: 15,
                           fontFamily: theme.fontBold,
+                          fontSize: 15,
                           color: theme.text,
                           marginBottom: 6,
                           lineHeight: 21,
@@ -140,51 +135,16 @@ export default function UpcomingEvents() {
                       </Text>
                       <View
                         style={{
-                          flexDirection: "row",
-                          alignItems: "center",
-                          justifyContent: "space-between",
+                          backgroundColor: "hsla(4, 84%, 42%, 0.1)",
+                          alignSelf: "flex-start",
+                          paddingHorizontal: 10,
+                          paddingVertical: 4,
+                          borderRadius: 6,
                         }}
                       >
-                        <View
-                          style={{
-                            backgroundColor: "hsla(4, 84%, 42%, 0.1)",
-                            paddingHorizontal: 10,
-                            paddingVertical: 4,
-                            borderRadius: 6,
-                          }}
-                        >
-                          <Text
-                            style={{
-                              fontSize: 11,
-                              fontFamily: theme.fontBold,
-                              color: theme.sectionHeadingColor,
-                            }}
-                          >
-                            {formatDateRange(item.startDate, item.endDate)}
-                          </Text>
-                        </View>
-                        <View
-                          style={{
-                            backgroundColor: item.isOnline
-                              ? "hsla(120, 60%, 40%, 0.1)"
-                              : "hsla(220, 60%, 50%, 0.1)",
-                            paddingHorizontal: 10,
-                            paddingVertical: 4,
-                            borderRadius: 6,
-                          }}
-                        >
-                          <Text
-                            style={{
-                              fontSize: 11,
-                              fontFamily: theme.fontBold,
-                              color: item.isOnline
-                                ? "hsl(120, 60%, 30%)"
-                                : "hsl(220, 60%, 40%)",
-                            }}
-                          >
-                            {item.isOnline ? "Online" : "In-Person"}
-                          </Text>
-                        </View>
+                        <Text style={{ fontSize: 11, fontFamily: theme.fontBold, color: theme.sectionHeadingColor }}>
+                          {formatDateRange(item.startDate, item.endDate)}
+                        </Text>
                       </View>
                     </View>
                   </View>
@@ -193,10 +153,8 @@ export default function UpcomingEvents() {
             </Link>
           )}
           ListEmptyComponent={
-            <Text
-              style={[globalStyle.text, { textAlign: "center", marginTop: 40 }]}
-            >
-              No upcoming events.
+            <Text style={[globalStyle.text, { textAlign: "center", marginTop: 40 }]}>
+              No past events.
             </Text>
           }
         />
@@ -230,21 +188,12 @@ export default function UpcomingEvents() {
           ]}
         >
           <ChevronLeft size={18} color="white" strokeWidth={2.5} />
-          <Text
-            style={{
-              color: "white",
-              fontFamily: theme.fontBold,
-              fontSize: 14,
-              marginLeft: 2,
-            }}
-          >
+          <Text style={{ color: "white", fontFamily: theme.fontBold, fontSize: 14, marginLeft: 2 }}>
             Prev
           </Text>
         </Pressable>
 
-        <Text
-          style={{ color: theme.text, fontFamily: theme.font, fontSize: 14 }}
-        >
+        <Text style={{ color: theme.text, fontFamily: theme.font, fontSize: 14 }}>
           {totalPages > 0 ? `${page} / ${totalPages}` : "—"}
         </Text>
 
@@ -264,19 +213,12 @@ export default function UpcomingEvents() {
             pressed && { opacity: 0.75 },
           ]}
         >
-          <Text
-            style={{
-              color: "white",
-              fontFamily: theme.fontBold,
-              fontSize: 14,
-              marginRight: 2,
-            }}
-          >
+          <Text style={{ color: "white", fontFamily: theme.fontBold, fontSize: 14, marginRight: 2 }}>
             Next
           </Text>
           <ChevronRight size={18} color="white" strokeWidth={2.5} />
         </Pressable>
       </View>
-    </>
+    </SafeAreaView>
   );
 }

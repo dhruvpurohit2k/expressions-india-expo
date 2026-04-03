@@ -10,8 +10,17 @@ export default function LatestEvents() {
   return (
     <View style={[globalStyle.container]}>
       <Text style={[globalStyle.sectionHeading]}>Latest Activites</Text>
-      <View style={[{ gap: 2, paddingVertical: 10 }]}>
-        <View style={[styles.container]}>
+      <View style={[{ gap: 5, paddingVertical: 10 }]}>
+        <View
+          style={[
+            {
+              backgroundColor: theme.backgroundColorLight,
+              elevation: 1,
+              padding: 5,
+              borderRadius: 5,
+            },
+          ]}
+        >
           <Text style={[globalStyle.text, styles.text, { fontSize: 14 }]}>
             International Young Film Makers Festival{" "}
           </Text>
@@ -29,7 +38,16 @@ export default function LatestEvents() {
             25 Apr 26
           </Text>
         </View>
-        <View style={[styles.container]}>
+        <View
+          style={[
+            {
+              backgroundColor: theme.backgroundColorLight,
+              elevation: 1,
+              padding: 5,
+              borderRadius: 5,
+            },
+          ]}
+        >
           <Text style={[globalStyle.text, styles.text, { fontSize: 14 }]}>
             MINDSMART
           </Text>
@@ -47,7 +65,16 @@ export default function LatestEvents() {
             1st May 26
           </Text>
         </View>
-        <View style={[styles.container]}>
+        <View
+          style={[
+            {
+              backgroundColor: theme.backgroundColorLight,
+              elevation: 1,
+              padding: 5,
+              borderRadius: 5,
+            },
+          ]}
+        >
           <Text style={[globalStyle.text, styles.text, { fontSize: 14 }]}>
             POSCSO Act, Child & Adoescent Wellbeing
           </Text>
@@ -65,7 +92,16 @@ export default function LatestEvents() {
             1st May 26
           </Text>
         </View>
-        <View style={[styles.container]}>
+        <View
+          style={[
+            {
+              backgroundColor: theme.backgroundColorLight,
+              elevation: 1,
+              padding: 5,
+              borderRadius: 5,
+            },
+          ]}
+        >
           <Text style={[globalStyle.text, styles.text, { fontSize: 14 }]}>
             First Aid, Cpr Training & Emergencies Care in Schools & Universities
           </Text>

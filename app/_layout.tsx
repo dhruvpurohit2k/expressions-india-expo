@@ -9,13 +9,39 @@ import * as NavigationBar from "expo-navigation-bar";
 import * as SystemUI from "expo-system-ui";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import { useEffect } from "react";
+import { useEffect, useState, useCallback } from "react";
+import { AppState, Platform } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { ImageProvider } from "@/src/context/imageContext";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import {
+  focusManager,
+  QueryClient,
+  QueryClientProvider,
+} from "@tanstack/react-query";
 import { styleFactory } from "@/src/styleFactory";
+import SplashScreen from "@/src/components/SplashScreen";
+
+focusManager.setEventListener((handleFocus) => {
+  const subscription = AppState.addEventListener("change", (state) => {
+    if (Platform.OS !== "web") {
+      handleFocus(state === "active");
+    }
+  });
+  return () => subscription.remove();
+});
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 30_000,
+      refetchOnWindowFocus: true,
+    },
+  },
+});
+
 export default function RootLayout() {
   const globalStyles = styleFactory();
+  const [showSplash, setShowSplash] = useState(true);
   const [loaded] = useFonts({
     Delius_400Regular,
     Inter_700Bold,
@@ -27,10 +53,18 @@ export default function RootLayout() {
     NavigationBar.setButtonStyleAsync("light");
   }, []);
 
-  const queryClient = new QueryClient();
+  const handleSplashFinish = useCallback(() => {
+    setShowSplash(false);
+  }, []);
+
   if (!loaded) {
     return null;
   }
+
+  if (showSplash) {
+    return <SplashScreen onFinish={handleSplashFinish} />;
+  }
+
   return (
     <SafeAreaProvider>
       <StatusBar
@@ -49,6 +83,8 @@ export default function RootLayout() {
             />
             <Stack.Screen name="modal" options={{ headerShown: false }} />
             <Stack.Screen name="event" options={{ headerShown: false }} />
+            <Stack.Screen name="podcast" options={{ headerShown: false }} />
+            <Stack.Screen name="journal" options={{ headerShown: false }} />
             <Stack.Screen name="workshop" options={{ headerShown: false }} />
             <Stack.Screen
               name="registration"

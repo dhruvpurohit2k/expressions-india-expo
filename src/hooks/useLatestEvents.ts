@@ -9,7 +9,7 @@ export function useLatestEvents() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch("http://192.168.1.12:5000/event")
+    fetch(`${process.env.EXPO_PUBLIC_API_URL}/event`)
       .then((res) => res.json())
       .then((json) => {
         setData(z.array(EventListItemSchema).parse(json));

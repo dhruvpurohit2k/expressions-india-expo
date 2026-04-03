@@ -1,50 +1,25 @@
-import { useState } from "react";
-import { useUpcomingEventQuery } from "../hooks/useUpcomingEventQuery";
-import { styleFactory } from "../styleFactory";
 import {
   View,
   Text,
+  Pressable,
   ActivityIndicator,
   FlatList,
-  Pressable,
   Image,
 } from "react-native";
+import { styleFactory } from "../styleFactory";
+import { Link, router } from "expo-router";
+import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react-native";
 import { theme } from "../theme";
-import { Link } from "expo-router";
-import { ChevronLeft, ChevronRight } from "lucide-react-native";
-import { format } from "date-fns";
+import { usePastEventQuery } from "../hooks/usePastEventQuery";
+import { useState } from "react";
 
-const LIMIT = 7;
+const LIMIT = 10;
 
-const MONTHS = [
-  "Jan",
-  "Feb",
-  "Mar",
-  "Apr",
-  "May",
-  "Jun",
-  "Jul",
-  "Aug",
-  "Sept",
-  "Oct",
-  "Nov",
-  "Dec",
-];
-
-function formatDate(date: Date) {
-  return format(date, "do MMM - yy");
-}
-
-function formatDateRange(startDate: Date, endDate: Date | null) {
-  if (!endDate) return formatDate(startDate);
-  return `${formatDate(startDate)} – ${formatDate(endDate)}`;
-}
-
-export default function UpcomingEvents() {
+export default function CompletedEvents() {
   const [page, setPage] = useState(1);
   const globalStyle = styleFactory();
 
-  const { data, isLoading, error } = useUpcomingEventQuery({
+  const { data, isLoading, error } = usePastEventQuery({
     limit: LIMIT,
     offset: (page - 1) * LIMIT,
   });
@@ -112,16 +87,37 @@ export default function UpcomingEvents() {
                         style={{
                           width: "100%",
                           aspectRatio: 16 / 9,
-                          backgroundColor: theme.sectionHeadingColor,
+                          backgroundColor: "hsl(0, 0%, 85%)",
                           alignItems: "center",
                           justifyContent: "center",
                         }}
                       >
-                        <Text style={{ color: "white", fontSize: 36, opacity: 0.6 }}>
-                          🌸
-                        </Text>
+                        <Text style={{ fontSize: 36, opacity: 0.4 }}>📷</Text>
                       </View>
                     )}
+
+                    {/* Completed badge overlay */}
+                    <View
+                      style={{
+                        position: "absolute",
+                        top: 10,
+                        right: 10,
+                        backgroundColor: "rgba(0,0,0,0.55)",
+                        paddingHorizontal: 8,
+                        paddingVertical: 3,
+                        borderRadius: 5,
+                      }}
+                    >
+                      <Text
+                        style={{
+                          color: "white",
+                          fontSize: 10,
+                          fontFamily: theme.fontBold,
+                        }}
+                      >
+                        COMPLETED
+                      </Text>
+                    </View>
 
                     {/* Info */}
                     <View style={{ padding: 12 }}>
@@ -140,51 +136,22 @@ export default function UpcomingEvents() {
                       </Text>
                       <View
                         style={{
-                          flexDirection: "row",
-                          alignItems: "center",
-                          justifyContent: "space-between",
+                          backgroundColor: "hsla(4, 84%, 42%, 0.1)",
+                          alignSelf: "flex-start",
+                          paddingHorizontal: 10,
+                          paddingVertical: 4,
+                          borderRadius: 6,
                         }}
                       >
-                        <View
+                        <Text
                           style={{
-                            backgroundColor: "hsla(4, 84%, 42%, 0.1)",
-                            paddingHorizontal: 10,
-                            paddingVertical: 4,
-                            borderRadius: 6,
+                            fontSize: 11,
+                            fontFamily: theme.fontBold,
+                            color: theme.sectionHeadingColor,
                           }}
                         >
-                          <Text
-                            style={{
-                              fontSize: 11,
-                              fontFamily: theme.fontBold,
-                              color: theme.sectionHeadingColor,
-                            }}
-                          >
-                            {formatDateRange(item.startDate, item.endDate)}
-                          </Text>
-                        </View>
-                        <View
-                          style={{
-                            backgroundColor: item.isOnline
-                              ? "hsla(120, 60%, 40%, 0.1)"
-                              : "hsla(220, 60%, 50%, 0.1)",
-                            paddingHorizontal: 10,
-                            paddingVertical: 4,
-                            borderRadius: 6,
-                          }}
-                        >
-                          <Text
-                            style={{
-                              fontSize: 11,
-                              fontFamily: theme.fontBold,
-                              color: item.isOnline
-                                ? "hsl(120, 60%, 30%)"
-                                : "hsl(220, 60%, 40%)",
-                            }}
-                          >
-                            {item.isOnline ? "Online" : "In-Person"}
-                          </Text>
-                        </View>
+                          {formatDateRange(item.startDate, item.endDate)}
+                        </Text>
                       </View>
                     </View>
                   </View>
@@ -196,7 +163,7 @@ export default function UpcomingEvents() {
             <Text
               style={[globalStyle.text, { textAlign: "center", marginTop: 40 }]}
             >
-              No upcoming events.
+              No completed events.
             </Text>
           }
         />
@@ -280,3 +247,28 @@ export default function UpcomingEvents() {
     </>
   );
 }
+function formatDate(date: Date) {
+  return `${date.getDate()} ${MONTHS[date.getMonth()]} ${date.getFullYear()}`;
+}
+
+function formatDateRange(startDate: Date, endDate: Date | null) {
+  if (!endDate) {
+    return formatDate(startDate);
+  }
+
+  return `${formatDate(startDate)} - ${formatDate(endDate)}`;
+}
+const MONTHS = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sept",
+  "Oct",
+  "Nov",
+  "Dec",
+];

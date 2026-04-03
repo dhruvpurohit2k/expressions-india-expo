@@ -58,7 +58,7 @@ export default function WriteToUs() {
       formData.append("contactNumber", value.contactNumber);
       formData.append("enquiry", value.enquiry);
       try {
-        const response = await fetch("http://192.168.1.12:5000/api/enquery", {
+        const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/api/enquery`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
