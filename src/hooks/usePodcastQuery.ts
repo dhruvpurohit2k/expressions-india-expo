@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { fetchPodcastList } from "../api/fetchPodcasts";
+import { queryKeys } from "../lib/queryKeys";
 
 export function usePodcastQuery({
   limit,
@@ -9,7 +10,7 @@ export function usePodcastQuery({
   offset?: number;
 }) {
   return useQuery({
-    queryKey: ["podcasts", limit, offset],
+    queryKey: queryKeys.podcasts.list({ limit, offset }),
     queryFn: () => fetchPodcastList({ limit, offset }),
     refetchInterval: 60_000,
   });

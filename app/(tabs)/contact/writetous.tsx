@@ -51,19 +51,19 @@ export default function WriteToUs() {
       enquiry: "",
     },
     onSubmit: async ({ value }) => {
-      const formData = new FormData();
-      formData.append("name", value.name);
-      formData.append("designation", value.designation);
-      formData.append("email", value.email);
-      formData.append("contactNumber", value.contactNumber);
-      formData.append("enquiry", value.enquiry);
       try {
-        const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/api/enquery`, {
+        const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/api/enquiry`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(value),
+          body: JSON.stringify({
+            name: value.name,
+            subject: value.designation,
+            email: value.email,
+            phone: value.contactNumber,
+            message: value.enquiry,
+          }),
         });
 
         if (response.ok) {

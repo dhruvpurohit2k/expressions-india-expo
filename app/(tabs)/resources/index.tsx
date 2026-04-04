@@ -2,6 +2,7 @@ import { useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
+  Image,
   Pressable,
   Text,
   View,
@@ -11,6 +12,7 @@ import { styleFactory } from "@/src/styleFactory";
 import { theme } from "@/src/theme";
 import { usePodcastQuery } from "@/src/hooks/usePodcastQuery";
 import { useJournalQuery } from "@/src/hooks/useJournalQuery";
+import { useArticleQuery } from "@/src/hooks/useArticleQuery";
 import { ChevronLeft, ChevronRight } from "lucide-react-native";
 import { Link } from "expo-router";
 import { format } from "date-fns";
@@ -48,6 +50,7 @@ export default function Resources() {
   const [activeTab, setActiveTab] = useState<Tab>("podcasts");
   const [podcastPage, setPodcastPage] = useState(1);
   const [journalPage, setJournalPage] = useState(1);
+  const [articlePage, setArticlePage] = useState(1);
   const globalStyle = styleFactory();
 
   const {
@@ -77,6 +80,20 @@ export default function Resources() {
   const journalTotal = journalData?.meta?.total ?? 0;
   const journalTotalPages =
     journalData?.meta?.totalPages ?? Math.ceil(journalTotal / LIMIT);
+
+  const {
+    data: articleData,
+    isLoading: articleLoading,
+    error: articleError,
+  } = useArticleQuery({
+    limit: LIMIT,
+    offset: (articlePage - 1) * LIMIT,
+  });
+
+  const articles = articleData?.data ?? [];
+  const articleTotal = articleData?.meta?.total ?? 0;
+  const articleTotalPages =
+    articleData?.meta?.totalPages ?? Math.ceil(articleTotal / LIMIT);
 
   return (
     <SafeAreaView style={globalStyle.screen}>
@@ -460,9 +477,232 @@ export default function Resources() {
         </>
       )}
       {activeTab === "articles" && (
-        <View style={{ flex: 1, paddingHorizontal: 15, paddingTop: 10 }}>
-          <Text style={globalStyle.text}>Articles coming soon.</Text>
-        </View>
+        <>
+          {articleError && (
+            <View style={{ paddingHorizontal: 15 }}>
+              <Text style={{ color: theme.red }}>
+                Could not load articles. Please try again.
+              </Text>
+            </View>
+          )}
+
+          {articleLoading ? (
+            <View
+              style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <ActivityIndicator size="large" color={theme.red} />
+            </View>
+          ) : (
+            <FlatList
+              data={articles}
+              keyExtractor={(item) => item.id}
+              contentContainerStyle={{
+                paddingHorizontal: 15,
+                gap: 8,
+                paddingBottom: 12,
+              }}
+              renderItem={({ item }) => (
+                <Link href={`/article/${item.id}`} asChild>
+                  <Pressable>
+                    {({ pressed }) => (
+                      <View
+                        style={[
+                          {
+                            backgroundColor: "hsl(0, 0%, 100%)",
+                            borderRadius: 8,
+                            elevation: 1,
+                            flexDirection: "row",
+                            overflow: "hidden",
+                          },
+                          pressed && {
+                            opacity: 0.85,
+                            transform: [{ scale: 0.99 }],
+                          },
+                        ]}
+                      >
+                        {item.thumbnailUrl ? (
+                          <Image
+                            source={{ uri: item.thumbnailUrl }}
+                            style={{
+                              width: 88,
+                              height: 88,
+                              resizeMode: "cover",
+                              backgroundColor: theme.backgroundColorDark,
+                            }}
+                          />
+                        ) : (
+                          <View
+                            style={{
+                              width: 88,
+                              height: 88,
+                              backgroundColor: theme.backgroundColorDark,
+                              alignItems: "center",
+                              justifyContent: "center",
+                            }}
+                          >
+                            <Text style={{ fontSize: 22 }}>📄</Text>
+                          </View>
+                        )}
+                        <View
+                          style={{
+                            flex: 1,
+                            padding: 10,
+                            justifyContent: "space-between",
+                          }}
+                        >
+                          <Text
+                            numberOfLines={2}
+                            ellipsizeMode="tail"
+                            style={{
+                              fontSize: 14,
+                              fontFamily: theme.fontBold,
+                              color: "hsl(0, 0%, 20%)",
+                              lineHeight: 19,
+                            }}
+                          >
+                            {item.title}
+                          </Text>
+                          <View
+                            style={{
+                              flexDirection: "row",
+                              justifyContent: "space-between",
+                              alignItems: "center",
+                              marginTop: 6,
+                            }}
+                          >
+                            <View
+                              style={{
+                                backgroundColor: theme.red + "18",
+                                borderRadius: 20,
+                                paddingHorizontal: 8,
+                                paddingVertical: 2,
+                              }}
+                            >
+                              <Text
+                                style={{
+                                  fontSize: 10,
+                                  color: theme.red,
+                                  fontFamily: theme.fontBold,
+                                }}
+                              >
+                                {item.category}
+                              </Text>
+                            </View>
+                            <Text
+                              style={{
+                                fontSize: 10,
+                                color: "hsl(0,0%,55%)",
+                                fontFamily: theme.font,
+                              }}
+                            >
+                              {formatDate(item.createdAt)}
+                            </Text>
+                          </View>
+                        </View>
+                      </View>
+                    )}
+                  </Pressable>
+                </Link>
+              )}
+              ListEmptyComponent={
+                <Text
+                  style={[
+                    globalStyle.text,
+                    { textAlign: "center", marginTop: 40 },
+                  ]}
+                >
+                  No articles available.
+                </Text>
+              }
+            />
+          )}
+
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+              paddingHorizontal: 15,
+              paddingVertical: 12,
+              borderTopWidth: 1,
+              borderTopColor: theme.backgroundColorDark,
+            }}
+          >
+            <Pressable
+              onPress={() => setArticlePage((p) => p - 1)}
+              disabled={articlePage === 1}
+              style={({ pressed }) => [
+                {
+                  flexDirection: "row",
+                  alignItems: "center",
+                  backgroundColor: theme.red,
+                  paddingVertical: 8,
+                  paddingHorizontal: 14,
+                  borderRadius: 8,
+                  opacity: articlePage === 1 ? 0.35 : 1,
+                },
+                pressed && { opacity: 0.75 },
+              ]}
+            >
+              <ChevronLeft size={18} color="white" strokeWidth={2.5} />
+              <Text
+                style={{
+                  color: "white",
+                  fontFamily: theme.fontBold,
+                  fontSize: 14,
+                  marginLeft: 2,
+                }}
+              >
+                Prev
+              </Text>
+            </Pressable>
+
+            <Text
+              style={{
+                color: theme.text,
+                fontFamily: theme.font,
+                fontSize: 14,
+              }}
+            >
+              {articleTotalPages > 0
+                ? `${articlePage} / ${articleTotalPages}`
+                : "—"}
+            </Text>
+
+            <Pressable
+              onPress={() => setArticlePage((p) => p + 1)}
+              disabled={articlePage >= articleTotalPages}
+              style={({ pressed }) => [
+                {
+                  flexDirection: "row",
+                  alignItems: "center",
+                  backgroundColor: theme.red,
+                  paddingVertical: 8,
+                  paddingHorizontal: 14,
+                  borderRadius: 8,
+                  opacity: articlePage >= articleTotalPages ? 0.35 : 1,
+                },
+                pressed && { opacity: 0.75 },
+              ]}
+            >
+              <Text
+                style={{
+                  color: "white",
+                  fontFamily: theme.fontBold,
+                  fontSize: 14,
+                  marginRight: 2,
+                }}
+              >
+                Next
+              </Text>
+              <ChevronRight size={18} color="white" strokeWidth={2.5} />
+            </Pressable>
+          </View>
+        </>
       )}
     </SafeAreaView>
   );

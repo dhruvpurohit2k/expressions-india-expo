@@ -27,7 +27,7 @@ export default function ForYou() {
               key={index}
               entering={FadeInLeft.duration(600).delay(index * 100)}
             >
-              <Link href={"/(tabs)/foryou/forStudent"} asChild>
+              <Link href={`/audience/${option.code}`} asChild>
                 <Pressable
                   style={(press) => [
                     globalStyles.whoAreYouOption,
@@ -73,22 +73,32 @@ export default function ForYou() {
 const options = [
   {
     icon: "school-outline",
-    text: "SCHOOL",
+    text: "STUDENT",
+    code: "student",
   },
   {
     icon: "book-outline",
     text: "TEACHER",
-  },
-  {
-    icon: "chatbubbles-outline",
-    text: "COUNSELOR",
+    code: "teacher",
   },
   {
     icon: "people-outline",
     text: "PARENT",
+    code: "parent",
+  },
+  {
+    icon: "chatbubbles-outline",
+    text: "COUNSELOR",
+    code: "counselor",
   },
   {
     icon: "business-outline",
     text: "HEAD OF SCHOOL",
+    code: "head_of_department",
+  },
+  {
+    icon: "briefcase-outline",
+    text: "Mental Health Professional",
+    code: "mental_health_professional",
   },
 ];

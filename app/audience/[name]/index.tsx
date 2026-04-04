@@ -1,0 +1,217 @@
+import { useAudience } from "@/src/hooks/useAudience";
+import { AUDIENCE_LABELS } from "@/src/types/audience";
+import { styleFactory } from "@/src/styleFactory";
+import { theme } from "@/src/theme";
+import { router, useLocalSearchParams, Link } from "expo-router";
+import { BookOpen, CalendarDays, Mic, ChevronLeft } from "lucide-react-native";
+import {
+  ActivityIndicator,
+  Pressable,
+  ScrollView,
+  Text,
+  View,
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+
+const SECTION_CARDS = [
+  {
+    key: "events",
+    label: "Events",
+    description: "Upcoming events curated for you",
+    icon: CalendarDays,
+    color: "#3b82f6",
+    bg: "#eff6ff",
+  },
+  {
+    key: "articles",
+    label: "Articles",
+    description: "Reads selected for your journey",
+    icon: BookOpen,
+    color: "#10b981",
+    bg: "#ecfdf5",
+  },
+  {
+    key: "podcasts",
+    label: "Podcasts",
+    description: "Listen to expert conversations",
+    icon: Mic,
+    color: "#8b5cf6",
+    bg: "#f5f3ff",
+  },
+] as const;
+
+export default function AudiencePage() {
+  const { name } = useLocalSearchParams<{ name: string }>();
+  const globalStyle = styleFactory();
+  const { data: audience, isLoading } = useAudience(name);
+
+  const label = AUDIENCE_LABELS[name] ?? name;
+
+  return (
+    <SafeAreaView style={globalStyle.screen}>
+      {/* Back */}
+      <View
+        style={[
+          {
+            flexDirection: "row",
+            alignItems: "center",
+            paddingVertical: 10,
+          },
+        ]}
+      >
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            paddingHorizontal: 15,
+            paddingVertical: 10,
+          }}
+        >
+          <Pressable
+            onPress={() => router.back()}
+            style={({ pressed }) => [
+              { padding: 6, borderRadius: 8, backgroundColor: "hsl(0,0%,95%)" },
+              pressed && { opacity: 0.7 },
+            ]}
+          >
+            <ChevronLeft size={24} color={theme.text} strokeWidth={2} />
+          </Pressable>
+        </View>
+        <Text
+          style={{
+            fontSize: 30,
+            fontFamily: theme.fontBold,
+            color: theme.sectionHeadingColor,
+            marginBottom: 4,
+          }}
+        >
+          {label}
+        </Text>
+      </View>
+
+      <ScrollView
+        contentContainerStyle={{ paddingHorizontal: 18, paddingBottom: 48 }}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* Title */}
+
+        {/* Description */}
+        {isLoading ? (
+          <View style={{ marginVertical: 16 }}>
+            <ActivityIndicator size="small" color={theme.red} />
+          </View>
+        ) : audience?.introduction ? (
+          <Text
+            style={{
+              fontSize: 15,
+              fontFamily: theme.font,
+              color: theme.text,
+              lineHeight: 24,
+              marginBottom: 28,
+              marginTop: 8,
+              textAlign: "justify",
+            }}
+          >
+            {audience.introduction}
+          </Text>
+        ) : (
+          <View style={{ height: 24 }} />
+        )}
+
+        {/* Divider */}
+        <View
+          style={{
+            height: 2,
+            width: 40,
+            backgroundColor: theme.red,
+            borderRadius: 2,
+            marginBottom: 20,
+          }}
+        />
+
+        {/* "Here's what we have for you" */}
+        <Text
+          style={{
+            fontSize: 18,
+            fontFamily: theme.fontBold,
+            color: theme.text,
+            marginBottom: 16,
+          }}
+        >
+          Here's what we have for you
+        </Text>
+
+        {/* Section cards */}
+        {SECTION_CARDS.map((card) => {
+          const Icon = card.icon;
+          return (
+            <Link key={card.key} href={`/audience/${name}/${card.key}`} asChild>
+              <Pressable>
+                {({ pressed }) => (
+                  <View
+                    style={[
+                      {
+                        alignItems: "center",
+                        backgroundColor: theme.backgroundColorLight,
+                        borderRadius: 18,
+                        paddingVertical: 28,
+                        paddingHorizontal: 20,
+                        marginBottom: 14,
+                        // borderWidth: 1,
+                        // borderColor: "rgba(0,0,0,0.07)",
+                        elevation: 1,
+                        // shadowColor: "#000",
+                        // shadowOffset: { width: 0, height: 2 },
+                        // shadowOpacity: 0.1,
+                        // shadowRadius: 6,
+                      },
+                      pressed && {
+                        opacity: 0.88,
+                        transform: [{ scale: 0.97 }],
+                      },
+                    ]}
+                  >
+                    <View
+                      style={{
+                        width: 72,
+                        height: 72,
+                        borderRadius: 36,
+                        backgroundColor: card.bg,
+                        alignItems: "center",
+                        justifyContent: "center",
+                        marginBottom: 14,
+                      }}
+                    >
+                      <Icon size={34} color={card.color} strokeWidth={1.6} />
+                    </View>
+                    <Text
+                      style={{
+                        fontSize: 18,
+                        fontFamily: theme.fontBold,
+                        color: theme.sectionHeadingColor,
+                        marginBottom: 6,
+                        textAlign: "center",
+                      }}
+                    >
+                      {card.label}
+                    </Text>
+                    <Text
+                      style={{
+                        fontSize: 13,
+                        fontFamily: theme.font,
+                        color: "hsl(0,0%,55%)",
+                        textAlign: "center",
+                      }}
+                    >
+                      {card.description}
+                    </Text>
+                  </View>
+                )}
+              </Pressable>
+            </Link>
+          );
+        })}
+      </ScrollView>
+    </SafeAreaView>
+  );
+}

@@ -1,8 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
-import { fetchJournalList } from "../api/fetchJournals";
+import { fetchArticleList } from "../api/fetchArticles";
 import { queryKeys } from "../lib/queryKeys";
 
-export function useJournalQuery({
+export function useArticleQuery({
   limit,
   offset,
 }: {
@@ -10,8 +10,8 @@ export function useJournalQuery({
   offset?: number;
 }) {
   return useQuery({
-    queryKey: queryKeys.journals.list({ limit, offset }),
-    queryFn: () => fetchJournalList({ limit, offset }),
+    queryKey: queryKeys.articles.list({ limit, offset }),
+    queryFn: () => fetchArticleList({ limit, offset }),
     refetchInterval: 60_000,
   });
 }

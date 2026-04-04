@@ -1,0 +1,20 @@
+import { ArticleDetailSchema } from "../types/article";
+import type { ArticleDetail } from "../types/article";
+
+export async function fetchArticle(id: string): Promise<ArticleDetail> {
+  const response = await fetch(
+    `${process.env.EXPO_PUBLIC_API_URL}/article/${id}`,
+  );
+  const json = await response.json();
+
+  if (!json.success) {
+    throw new Error(json.error?.message ?? "Request failed");
+  }
+
+  const parsed = ArticleDetailSchema.safeParse(json.data);
+  if (!parsed.success) {
+    throw new Error(parsed.error.message);
+  }
+
+  return parsed.data;
+}
