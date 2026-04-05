@@ -11,10 +11,10 @@ import {
 import * as Linking from "expo-linking";
 import { SafeAreaView } from "react-native-safe-area-context";
 import LatestEvents from "@/src/components/LatestEvents";
-import Header from "@/src/components/Header";
 import Carousel from "@/src/components/Carousel";
 import { useQuery } from "@tanstack/react-query";
-import Animated, { FadeInDown, SlideInDown } from "react-native-reanimated";
+import Animated, { FadeInDown } from "react-native-reanimated";
+import { ExternalLink } from "lucide-react-native";
 
 export default function Home() {
   const globalStyle = styleFactory();
@@ -23,140 +23,209 @@ export default function Home() {
 
   return (
     <SafeAreaView
-      style={[{ backgroundColor: theme.backgroundColorLight, flex: 1 }]}
+      style={{ backgroundColor: theme.backgroundColor, flex: 1 }}
       edges={["top", "left", "right"]}
     >
-      <ScrollView>
-        <Header style={{ marginBottom: 20 }}>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        {/* Header */}
+        <Animated.View
+          entering={FadeInDown.duration(400)}
+          style={{
+            paddingHorizontal: 18,
+            paddingTop: 18,
+            paddingBottom: 10,
+          }}
+        >
           <Text
-            style={[
-              globalStyle.companyName,
-              {
-                color: theme.red,
-                paddingHorizontal: 15,
-                fontSize: 35,
-                // fontFamily: "Inter_700Bold",
-              },
-            ]}
+            style={{
+              fontFamily: "Delius_400Regular",
+              fontSize: 30,
+              color: theme.sectionHeadingColor,
+            }}
           >
             Expressions India
           </Text>
-        </Header>
-        {/*<View style={[globalStyle.container]}>*/}
-        {/*<Text style={[globalStyle.text, { fontSize: 18 }]}>
-            Expressions India is a national initiative empowering students with
-            vital life skills, mental health awareness, and emotional resilience
-            for a healthier future.
-          </Text>*/}
-        {/*<Link href="/about" asChild>
-            <Button>Know More</Button>
-            {/*<Pressable>
-              <Text
-                style={{
-                  color: "white",
-                  fontFamily: "Inter_700Bold",
-                  alignSelf: "flex-start",
-                  padding: 5,
-                  borderRadius: 5,
-                  backgroundColor: theme.sectionHeadingColor,
-                }}
-              >
-                Know More
-              </Text>
-            </Pressable>*/}
-        {/*</Link>*/}
-        {/*</View>*/}
+          <Text
+            style={{
+              fontFamily: theme.font,
+              fontSize: 13,
+              color: "hsl(0,0%,55%)",
+              marginTop: 2,
+            }}
+          >
+            National Life Skills & School Wellness Program
+          </Text>
+        </Animated.View>
+
+        {/* Carousel */}
         {homePageImagesPending ? (
-          <View>
-            <ActivityIndicator />
-            <Text>Loading...</Text>
+          <View
+            style={{
+              height: 260,
+              alignItems: "center",
+              justifyContent: "center",
+              marginHorizontal: 15,
+              borderRadius: 20,
+              backgroundColor: theme.backgroundColorDark,
+            }}
+          >
+            <ActivityIndicator size="large" color={theme.red} />
           </View>
         ) : (
           <Carousel images={images} />
         )}
-        {/*<Carousel images={images} />*/}
-        <Animated.View entering={FadeInDown.duration(500)}>
+
+        {/* Latest Activities */}
+        <Animated.View entering={FadeInDown.duration(500).delay(100)}>
           <LatestEvents />
         </Animated.View>
-        <View style={globalStyle.container}>
-          <Text style={[globalStyle.sectionHeading]}>Almanac 2026</Text>
-          <Text style={globalStyle.text}>
-            Our 2026 Almanac which features our programs and development
-            trainings and outcomes of national and global headlines for
-            enrichment of child centric pedagogy, school leadership, and
-            training resource enrichment.
-          </Text>
-          <Pressable
-            onPress={() => {
-              Linking.openURL(
-                "https://expressionsindia.org/images/almanac_2026.pdf",
-              );
+
+        {/* Downloads */}
+        <View
+          style={{
+            paddingHorizontal: 15,
+            marginTop: 24,
+            marginBottom: 24,
+            gap: 14,
+          }}
+        >
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              gap: 8,
+              marginBottom: 2,
             }}
           >
             <View
               style={{
-                elevation: 5,
-                backgroundColor: "black",
-                alignSelf: "center",
-                borderRadius: 10,
+                width: 4,
+                height: 22,
+                backgroundColor: theme.red,
+                borderRadius: 2,
               }}
-            >
-              <Image
-                source={require("@/assets/images/home/almanac_image.png")}
-                style={{
-                  width: 250,
-                  height: 250,
-                  borderRadius: 10,
-                }}
-                resizeMode="contain"
-              />
-            </View>
-          </Pressable>
-        </View>
-        <View style={globalStyle.container}>
-          <Text style={globalStyle.sectionHeading}>Brochure</Text>
-          <Text style={globalStyle.text}>
-            Check out our brochure for more details.
-          </Text>
-          <Pressable
-            onPress={() => {
-              Linking.openURL(
-                "https://expressionsindia.org/images/home/brochure.pdf",
-              );
-            }}
-          >
-            <View
+            />
+            <Text
               style={{
-                elevation: 5,
-                backgroundColor: "black",
-                alignSelf: "center",
-                borderRadius: 10,
+                fontSize: 20,
+                fontFamily: theme.fontBold,
+                color: theme.sectionHeadingColor,
               }}
             >
-              <Image
-                source={require("@/assets/images/home/brochure.png")}
-                style={{
-                  width: 250,
-                  height: 250,
-                  borderRadius: 10,
-                }}
-                resizeMode="cover"
-              />
-            </View>
-          </Pressable>
+              Downloads
+            </Text>
+          </View>
+
+          <DownloadCard
+            title="Almanac 2026"
+            description="Our 2026 Almanac featuring programs, development trainings, and national & global outcomes for child-centric pedagogy."
+            image={require("@/assets/images/home/almanac_image.png")}
+            imageMode="contain"
+            url="https://expressionsindia.org/images/almanac_2026.pdf"
+            delay={0}
+          />
+
+          <DownloadCard
+            title="Brochure"
+            description="An overview of our initiatives, events, and the impact we create across schools nationwide."
+            image={require("@/assets/images/home/brochure.png")}
+            imageMode="cover"
+            url="https://expressionsindia.org/images/home/brochure.pdf"
+            delay={80}
+          />
         </View>
       </ScrollView>
     </SafeAreaView>
   );
 }
 
-// const images = [
-//   // "http://192.168.1.12:9000/expressions-india/workshop/9461eefa9b19f0a23b166f412d5d0825ea819237eca6f034e2b7bde43aa2b246",
-//   require("@/assets/images/events/CBSE Regional Adolescent Summit 2024 - (9 and 10 December 2024)/1.jpg"),
-//   require("@/assets/images/events/CBSE Regional Adolescent Summit 2024 - (9 and 10 December 2024)/2.jpg"),
-//   require("@/assets/images/events/CBSE Regional Adolescent Summit 2024 - (9 and 10 December 2024)/3.jpg"),
-//   require("@/assets/images/events/CBSE Regional Adolescent Summit 2024 - (9 and 10 December 2024)/4.jpg"),
-// ];
+function DownloadCard({
+  title,
+  description,
+  image,
+  imageMode,
+  url,
+  delay,
+}: {
+  title: string;
+  description: string;
+  image: any;
+  imageMode: "contain" | "cover";
+  url: string;
+  delay: number;
+}) {
+  return (
+    <Animated.View entering={FadeInDown.duration(450).delay(200 + delay)}>
+      <Pressable
+        onPress={() => Linking.openURL(url)}
+        style={({ pressed }) => [
+          {
+            backgroundColor: theme.backgroundColorLight,
+            borderRadius: 16,
+            overflow: "hidden",
+            shadowColor: "#000",
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.08,
+            shadowRadius: 8,
+            elevation: 3,
+          },
+          pressed && { opacity: 0.88, transform: [{ scale: 0.985 }] },
+        ]}
+      >
+        <Image
+          source={image}
+          style={{ width: "100%", height: 180 }}
+          resizeMode={imageMode}
+        />
+        <View
+          style={{
+            padding: 14,
+            flexDirection: "row",
+            alignItems: "center",
+            gap: 10,
+          }}
+        >
+          <View style={{ flex: 1 }}>
+            <Text
+              style={{
+                fontFamily: theme.fontBold,
+                fontSize: 16,
+                color: theme.sectionHeadingColor,
+                marginBottom: 4,
+              }}
+            >
+              {title}
+            </Text>
+            <Text
+              style={{
+                fontFamily: theme.font,
+                fontSize: 13,
+                color: "hsl(0,0%,50%)",
+                lineHeight: 18,
+              }}
+            >
+              {description}
+            </Text>
+          </View>
+          <View
+            style={{
+              width: 36,
+              height: 36,
+              borderRadius: 10,
+              backgroundColor: "white",
+              alignItems: "center",
+              justifyContent: "center",
+              flexShrink: 0,
+            }}
+          >
+            <ExternalLink size={18} color={theme.red} strokeWidth={2} />
+          </View>
+        </View>
+      </Pressable>
+    </Animated.View>
+  );
+}
+
 const fetchHomePageImages = async () => {
   try {
     const response = await fetch(

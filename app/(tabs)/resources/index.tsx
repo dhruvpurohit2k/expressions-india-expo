@@ -1,4 +1,9 @@
-import Animated, { FadeInDown, FadeInLeft, FadeInUp, SlideInDown } from "react-native-reanimated";
+import Animated, {
+  FadeInDown,
+  FadeInLeft,
+  FadeInUp,
+  SlideInDown,
+} from "react-native-reanimated";
 import { useState } from "react";
 import {
   ActivityIndicator,
@@ -14,9 +19,10 @@ import { theme } from "@/src/theme";
 import { usePodcastQuery } from "@/src/hooks/usePodcastQuery";
 import { useJournalQuery } from "@/src/hooks/useJournalQuery";
 import { useArticleQuery } from "@/src/hooks/useArticleQuery";
-import { ChevronLeft, ChevronRight } from "lucide-react-native";
 import { Link } from "expo-router";
 import { format } from "date-fns";
+import { NavBar } from "@/src/components/NavBar";
+import Pagination from "@/src/components/Pagination";
 
 type Tab = "podcasts" | "journals" | "articles";
 
@@ -97,51 +103,13 @@ export default function Resources() {
     articleData?.meta?.totalPages ?? Math.ceil(articleTotal / LIMIT);
 
   return (
-    <SafeAreaView style={globalStyle.screen}>
-      <Animated.Text
-        entering={FadeInDown.duration(350)}
-        style={[globalStyle.sectionHeading, { marginHorizontal: 15 }]}
-      >
-        Resources
-      </Animated.Text>
-
-      <Animated.View
-        entering={FadeInDown.duration(350).delay(60)}
-        style={{
-          flexDirection: "row",
-          marginHorizontal: 15,
-          marginVertical: 10,
-          borderRadius: 10,
-          overflow: "hidden",
-          borderWidth: 1,
-          borderColor: theme.red,
-        }}
-      >
-        {TABS.map((tab) => (
-          <Pressable
-            key={tab.key}
-            onPress={() => setActiveTab(tab.key)}
-            style={{
-              flex: 1,
-              paddingVertical: 10,
-              alignItems: "center",
-              backgroundColor:
-                activeTab === tab.key ? theme.red : "transparent",
-            }}
-          >
-            <Text
-              style={{
-                color: activeTab === tab.key ? "white" : theme.red,
-                fontFamily: theme.fontBold,
-                fontSize: 14,
-              }}
-            >
-              {tab.label}
-            </Text>
-          </Pressable>
-        ))}
-      </Animated.View>
-
+    <SafeAreaView style={globalStyle.screen} edges={["top"]}>
+      <NavBar
+        title="Resources"
+        tabs={TABS}
+        currentTab={activeTab}
+        currentTabSetter={setActiveTab}
+      />
       {activeTab === "podcasts" && (
         <>
           {podcastError && (
@@ -234,87 +202,11 @@ export default function Resources() {
             />
           )}
 
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "space-between",
-              paddingHorizontal: 15,
-              paddingVertical: 12,
-              borderTopWidth: 1,
-              borderTopColor: theme.backgroundColorDark,
-            }}
-          >
-            <Pressable
-              onPress={() => setPodcastPage((p) => p - 1)}
-              disabled={podcastPage === 1}
-              style={({ pressed }) => [
-                {
-                  flexDirection: "row",
-                  alignItems: "center",
-                  backgroundColor: theme.red,
-                  paddingVertical: 8,
-                  paddingHorizontal: 14,
-                  borderRadius: 8,
-                  opacity: podcastPage === 1 ? 0.35 : 1,
-                },
-                pressed && { opacity: 0.75 },
-              ]}
-            >
-              <ChevronLeft size={18} color="white" strokeWidth={2.5} />
-              <Text
-                style={{
-                  color: "white",
-                  fontFamily: theme.fontBold,
-                  fontSize: 14,
-                  marginLeft: 2,
-                }}
-              >
-                Prev
-              </Text>
-            </Pressable>
-
-            <Text
-              style={{
-                color: theme.text,
-                fontFamily: theme.font,
-                fontSize: 14,
-              }}
-            >
-              {podcastTotalPages > 0
-                ? `${podcastPage} / ${podcastTotalPages}`
-                : "—"}
-            </Text>
-
-            <Pressable
-              onPress={() => setPodcastPage((p) => p + 1)}
-              disabled={podcastPage >= podcastTotalPages}
-              style={({ pressed }) => [
-                {
-                  flexDirection: "row",
-                  alignItems: "center",
-                  backgroundColor: theme.red,
-                  paddingVertical: 8,
-                  paddingHorizontal: 14,
-                  borderRadius: 8,
-                  opacity: podcastPage >= podcastTotalPages ? 0.35 : 1,
-                },
-                pressed && { opacity: 0.75 },
-              ]}
-            >
-              <Text
-                style={{
-                  color: "white",
-                  fontFamily: theme.fontBold,
-                  fontSize: 14,
-                  marginRight: 2,
-                }}
-              >
-                Next
-              </Text>
-              <ChevronRight size={18} color="white" strokeWidth={2.5} />
-            </Pressable>
-          </View>
+          <Pagination
+            page={podcastPage}
+            totalPages={podcastTotalPages}
+            setPage={setPodcastPage}
+          />
         </>
       )}
 
@@ -409,8 +301,12 @@ export default function Resources() {
               }
             />
           )}
-
-          <View
+          <Pagination
+            page={journalPage}
+            totalPages={journalTotalPages}
+            setPage={setJournalPage}
+          />
+          {/*<View
             style={{
               flexDirection: "row",
               alignItems: "center",
@@ -490,7 +386,7 @@ export default function Resources() {
               </Text>
               <ChevronRight size={18} color="white" strokeWidth={2.5} />
             </Pressable>
-          </View>
+          </View>*/}
         </>
       )}
       {activeTab === "articles" && (
@@ -644,87 +540,11 @@ export default function Resources() {
             />
           )}
 
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "space-between",
-              paddingHorizontal: 15,
-              paddingVertical: 12,
-              borderTopWidth: 1,
-              borderTopColor: theme.backgroundColorDark,
-            }}
-          >
-            <Pressable
-              onPress={() => setArticlePage((p) => p - 1)}
-              disabled={articlePage === 1}
-              style={({ pressed }) => [
-                {
-                  flexDirection: "row",
-                  alignItems: "center",
-                  backgroundColor: theme.red,
-                  paddingVertical: 8,
-                  paddingHorizontal: 14,
-                  borderRadius: 8,
-                  opacity: articlePage === 1 ? 0.35 : 1,
-                },
-                pressed && { opacity: 0.75 },
-              ]}
-            >
-              <ChevronLeft size={18} color="white" strokeWidth={2.5} />
-              <Text
-                style={{
-                  color: "white",
-                  fontFamily: theme.fontBold,
-                  fontSize: 14,
-                  marginLeft: 2,
-                }}
-              >
-                Prev
-              </Text>
-            </Pressable>
-
-            <Text
-              style={{
-                color: theme.text,
-                fontFamily: theme.font,
-                fontSize: 14,
-              }}
-            >
-              {articleTotalPages > 0
-                ? `${articlePage} / ${articleTotalPages}`
-                : "—"}
-            </Text>
-
-            <Pressable
-              onPress={() => setArticlePage((p) => p + 1)}
-              disabled={articlePage >= articleTotalPages}
-              style={({ pressed }) => [
-                {
-                  flexDirection: "row",
-                  alignItems: "center",
-                  backgroundColor: theme.red,
-                  paddingVertical: 8,
-                  paddingHorizontal: 14,
-                  borderRadius: 8,
-                  opacity: articlePage >= articleTotalPages ? 0.35 : 1,
-                },
-                pressed && { opacity: 0.75 },
-              ]}
-            >
-              <Text
-                style={{
-                  color: "white",
-                  fontFamily: theme.fontBold,
-                  fontSize: 14,
-                  marginRight: 2,
-                }}
-              >
-                Next
-              </Text>
-              <ChevronRight size={18} color="white" strokeWidth={2.5} />
-            </Pressable>
-          </View>
+          <Pagination
+            page={articlePage}
+            totalPages={articleTotalPages}
+            setPage={setArticlePage}
+          />
         </>
       )}
     </SafeAreaView>

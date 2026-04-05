@@ -155,125 +155,134 @@ function AboutTheOrg() {
 }
 
 function MissionAndVision() {
+  const items = [
+    "Towards Healthy, Happy and Harmonious Children of India.",
+    "Towards Aware, Responsible and Empowered Adolescents and Youth of India.",
+    "To bring together a large number of schools to have a face-to-face dialogue through various events, envisaging sustainable models of promoting the life skills and well-being programs in schools across the country.",
+    "Make the most of our human talent and potential.",
+    "Inform, educate, and inspire students and adolescents to reach their goals.",
+    "Create a positive environment that both challenges and supports people; and accomplish our goals faster and easier, with less stress and more enjoyment.",
+  ];
   return (
     <View style={[globalStyle.aboutCard, { width: screenWidth - 30 }]}>
       <Text style={globalStyle.sectionHeading}>Mission And Vision</Text>
-      <View
-        style={{
-          flex: 1,
-          justifyContent: "center",
-        }}
-      >
-        <ScrollView style={{ flex: 1 }}>
-          <View style={{ flexDirection: "row", gap: 10 }}>
-            <Text style={globalStyle.text}>1.</Text>
-            <Text style={[globalStyle.text, { flex: 1 }]}>
-              Towards Healthy, Happy and Harmonious Children of India.
+      <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
+        {items.map((item, i) => (
+          <View
+            key={i}
+            style={{
+              flexDirection: "row",
+              alignItems: "flex-start",
+              gap: 12,
+              backgroundColor: theme.backgroundColorLight,
+              borderRadius: 12,
+              padding: 14,
+              marginBottom: 10,
+              // elevation: 5,
+              shadowColor: "#000",
+              shadowOffset: { width: 0, height: 1 },
+              shadowOpacity: 0.06,
+              shadowRadius: 3,
+            }}
+          >
+            <View
+              style={{
+                width: 18,
+                height: 18,
+                borderRadius: 14,
+                backgroundColor: theme.red + "18",
+                alignItems: "center",
+                justifyContent: "center",
+                flexShrink: 0,
+                marginTop: 5,
+              }}
+            >
+              <Text
+                style={{
+                  fontFamily: theme.fontBold,
+                  fontSize: 10,
+                  color: "white",
+                }}
+              >
+                {i + 1}
+              </Text>
+            </View>
+            <Text
+              style={[
+                { fontSize: 16, color: theme.text, flex: 1, marginBottom: 0 },
+              ]}
+            >
+              {item}
             </Text>
           </View>
-          <View style={{ flexDirection: "row", gap: 10 }}>
-            <Text style={globalStyle.text}>2.</Text>
-            <Text style={[globalStyle.text, { flex: 1 }]}>
-              Towards Aware, Responsible and Empowered Adolescents and Youth of
-              India.
-            </Text>
-          </View>
-          <View style={{ flexDirection: "row", gap: 10 }}>
-            <Text style={globalStyle.text}>3.</Text>
-            <Text style={[globalStyle.text, { flex: 1 }]}>
-              To bring together a large number of schools to have a face-to-face
-              dialogue through various events, envisaging sustainable models of
-              promoting the life skills and well-being programs in schools
-              across the country.
-            </Text>
-          </View>
-          <View style={{ flexDirection: "row", gap: 10 }}>
-            <Text style={globalStyle.text}>4.</Text>
-            <Text style={[globalStyle.text, { flex: 1 }]}>
-              Make the most of our human talent and potential.
-            </Text>
-          </View>
-          <View style={{ flexDirection: "row", gap: 10 }}>
-            <Text style={globalStyle.text}>5.</Text>
-            <Text style={[globalStyle.text, { flex: 1 }]}>
-              Inform, educate, and inspire students and adolescents to reach
-              their goals.
-            </Text>
-          </View>
-          <View style={{ flexDirection: "row", gap: 10 }}>
-            <Text style={globalStyle.text}>6.</Text>
-            <Text style={[globalStyle.text, { flex: 1 }]}>
-              Create a positive environment that both challenges and supports
-              people; and accomplish our goals faster and easier, with less
-              stress and more enjoyment.
-            </Text>
-          </View>
-        </ScrollView>
-      </View>
+        ))}
+      </ScrollView>
     </View>
   );
 }
 
 function ObjectivesAndFocus() {
+  const items = [
+    "Student enrichment through best practices of Skills based Adolescent Life Skills, Mental Health, Safety and Wellbeing in Schools.",
+    "To ensure integration of School Safety, Nutrition and General Health concerns within the comprehensive school health curriculum along with contemporary gender issues.",
+    "To strengthen the peer to peer dialogue and school family partnership for promoting Life Skills, Mental Health and Wellbeing in Schools.",
+    "Voicing the student's psychosocial needs, fostering effective Young Leadership as Life Skills and Wellbeing Ambassadors.",
+    "Strengthen Capacity of Implementing Agencies for Project Management.",
+    "Youth Mental Health and University/College Counseling Services in India.",
+  ];
   return (
-    <View
-      style={[
-        globalStyle.aboutCard,
-        {
-          width: screenWidth - 30,
-        },
-      ]}
-    >
+    <View style={[globalStyle.aboutCard, { width: screenWidth - 30 }]}>
       <Text style={globalStyle.sectionHeading}>Objectives & Focus Areas</Text>
-      <ScrollView
-        style={{
-          paddingHorizontal: 10,
-          flex: 1,
-        }}
-      >
-        <View style={{ flexDirection: "row", gap: 10 }}>
-          <Text style={[globalStyle.text]}>1.</Text>
-          <Text style={[globalStyle.text, { flex: 1 }]}>
-            Student enrichment through best practices of Skills based Adolescent
-            Life Skills, Mental Health, Safety and Wellbeing in Schools.
-          </Text>
-        </View>
-        <View style={{ flexDirection: "row", gap: 10 }}>
-          <Text style={globalStyle.text}>2.</Text>
-          <Text style={[globalStyle.text, { flex: 1 }]}>
-            To ensure integration of School Safety, Nutrition and General Health
-            concerns within the comprehensive school health curriculum along
-            with contemporary gender issues.
-          </Text>
-        </View>
-        <View style={{ flexDirection: "row", gap: 10 }}>
-          <Text style={globalStyle.text}>3.</Text>
-          <Text style={[globalStyle.text, { flex: 1 }]}>
-            To strengthen the peer to peer dialogue and school family
-            partnership for promoting Life Skills, Mental Health and Wellbeing
-            in Schools.
-          </Text>
-        </View>
-        <View style={{ flexDirection: "row", gap: 10 }}>
-          <Text style={globalStyle.text}>4.</Text>
-          <Text style={[globalStyle.text, { flex: 1 }]}>
-            Voicing the {" student's "} psychosocial needs, fostering effective
-            Young Leadership as Life Skills and Wellbeing Ambassadors.
-          </Text>
-        </View>
-        <View style={{ flexDirection: "row", gap: 10 }}>
-          <Text style={globalStyle.text}>5.</Text>
-          <Text style={[globalStyle.text, { flex: 1 }]}>
-            Strengthen Capacity of Implementing Agencies for Project Management.
-          </Text>
-        </View>
-        <View style={{ flexDirection: "row", gap: 10 }}>
-          <Text style={globalStyle.text}>6.</Text>
-          <Text style={[globalStyle.text, { flex: 1 }]}>
-            Youth Mental Health and University/College Counseling Services in
-            India.
-          </Text>
-        </View>
+      <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
+        {items.map((item, i) => (
+          <View
+            key={i}
+            style={{
+              flexDirection: "row",
+              alignItems: "flex-start",
+              gap: 12,
+              backgroundColor: theme.backgroundColorLight,
+              borderRadius: 12,
+              padding: 14,
+              marginBottom: 10,
+              // elevation: 1,
+              // shadowColor: "#000",
+              // shadowOffset: { width: 0, height: 1 },
+              // shadowOpacity: 0.06,
+              // shadowRadius: 3,
+            }}
+          >
+            <View
+              style={{
+                width: 18,
+                height: 18,
+                borderRadius: 14,
+                backgroundColor: theme.red + "18",
+                alignItems: "center",
+                justifyContent: "center",
+                flexShrink: 0,
+                marginTop: 5,
+              }}
+            >
+              <Text
+                style={{
+                  fontFamily: theme.fontBold,
+                  fontSize: 10,
+                  color: "white",
+                }}
+              >
+                {i + 1}
+              </Text>
+            </View>
+            <Text
+              style={[
+                { fontSize: 16, color: theme.text, flex: 1, marginBottom: 0 },
+              ]}
+            >
+              {item}
+            </Text>
+          </View>
+        ))}
       </ScrollView>
     </View>
   );

@@ -1,11 +1,9 @@
 import AboutUs from "@/src/components/AboutUs";
 import Director from "@/src/components/Director";
-import Header from "@/src/components/Header";
 import Team from "@/src/components/Team";
+import { NavBar } from "@/src/components/NavBar";
 import { styleFactory } from "@/src/styleFactory";
-import { theme } from "@/src/theme";
 import { useState } from "react";
-import { View, Text, Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 type Tab = "aboutUs" | "meetDir" | "team";
@@ -15,60 +13,22 @@ const TABS: { key: Tab; label: string }[] = [
   { key: "meetDir", label: "Meet the Director" },
   { key: "team", label: "Team" },
 ];
+
 export default function About() {
   const globalStyle = styleFactory();
-  const [sectionNumber, setSectionNumber] = useState<number>(0);
   const [activeTab, setActiveTab] = useState<Tab>("aboutUs");
-  // const sectionMap: Record<number, React.JSX.Element> = {
-  //   0: <AboutUs />,
-  //   1: <Director />,
-  //   2: <Team />,
-  // };
+
   return (
     <SafeAreaView style={[globalStyle.screen]} edges={["top"]}>
-      <Text style={[globalStyle.sectionHeading, { marginHorizontal: 15 }]}>
-        Resources
-      </Text>
-
-      <View
-        style={{
-          flexDirection: "row",
-          marginHorizontal: 15,
-          marginVertical: 10,
-          borderRadius: 10,
-          overflow: "hidden",
-          borderWidth: 1,
-          borderColor: theme.red,
-        }}
-      >
-        {TABS.map((tab) => (
-          <Pressable
-            key={tab.key}
-            onPress={() => setActiveTab(tab.key)}
-            style={{
-              flex: 1,
-              paddingVertical: 10,
-              alignItems: "center",
-              backgroundColor:
-                activeTab === tab.key ? theme.red : "transparent",
-            }}
-          >
-            <Text
-              style={{
-                color: activeTab === tab.key ? "white" : theme.red,
-                fontFamily: theme.fontBold,
-                fontSize: 14,
-              }}
-            >
-              {tab.label}
-            </Text>
-          </Pressable>
-        ))}
-      </View>
+      <NavBar
+        title="About"
+        tabs={TABS}
+        currentTab={activeTab}
+        currentTabSetter={setActiveTab}
+      />
       {activeTab === "aboutUs" && <AboutUs />}
       {activeTab === "meetDir" && <Director />}
       {activeTab === "team" && <Team />}
     </SafeAreaView>
   );
-  // return <AboutUs />;
 }

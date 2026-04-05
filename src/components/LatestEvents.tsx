@@ -1,170 +1,115 @@
-import { View, Text, Pressable, StyleSheet } from "react-native";
+import { View, Text } from "react-native";
 import { theme } from "../theme";
-import { styleFactory } from "../styleFactory";
-import { Month } from "../utils";
-import { Link } from "expo-router";
+import { CalendarDays } from "lucide-react-native";
+import Animated, { FadeInDown } from "react-native-reanimated";
+
+const events = [
+  { title: "International Young Film Makers Festival", date: "25 Apr '26" },
+  { title: "MINDSMART", date: "1 May '26" },
+  { title: "POCSO Act, Child & Adolescent Wellbeing", date: "1 May '26" },
+  {
+    title: "First Aid, CPR Training & Emergency Care in Schools & Universities",
+    date: null,
+  },
+];
 
 export default function LatestEvents() {
-  const globalStyle = styleFactory();
-  // const { data: events, loading } = useLatestEvents();
   return (
-    <View style={[globalStyle.container]}>
-      <Text style={[globalStyle.sectionHeading]}>Latest Activites</Text>
-      <View style={[{ gap: 5, paddingVertical: 10 }]}>
+    <View style={{ paddingHorizontal: 15, marginTop: 24, marginBottom: 8 }}>
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          gap: 8,
+          marginBottom: 14,
+        }}
+      >
         <View
-          style={[
-            {
-              backgroundColor: theme.backgroundColorLight,
-              elevation: 1,
-              padding: 5,
-              borderRadius: 5,
-            },
-          ]}
+          style={{
+            width: 4,
+            height: 22,
+            backgroundColor: theme.red,
+            borderRadius: 2,
+          }}
+        />
+        <Text
+          style={{
+            fontSize: 20,
+            fontFamily: theme.fontBold,
+            color: theme.sectionHeadingColor,
+          }}
         >
-          <Text style={[globalStyle.text, styles.text, { fontSize: 14 }]}>
-            International Young Film Makers Festival{" "}
-          </Text>
-          <Text
-            style={[
-              globalStyle.text,
-              {
-                fontSize: 13,
-                color: theme.red,
-                alignSelf: "flex-end",
-                marginVertical: 0,
-              },
-            ]}
-          >
-            25 Apr 26
-          </Text>
-        </View>
-        <View
-          style={[
-            {
-              backgroundColor: theme.backgroundColorLight,
-              elevation: 1,
-              padding: 5,
-              borderRadius: 5,
-            },
-          ]}
-        >
-          <Text style={[globalStyle.text, styles.text, { fontSize: 14 }]}>
-            MINDSMART
-          </Text>
-          <Text
-            style={[
-              globalStyle.text,
-              {
-                fontSize: 13,
-                color: theme.red,
-                alignSelf: "flex-end",
-                marginVertical: 0,
-              },
-            ]}
-          >
-            1st May 26
-          </Text>
-        </View>
-        <View
-          style={[
-            {
-              backgroundColor: theme.backgroundColorLight,
-              elevation: 1,
-              padding: 5,
-              borderRadius: 5,
-            },
-          ]}
-        >
-          <Text style={[globalStyle.text, styles.text, { fontSize: 14 }]}>
-            POSCSO Act, Child & Adoescent Wellbeing
-          </Text>
-          <Text
-            style={[
-              globalStyle.text,
-              {
-                fontSize: 13,
-                alignSelf: "flex-end",
-                color: theme.red,
-                marginVertical: 0,
-              },
-            ]}
-          >
-            1st May 26
-          </Text>
-        </View>
-        <View
-          style={[
-            {
-              backgroundColor: theme.backgroundColorLight,
-              elevation: 1,
-              padding: 5,
-              borderRadius: 5,
-            },
-          ]}
-        >
-          <Text style={[globalStyle.text, styles.text, { fontSize: 14 }]}>
-            First Aid, Cpr Training & Emergencies Care in Schools & Universities
-          </Text>
-        </View>
+          Latest Activities
+        </Text>
       </View>
-      {/*{!loading &&
-        events &&
-        events.map((item, idx) => (
-          <View key={idx} style={{ marginVertical: 5 }}>
-            <Link href={`/event/${item.id}`} asChild>
-              <Pressable>
-                <View
+
+      <View style={{ gap: 8 }}>
+        {events.map((event, i) => (
+          <Animated.View
+            key={i}
+            entering={FadeInDown.duration(400).delay(i * 70)}
+            style={{
+              backgroundColor: theme.backgroundColorLight,
+              borderRadius: 12,
+              padding: 14,
+              flexDirection: "row",
+              alignItems: "center",
+              gap: 12,
+              shadowColor: "#000",
+              shadowOffset: { width: 0, height: 1 },
+              shadowOpacity: 0.06,
+              shadowRadius: 4,
+              elevation: 2,
+            }}
+          >
+            <View
+              style={{
+                width: 36,
+                height: 36,
+                borderRadius: 10,
+                backgroundColor: "white",
+                alignItems: "center",
+                justifyContent: "center",
+                flexShrink: 0,
+              }}
+            >
+              <CalendarDays size={18} color={theme.red} strokeWidth={2} />
+            </View>
+            <Text
+              style={{
+                flex: 1,
+                fontFamily: theme.font,
+                fontSize: 14,
+                color: theme.text,
+                lineHeight: 20,
+              }}
+            >
+              {event.title}
+            </Text>
+            {event.date && (
+              <View
+                style={{
+                  backgroundColor: "white",
+                  borderRadius: 6,
+                  paddingHorizontal: 8,
+                  paddingVertical: 4,
+                  flexShrink: 0,
+                }}
+              >
+                <Text
                   style={{
-                    paddingVertical: 5,
-                    paddingHorizontal: 10,
-                    borderRadius: 10,
-                    borderWidth: 1,
-                    borderColor: theme.backgroundColorLight,
-                    elevation: 2,
-                    backgroundColor: theme.backgroundColorLight,
+                    fontSize: 11,
+                    fontFamily: theme.fontBold,
+                    color: theme.red,
                   }}
                 >
-                  <Text style={[globalStyle.text]}>{item.title}</Text>
-                  <View
-                    style={{
-                      alignItems: "flex-end",
-                      flexDirection: "row",
-                      gap: 10,
-                    }}
-                  >
-                    <Text
-                      style={[globalStyle.text, { fontSize: 12 }]}
-                    >{`${item.startDate.getDate()} ${Month[item.startDate.getMonth()]} ${item.startDate.getFullYear()}`}</Text>
-                    {item.endDate && (
-                      <>
-                        <Text style={[globalStyle.text, { fontSize: 12 }]}>
-                          -
-                        </Text>
-                        <Text style={[globalStyle.text, { fontSize: 12 }]}>
-                          {`${item.endDate.getDate()} ${Month[item.endDate.getMonth()]} ${item.endDate.getFullYear()}`}
-                        </Text>
-                      </>
-                    )}
-                  </View>
-                </View>
-              </Pressable>
-            </Link>
-          </View>
-        ))}*/}
+                  {event.date}
+                </Text>
+              </View>
+            )}
+          </Animated.View>
+        ))}
+      </View>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    paddingHorizontal: 5,
-    backgroundColor: "#hsla(0, 0%, 98%,1)",
-    borderRadius: 10,
-    // elevation: 1,
-    // borderWidth: 1,
-    // borderColor: theme.backgroundColorDark,
-  },
-  text: {
-    color: theme.text,
-  },
-});

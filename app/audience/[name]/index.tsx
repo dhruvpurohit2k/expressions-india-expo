@@ -96,28 +96,30 @@ export default function AudiencePage() {
         showsVerticalScrollIndicator={false}
       >
         {/* Description */}
-        {isLoading ? (
-          <View style={{ marginVertical: 16 }}>
-            <ActivityIndicator size="small" color={theme.red} />
-          </View>
-        ) : audience?.introduction ? (
-          <Animated.Text
-            entering={FadeInDown.duration(400).delay(100)}
-            style={{
-              fontSize: 15,
-              fontFamily: theme.font,
-              color: theme.text,
-              lineHeight: 24,
-              marginBottom: 28,
-              marginTop: 8,
-              textAlign: "justify",
-            }}
-          >
-            {audience.introduction}
-          </Animated.Text>
-        ) : (
-          <View style={{ height: 24 }} />
-        )}
+        <View style={{ minHeight: 96 }}>
+          {isLoading ? (
+            <View style={{ marginVertical: 16 }}>
+              <ActivityIndicator size="small" color={theme.red} />
+            </View>
+          ) : audience?.introduction ? (
+            <Animated.Text
+              entering={FadeInDown.duration(400).delay(100)}
+              style={{
+                fontSize: 15,
+                fontFamily: theme.font,
+                color: theme.text,
+                lineHeight: 24,
+                marginBottom: 28,
+                marginTop: 8,
+                textAlign: "justify",
+              }}
+            >
+              {audience.introduction}
+            </Animated.Text>
+          ) : (
+            <View style={{ height: 24 }} />
+          )}
+        </View>
 
         {/* Divider */}
         <Animated.View

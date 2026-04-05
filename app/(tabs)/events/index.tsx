@@ -6,6 +6,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import UpcomingEvents from "@/src/components/UpcomingEvent";
 import CompletedEvents from "@/src/components/CompletedEvents";
 import Animated, { FadeInDown } from "react-native-reanimated";
+import { NavBar } from "@/src/components/NavBar";
 
 export default function Program() {
   const globalStyle = styleFactory();
@@ -21,7 +22,13 @@ export default function Program() {
       style={{ backgroundColor: theme.backgroundColorLight, flex: 1 }}
       edges={["top"]}
     >
-      <Animated.Text
+      <NavBar
+        title="Events"
+        tabs={TABS}
+        currentTab={activeTab}
+        currentTabSetter={setActiveTab}
+      />
+      {/*<Animated.Text
         entering={FadeInDown.duration(350)}
         style={[globalStyle.sectionHeading, { marginHorizontal: 15 }]}
       >
@@ -63,7 +70,7 @@ export default function Program() {
             </Text>
           </Pressable>
         ))}
-      </Animated.View>
+      </Animated.View>*/}
 
       {activeTab === "upcoming" ? <UpcomingEvents /> : <CompletedEvents />}
     </SafeAreaView>

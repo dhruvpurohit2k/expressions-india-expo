@@ -8,8 +8,8 @@ import {
 } from "react-native";
 import { styleFactory } from "../styleFactory";
 import { Link } from "expo-router";
-import { ChevronLeft, ChevronRight } from "lucide-react-native";
 import { theme } from "../theme";
+import Pagination from "./Pagination";
 import { usePastEventQuery } from "../hooks/usePastEventQuery";
 import { useState } from "react";
 import Animated, { FadeInUp, SlideInDown } from "react-native-reanimated";
@@ -174,66 +174,7 @@ export default function CompletedEvents() {
         />
       )}
 
-      <Animated.View
-        entering={FadeInUp.duration(350).delay(100)}
-        style={{
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "space-between",
-          paddingHorizontal: 15,
-          paddingVertical: 12,
-          borderTopWidth: 1,
-          borderTopColor: theme.backgroundColorDark,
-        }}
-      >
-        <Pressable
-          onPress={() => setPage((p) => p - 1)}
-          disabled={page === 1}
-          style={({ pressed }) => [
-            {
-              flexDirection: "row",
-              alignItems: "center",
-              backgroundColor: theme.red,
-              paddingVertical: 8,
-              paddingHorizontal: 14,
-              borderRadius: 8,
-              opacity: page === 1 ? 0.35 : 1,
-            },
-            pressed && { opacity: 0.75 },
-          ]}
-        >
-          <ChevronLeft size={18} color="white" strokeWidth={2.5} />
-          <Text style={{ color: "white", fontFamily: theme.fontBold, fontSize: 14, marginLeft: 2 }}>
-            Prev
-          </Text>
-        </Pressable>
-
-        <Text style={{ color: theme.text, fontFamily: theme.font, fontSize: 14 }}>
-          {totalPages > 0 ? `${page} / ${totalPages}` : "—"}
-        </Text>
-
-        <Pressable
-          onPress={() => setPage((p) => p + 1)}
-          disabled={page >= totalPages}
-          style={({ pressed }) => [
-            {
-              flexDirection: "row",
-              alignItems: "center",
-              backgroundColor: theme.red,
-              paddingVertical: 8,
-              paddingHorizontal: 14,
-              borderRadius: 8,
-              opacity: page >= totalPages ? 0.35 : 1,
-            },
-            pressed && { opacity: 0.75 },
-          ]}
-        >
-          <Text style={{ color: "white", fontFamily: theme.fontBold, fontSize: 14, marginRight: 2 }}>
-            Next
-          </Text>
-          <ChevronRight size={18} color="white" strokeWidth={2.5} />
-        </Pressable>
-      </Animated.View>
+      <Pagination page={page} totalPages={totalPages} setPage={setPage} />
     </>
   );
 }

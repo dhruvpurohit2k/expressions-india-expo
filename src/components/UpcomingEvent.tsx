@@ -11,11 +11,11 @@ import {
 } from "react-native";
 import { theme } from "../theme";
 import { Link } from "expo-router";
-import { ChevronLeft, ChevronRight } from "lucide-react-native";
 import { format } from "date-fns";
 import Animated, { FadeInUp, SlideInDown } from "react-native-reanimated";
+import Pagination from "./Pagination";
 
-const LIMIT = 7;
+const LIMIT = 2;
 
 function formatDate(date: Date) {
   return format(date, "do MMM - yy");
@@ -49,7 +49,9 @@ export default function UpcomingEvents() {
         </View>
       )}
       {isLoading ? (
-        <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <View
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        >
           <ActivityIndicator size="large" color={theme.red} />
         </View>
       ) : (
@@ -63,7 +65,11 @@ export default function UpcomingEvents() {
             marginTop: 16,
           }}
           renderItem={({ item, index }) => (
-            <Animated.View entering={SlideInDown.duration(500).delay(Math.min(index, 7) * 80)}>
+            <Animated.View
+              entering={SlideInDown.duration(500).delay(
+                Math.min(index, 7) * 80,
+              )}
+            >
               <Link href={`/event/${item.id}`} asChild>
                 <Pressable>
                   {({ pressed }) => (
@@ -72,14 +78,17 @@ export default function UpcomingEvents() {
                         {
                           backgroundColor: "hsl(0, 0%, 100%)",
                           borderRadius: 12,
-                          elevation: 3,
+                          elevation: 1,
                           shadowColor: "#000",
                           shadowOffset: { width: 0, height: 2 },
                           shadowOpacity: 0.08,
                           shadowRadius: 6,
                           overflow: "hidden",
                         },
-                        pressed && { opacity: 0.88, transform: [{ scale: 0.985 }] },
+                        pressed && {
+                          opacity: 0.88,
+                          transform: [{ scale: 0.985 }],
+                        },
                       ]}
                     >
                       {item.thumbnailUrl ? (
@@ -98,7 +107,13 @@ export default function UpcomingEvents() {
                             justifyContent: "center",
                           }}
                         >
-                          <Text style={{ color: "white", fontSize: 36, opacity: 0.6 }}>
+                          <Text
+                            style={{
+                              color: "white",
+                              fontSize: 36,
+                              opacity: 0.6,
+                            }}
+                          >
                             🌸
                           </Text>
                         </View>
@@ -183,67 +198,7 @@ export default function UpcomingEvents() {
           }
         />
       )}
-
-      <Animated.View
-        entering={FadeInUp.duration(350).delay(100)}
-        style={{
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "space-between",
-          paddingHorizontal: 15,
-          paddingVertical: 12,
-          borderTopWidth: 1,
-          borderTopColor: theme.backgroundColorDark,
-        }}
-      >
-        <Pressable
-          onPress={() => setPage((p) => p - 1)}
-          disabled={page === 1}
-          style={({ pressed }) => [
-            {
-              flexDirection: "row",
-              alignItems: "center",
-              backgroundColor: theme.red,
-              paddingVertical: 8,
-              paddingHorizontal: 14,
-              borderRadius: 8,
-              opacity: page === 1 ? 0.35 : 1,
-            },
-            pressed && { opacity: 0.75 },
-          ]}
-        >
-          <ChevronLeft size={18} color="white" strokeWidth={2.5} />
-          <Text style={{ color: "white", fontFamily: theme.fontBold, fontSize: 14, marginLeft: 2 }}>
-            Prev
-          </Text>
-        </Pressable>
-
-        <Text style={{ color: theme.text, fontFamily: theme.font, fontSize: 14 }}>
-          {totalPages > 0 ? `${page} / ${totalPages}` : "—"}
-        </Text>
-
-        <Pressable
-          onPress={() => setPage((p) => p + 1)}
-          disabled={page >= totalPages}
-          style={({ pressed }) => [
-            {
-              flexDirection: "row",
-              alignItems: "center",
-              backgroundColor: theme.red,
-              paddingVertical: 8,
-              paddingHorizontal: 14,
-              borderRadius: 8,
-              opacity: page >= totalPages ? 0.35 : 1,
-            },
-            pressed && { opacity: 0.75 },
-          ]}
-        >
-          <Text style={{ color: "white", fontFamily: theme.fontBold, fontSize: 14, marginRight: 2 }}>
-            Next
-          </Text>
-          <ChevronRight size={18} color="white" strokeWidth={2.5} />
-        </Pressable>
-      </Animated.View>
+      <Pagination page={page} totalPages={totalPages} setPage={setPage} />
     </>
   );
 }
