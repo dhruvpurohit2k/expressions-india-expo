@@ -1,11 +1,12 @@
 import { styleFactory } from "@/src/styleFactory";
 import { theme } from "@/src/theme";
 import { useState } from "react";
-
-import { View, Text, Pressable } from "react-native";
+import { Pressable, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import UpcomingEvents from "@/src/components/UpcomingEvent";
 import CompletedEvents from "@/src/components/CompletedEvents";
+import Animated, { FadeInDown } from "react-native-reanimated";
+
 export default function Program() {
   const globalStyle = styleFactory();
   type Tab = "upcoming" | "completed";
@@ -14,16 +15,21 @@ export default function Program() {
     { key: "completed", label: "Completed Events" },
   ];
   const [activeTab, setActiveTab] = useState<Tab>("upcoming");
+
   return (
     <SafeAreaView
       style={{ backgroundColor: theme.backgroundColorLight, flex: 1 }}
       edges={["top"]}
     >
-      <Text style={[globalStyle.sectionHeading, { marginHorizontal: 15 }]}>
-        Resources
-      </Text>
+      <Animated.Text
+        entering={FadeInDown.duration(350)}
+        style={[globalStyle.sectionHeading, { marginHorizontal: 15 }]}
+      >
+        Events
+      </Animated.Text>
 
-      <View
+      <Animated.View
+        entering={FadeInDown.duration(350).delay(70)}
         style={{
           flexDirection: "row",
           marginHorizontal: 15,
@@ -57,18 +63,9 @@ export default function Program() {
             </Text>
           </Pressable>
         ))}
-      </View>
+      </Animated.View>
+
       {activeTab === "upcoming" ? <UpcomingEvents /> : <CompletedEvents />}
-      {/*<Animated.ScrollView
-        style={[globalStyle.screen, { paddingHorizontal: 10 }]}
-      >
-        <Animated.View entering={SlideInLeft.duration(700).delay(50)}>
-          <UpcomingEvents />
-        </Animated.View>
-        <Animated.View entering={SlideInDown.duration(700).delay(200)}>
-          <PastEvents />
-        </Animated.View>
-      </Animated.ScrollView>*/}
     </SafeAreaView>
   );
 }

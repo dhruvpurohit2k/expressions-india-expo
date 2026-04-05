@@ -14,6 +14,7 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import Animated, { FadeInDown, FadeInUp, SlideInDown } from "react-native-reanimated";
 
 const LIMIT = 10;
 
@@ -35,7 +36,8 @@ export default function AudiencePodcasts() {
   return (
     <SafeAreaView style={globalStyle.screen}>
       {/* Header */}
-      <View
+      <Animated.View
+        entering={FadeInDown.duration(300)}
         style={{
           flexDirection: "row",
           alignItems: "center",
@@ -64,7 +66,7 @@ export default function AudiencePodcasts() {
         >
           Podcasts for {label}
         </Text>
-      </View>
+      </Animated.View>
 
       {error && (
         <Text style={{ color: theme.red, paddingHorizontal: 15 }}>
@@ -73,104 +75,77 @@ export default function AudiencePodcasts() {
       )}
 
       {isLoading ? (
-        <View
-          style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
-        >
+        <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
           <ActivityIndicator size="large" color={theme.red} />
         </View>
       ) : (
         <FlatList
           data={podcasts}
           keyExtractor={(item) => item.id}
-          contentContainerStyle={{
-            paddingHorizontal: 15,
-            gap: 10,
-            paddingBottom: 12,
-          }}
-          renderItem={({ item }) => (
-            <Link href={`/podcast/${item.id}`} asChild>
-              <Pressable>
-                {({ pressed }) => (
-                  <View
-                    style={[
-                      {
-                        backgroundColor: theme.backgroundColorLight,
-                        borderRadius: 10,
-                        overflow: "hidden",
-                        elevation: 1,
-                        padding: 10,
-                        flexDirection: "row",
-                        alignItems: "center",
-                      },
-                      pressed && {
-                        opacity: 0.85,
-                        transform: [{ scale: 0.99 }],
-                      },
-                    ]}
-                  >
-                    {/*<View
-                      style={{
-                        width: 72,
-                        height: 72,
-                        backgroundColor: "#f5f3ff",
-                        alignItems: "center",
-                        justifyContent: "center",
-                      }}
-                    >
-                      <Text style={{ fontSize: 28 }}>🎙️</Text>
-                    </View>*/}
+          contentContainerStyle={{ paddingHorizontal: 15, gap: 10, paddingBottom: 12 }}
+          renderItem={({ item, index }) => (
+            <Animated.View entering={SlideInDown.duration(450).delay(Math.min(index, 8) * 70)}>
+              <Link href={`/podcast/${item.id}`} asChild>
+                <Pressable>
+                  {({ pressed }) => (
                     <View
-                      style={{
-                        flex: 1,
-                        padding: 10,
-                        justifyContent: "space-between",
-                      }}
+                      style={[
+                        {
+                          backgroundColor: theme.backgroundColorLight,
+                          borderRadius: 10,
+                          overflow: "hidden",
+                          elevation: 1,
+                          padding: 10,
+                          flexDirection: "row",
+                          alignItems: "center",
+                        },
+                        pressed && { opacity: 0.85, transform: [{ scale: 0.99 }] },
+                      ]}
                     >
-                      <Text
-                        numberOfLines={2}
-                        style={{
-                          fontSize: 14,
-                          fontFamily: theme.fontBold,
-                          color: "hsl(0,0%,20%)",
-                          lineHeight: 19,
-                        }}
-                      >
-                        {item.title}
-                      </Text>
-                      <Text
-                        style={{
-                          fontSize: 10,
-                          color: "hsl(0,0%,55%)",
-                          fontFamily: theme.font,
-                          marginTop: 6,
-                        }}
-                      >
-                        {format(item.createdAt, "do MMM yyyy")}
-                      </Text>
+                      <View style={{ flex: 1, justifyContent: "space-between" }}>
+                        <Text
+                          numberOfLines={2}
+                          style={{
+                            fontSize: 14,
+                            fontFamily: theme.fontBold,
+                            color: "hsl(0,0%,20%)",
+                            lineHeight: 19,
+                          }}
+                        >
+                          {item.title}
+                        </Text>
+                        <Text
+                          style={{
+                            fontSize: 10,
+                            color: "hsl(0,0%,55%)",
+                            fontFamily: theme.font,
+                            marginTop: 6,
+                          }}
+                        >
+                          {format(item.createdAt, "do MMM yyyy")}
+                        </Text>
+                      </View>
+                      <ChevronRight size={18} color="hsl(0,0%,70%)" strokeWidth={2} style={{ marginLeft: 8 }} />
                     </View>
-                    <ChevronRight
-                      size={18}
-                      color="hsl(0,0%,70%)"
-                      strokeWidth={2}
-                      style={{ marginRight: 10 }}
-                    />
-                  </View>
-                )}
-              </Pressable>
-            </Link>
+                  )}
+                </Pressable>
+              </Link>
+            </Animated.View>
           )}
           ListEmptyComponent={
-            <Text
+            <Animated.Text
+              entering={FadeInUp.duration(400).delay(200)}
               style={[globalStyle.text, { textAlign: "center", marginTop: 40 }]}
             >
               No podcasts for {label}.
-            </Text>
+            </Animated.Text>
           }
         />
       )}
 
       {totalPages > 1 && (
-        <View
+        <Animated.View
+          entering={FadeInUp.duration(350).delay(100)}
           style={{
             flexDirection: "row",
             alignItems: "center",
@@ -185,64 +160,28 @@ export default function AudiencePodcasts() {
             onPress={() => setPage((p) => p - 1)}
             disabled={page === 1}
             style={({ pressed }) => [
-              {
-                flexDirection: "row",
-                alignItems: "center",
-                backgroundColor: theme.red,
-                paddingVertical: 8,
-                paddingHorizontal: 14,
-                borderRadius: 8,
-                opacity: page === 1 ? 0.35 : 1,
-              },
+              { flexDirection: "row", alignItems: "center", backgroundColor: theme.red, paddingVertical: 8, paddingHorizontal: 14, borderRadius: 8, opacity: page === 1 ? 0.35 : 1 },
               pressed && { opacity: 0.75 },
             ]}
           >
             <ChevronLeft size={18} color="white" strokeWidth={2.5} />
-            <Text
-              style={{
-                color: "white",
-                fontFamily: theme.fontBold,
-                fontSize: 14,
-                marginLeft: 2,
-              }}
-            >
-              Prev
-            </Text>
+            <Text style={{ color: "white", fontFamily: theme.fontBold, fontSize: 14, marginLeft: 2 }}>Prev</Text>
           </Pressable>
-          <Text
-            style={{ color: theme.text, fontFamily: theme.font, fontSize: 14 }}
-          >
+          <Text style={{ color: theme.text, fontFamily: theme.font, fontSize: 14 }}>
             {page} / {totalPages}
           </Text>
           <Pressable
             onPress={() => setPage((p) => p + 1)}
             disabled={page >= totalPages}
             style={({ pressed }) => [
-              {
-                flexDirection: "row",
-                alignItems: "center",
-                backgroundColor: theme.red,
-                paddingVertical: 8,
-                paddingHorizontal: 14,
-                borderRadius: 8,
-                opacity: page >= totalPages ? 0.35 : 1,
-              },
+              { flexDirection: "row", alignItems: "center", backgroundColor: theme.red, paddingVertical: 8, paddingHorizontal: 14, borderRadius: 8, opacity: page >= totalPages ? 0.35 : 1 },
               pressed && { opacity: 0.75 },
             ]}
           >
-            <Text
-              style={{
-                color: "white",
-                fontFamily: theme.fontBold,
-                fontSize: 14,
-                marginRight: 2,
-              }}
-            >
-              Next
-            </Text>
+            <Text style={{ color: "white", fontFamily: theme.fontBold, fontSize: 14, marginRight: 2 }}>Next</Text>
             <ChevronRight size={18} color="white" strokeWidth={2.5} />
           </Pressable>
-        </View>
+        </Animated.View>
       )}
     </SafeAreaView>
   );

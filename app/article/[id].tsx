@@ -14,6 +14,7 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import Animated, { FadeInDown, FadeInUp, SlideInRight } from "react-native-reanimated";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
@@ -25,15 +26,10 @@ export default function ArticleDetail() {
   if (isLoading) {
     return (
       <SafeAreaView
-        style={[
-          globalStyle.screen,
-          { alignItems: "center", justifyContent: "center" },
-        ]}
+        style={[globalStyle.screen, { alignItems: "center", justifyContent: "center" }]}
       >
         <ActivityIndicator size="large" color={theme.red} />
-        <Text style={[globalStyle.text, { marginTop: 12 }]}>
-          Loading article...
-        </Text>
+        <Text style={[globalStyle.text, { marginTop: 12 }]}>Loading article...</Text>
       </SafeAreaView>
     );
   }
@@ -41,10 +37,7 @@ export default function ArticleDetail() {
   if (error || !article) {
     return (
       <SafeAreaView
-        style={[
-          globalStyle.screen,
-          { alignItems: "center", justifyContent: "center", padding: 20 },
-        ]}
+        style={[globalStyle.screen, { alignItems: "center", justifyContent: "center", padding: 20 }]}
       >
         <Text style={[globalStyle.sectionHeading, { textAlign: "center" }]}>
           {error ? "Could not load article" : "Article not found"}
@@ -55,8 +48,6 @@ export default function ArticleDetail() {
 
   const coverImage = article.medias[0] ?? null;
   const extraImages = article.medias.slice(1);
-
-  // Split content into paragraphs for nicer rendering
   const paragraphs = article.content
     .split(/\n\n+/)
     .map((p) => p.trim())
@@ -65,7 +56,8 @@ export default function ArticleDetail() {
   return (
     <SafeAreaView style={globalStyle.screen}>
       {/* Back button */}
-      <View
+      <Animated.View
+        entering={FadeInDown.duration(300)}
         style={{
           flexDirection: "row",
           alignItems: "center",
@@ -76,38 +68,34 @@ export default function ArticleDetail() {
         <Pressable
           onPress={() => router.back()}
           style={({ pressed }) => [
-            {
-              padding: 6,
-              borderRadius: 8,
-              backgroundColor: "hsl(0, 0%, 95%)",
-            },
+            { padding: 6, borderRadius: 8, backgroundColor: "hsl(0, 0%, 95%)" },
             pressed && { opacity: 0.7 },
           ]}
         >
           <ChevronLeft size={24} color={theme.text} strokeWidth={2} />
         </Pressable>
-      </View>
+      </Animated.View>
 
-      <ScrollView
-        contentContainerStyle={{ paddingBottom: 48 }}
-        showsVerticalScrollIndicator={false}
-      >
+      <ScrollView contentContainerStyle={{ paddingBottom: 48 }} showsVerticalScrollIndicator={false}>
         {/* Cover image */}
         {coverImage && (
-          <Image
-            source={{ uri: coverImage.url }}
-            style={{
-              width: SCREEN_WIDTH,
-              height: SCREEN_WIDTH * 0.6,
-              resizeMode: "cover",
-              backgroundColor: theme.backgroundColorDark,
-            }}
-          />
+          <Animated.View entering={SlideInRight.duration(500)}>
+            <Image
+              source={{ uri: coverImage.url }}
+              style={{
+                width: SCREEN_WIDTH,
+                height: SCREEN_WIDTH * 0.6,
+                resizeMode: "cover",
+                backgroundColor: theme.backgroundColorDark,
+              }}
+            />
+          </Animated.View>
         )}
 
         <View style={{ paddingHorizontal: 18, paddingTop: 20 }}>
           {/* Category chip */}
-          <View
+          <Animated.View
+            entering={FadeInDown.duration(400).delay(100)}
             style={{
               alignSelf: "flex-start",
               backgroundColor: theme.red + "18",
@@ -128,10 +116,11 @@ export default function ArticleDetail() {
             >
               {article.category}
             </Text>
-          </View>
+          </Animated.View>
 
           {/* Title */}
-          <Text
+          <Animated.Text
+            entering={FadeInDown.duration(450).delay(160)}
             style={{
               fontSize: 26,
               fontFamily: theme.fontBold,
@@ -141,10 +130,11 @@ export default function ArticleDetail() {
             }}
           >
             {article.title}
-          </Text>
+          </Animated.Text>
 
           {/* Date */}
-          <Text
+          <Animated.Text
+            entering={FadeInDown.duration(400).delay(220)}
             style={{
               fontSize: 12,
               color: "hsl(0,0%,55%)",
@@ -153,10 +143,11 @@ export default function ArticleDetail() {
             }}
           >
             {format(article.createdAt, "do MMMM yyyy")}
-          </Text>
+          </Animated.Text>
 
           {/* Divider */}
-          <View
+          <Animated.View
+            entering={FadeInDown.duration(400).delay(280)}
             style={{
               height: 2,
               width: 40,
@@ -168,8 +159,9 @@ export default function ArticleDetail() {
 
           {/* Content paragraphs */}
           {paragraphs.map((para, i) => (
-            <Text
+            <Animated.Text
               key={i}
+              entering={FadeInUp.duration(450).delay(300 + i * 60)}
               style={{
                 fontSize: 15,
                 color: theme.text,
@@ -180,12 +172,12 @@ export default function ArticleDetail() {
               }}
             >
               {para}
-            </Text>
+            </Animated.Text>
           ))}
 
           {/* Extra images gallery */}
           {extraImages.length > 0 && (
-            <View style={{ marginTop: 8 }}>
+            <Animated.View entering={FadeInUp.duration(450).delay(400)} style={{ marginTop: 8 }}>
               <Text
                 style={{
                   fontSize: 13,
@@ -198,13 +190,7 @@ export default function ArticleDetail() {
               >
                 Photos
               </Text>
-              <View
-                style={{
-                  flexDirection: "row",
-                  flexWrap: "wrap",
-                  gap: 6,
-                }}
-              >
+              <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 6 }}>
                 {extraImages.map((m) => (
                   <Image
                     key={m.id}
@@ -219,7 +205,7 @@ export default function ArticleDetail() {
                   />
                 ))}
               </View>
-            </View>
+            </Animated.View>
           )}
         </View>
       </ScrollView>

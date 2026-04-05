@@ -15,6 +15,7 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import Animated, { FadeInDown, FadeInUp, SlideInDown } from "react-native-reanimated";
 
 const LIMIT = 10;
 
@@ -36,7 +37,8 @@ export default function AudienceEvents() {
   return (
     <SafeAreaView style={globalStyle.screen}>
       {/* Header */}
-      <View
+      <Animated.View
+        entering={FadeInDown.duration(300)}
         style={{
           flexDirection: "row",
           alignItems: "center",
@@ -65,7 +67,7 @@ export default function AudienceEvents() {
         >
           Events for {label}
         </Text>
-      </View>
+      </Animated.View>
 
       {error && (
         <Text style={{ color: theme.red, paddingHorizontal: 15 }}>
@@ -74,154 +76,98 @@ export default function AudienceEvents() {
       )}
 
       {isLoading ? (
-        <View
-          style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
-        >
+        <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
           <ActivityIndicator size="large" color={theme.red} />
         </View>
       ) : (
         <FlatList
           data={events}
           keyExtractor={(item) => item.id}
-          contentContainerStyle={{
-            paddingHorizontal: 15,
-            gap: 10,
-            paddingBottom: 12,
-          }}
-          renderItem={({ item }) => (
-            <Link href={`/event/${item.id}`} asChild>
-              <Pressable>
-                {({ pressed }) => (
-                  <View
-                    style={[
-                      {
-                        backgroundColor: theme.backgroundColorLight,
-                        borderRadius: 10,
-                        gap: 10,
-                        overflow: "hidden",
-                        elevation: 1,
-                        paddingVertical: 10,
-                        paddingHorizontal: 15,
-                        flexDirection: "row",
-                      },
-                      pressed && {
-                        opacity: 0.85,
-                        transform: [{ scale: 0.99 }],
-                      },
-                    ]}
-                  >
-                    {item.thumbnailUrl ? (
-                      <Image
-                        source={{ uri: item.thumbnailUrl }}
-                        style={{ width: 80, height: 80, resizeMode: "cover" }}
-                      />
-                    ) : (
-                      <View
-                        style={{
-                          width: 80,
-                          height: 80,
-                          backgroundColor: theme.backgroundColorDark,
-                          alignItems: "center",
-                          justifyContent: "center",
-                        }}
-                      >
-                        <Text style={{ fontSize: 24 }}>📅</Text>
-                      </View>
-                    )}
+          contentContainerStyle={{ paddingHorizontal: 15, gap: 10, paddingBottom: 12 }}
+          renderItem={({ item, index }) => (
+            <Animated.View entering={SlideInDown.duration(450).delay(Math.min(index, 8) * 70)}>
+              <Link href={`/event/${item.id}`} asChild>
+                <Pressable>
+                  {({ pressed }) => (
                     <View
-                      style={{
-                        flex: 1,
-                        padding: 10,
-                        justifyContent: "space-between",
-                      }}
-                    >
-                      <Text
-                        numberOfLines={2}
-                        style={{
-                          fontSize: 14,
-                          fontFamily: theme.fontBold,
-                          color: "hsl(0,0%,20%)",
-                          lineHeight: 19,
-                        }}
-                      >
-                        {item.title}
-                      </Text>
-                      <View
-                        style={{
+                      style={[
+                        {
+                          backgroundColor: theme.backgroundColorLight,
+                          borderRadius: 10,
+                          overflow: "hidden",
+                          elevation: 1,
                           flexDirection: "row",
-                          gap: 8,
-                          alignItems: "center",
-                        }}
-                      >
-                        <Text
+                        },
+                        pressed && { opacity: 0.85, transform: [{ scale: 0.99 }] },
+                      ]}
+                    >
+                      {item.thumbnailUrl ? (
+                        <Image
+                          source={{ uri: item.thumbnailUrl }}
+                          style={{ width: 80, height: 80, resizeMode: "cover" }}
+                        />
+                      ) : (
+                        <View
                           style={{
-                            fontSize: 11,
-                            color: "hsl(0,0%,55%)",
-                            fontFamily: theme.font,
+                            width: 80,
+                            height: 80,
+                            backgroundColor: theme.backgroundColorDark,
+                            alignItems: "center",
+                            justifyContent: "center",
                           }}
                         >
-                          {format(item.startDate, "do MMM yyyy")}
+                          <Text style={{ fontSize: 24 }}>📅</Text>
+                        </View>
+                      )}
+                      <View style={{ flex: 1, padding: 10, justifyContent: "space-between" }}>
+                        <Text
+                          numberOfLines={2}
+                          style={{
+                            fontSize: 14,
+                            fontFamily: theme.fontBold,
+                            color: "hsl(0,0%,20%)",
+                            lineHeight: 19,
+                          }}
+                        >
+                          {item.title}
                         </Text>
-                        {item.isOnline && (
-                          <View
-                            style={{
-                              backgroundColor: "#eff6ff",
-                              borderRadius: 20,
-                              paddingHorizontal: 7,
-                              paddingVertical: 2,
-                            }}
-                          >
-                            <Text
-                              style={{
-                                fontSize: 10,
-                                color: "#3b82f6",
-                                fontFamily: theme.fontBold,
-                              }}
-                            >
-                              Online
-                            </Text>
-                          </View>
-                        )}
-                        {item.isPaid && (
-                          <View
-                            style={{
-                              backgroundColor: "#fef3c7",
-                              borderRadius: 20,
-                              paddingHorizontal: 7,
-                              paddingVertical: 2,
-                            }}
-                          >
-                            <Text
-                              style={{
-                                fontSize: 10,
-                                color: "#d97706",
-                                fontFamily: theme.fontBold,
-                              }}
-                            >
-                              Paid
-                            </Text>
-                          </View>
-                        )}
+                        <View style={{ flexDirection: "row", gap: 8, alignItems: "center" }}>
+                          <Text style={{ fontSize: 11, color: "hsl(0,0%,55%)", fontFamily: theme.font }}>
+                            {format(item.startDate, "do MMM yyyy")}
+                          </Text>
+                          {item.isOnline && (
+                            <View style={{ backgroundColor: "#eff6ff", borderRadius: 20, paddingHorizontal: 7, paddingVertical: 2 }}>
+                              <Text style={{ fontSize: 10, color: "#3b82f6", fontFamily: theme.fontBold }}>Online</Text>
+                            </View>
+                          )}
+                          {item.isPaid && (
+                            <View style={{ backgroundColor: "#fef3c7", borderRadius: 20, paddingHorizontal: 7, paddingVertical: 2 }}>
+                              <Text style={{ fontSize: 10, color: "#d97706", fontFamily: theme.fontBold }}>Paid</Text>
+                            </View>
+                          )}
+                        </View>
                       </View>
                     </View>
-                  </View>
-                )}
-              </Pressable>
-            </Link>
+                  )}
+                </Pressable>
+              </Link>
+            </Animated.View>
           )}
           ListEmptyComponent={
-            <Text
+            <Animated.Text
+              entering={FadeInUp.duration(400).delay(200)}
               style={[globalStyle.text, { textAlign: "center", marginTop: 40 }]}
             >
               No upcoming events for {label}.
-            </Text>
+            </Animated.Text>
           }
         />
       )}
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <View
+        <Animated.View
+          entering={FadeInUp.duration(350).delay(100)}
           style={{
             flexDirection: "row",
             alignItems: "center",
@@ -236,64 +182,28 @@ export default function AudienceEvents() {
             onPress={() => setPage((p) => p - 1)}
             disabled={page === 1}
             style={({ pressed }) => [
-              {
-                flexDirection: "row",
-                alignItems: "center",
-                backgroundColor: theme.red,
-                paddingVertical: 8,
-                paddingHorizontal: 14,
-                borderRadius: 8,
-                opacity: page === 1 ? 0.35 : 1,
-              },
+              { flexDirection: "row", alignItems: "center", backgroundColor: theme.red, paddingVertical: 8, paddingHorizontal: 14, borderRadius: 8, opacity: page === 1 ? 0.35 : 1 },
               pressed && { opacity: 0.75 },
             ]}
           >
             <ChevronLeft size={18} color="white" strokeWidth={2.5} />
-            <Text
-              style={{
-                color: "white",
-                fontFamily: theme.fontBold,
-                fontSize: 14,
-                marginLeft: 2,
-              }}
-            >
-              Prev
-            </Text>
+            <Text style={{ color: "white", fontFamily: theme.fontBold, fontSize: 14, marginLeft: 2 }}>Prev</Text>
           </Pressable>
-          <Text
-            style={{ color: theme.text, fontFamily: theme.font, fontSize: 14 }}
-          >
+          <Text style={{ color: theme.text, fontFamily: theme.font, fontSize: 14 }}>
             {page} / {totalPages}
           </Text>
           <Pressable
             onPress={() => setPage((p) => p + 1)}
             disabled={page >= totalPages}
             style={({ pressed }) => [
-              {
-                flexDirection: "row",
-                alignItems: "center",
-                backgroundColor: theme.red,
-                paddingVertical: 8,
-                paddingHorizontal: 14,
-                borderRadius: 8,
-                opacity: page >= totalPages ? 0.35 : 1,
-              },
+              { flexDirection: "row", alignItems: "center", backgroundColor: theme.red, paddingVertical: 8, paddingHorizontal: 14, borderRadius: 8, opacity: page >= totalPages ? 0.35 : 1 },
               pressed && { opacity: 0.75 },
             ]}
           >
-            <Text
-              style={{
-                color: "white",
-                fontFamily: theme.fontBold,
-                fontSize: 14,
-                marginRight: 2,
-              }}
-            >
-              Next
-            </Text>
+            <Text style={{ color: "white", fontFamily: theme.fontBold, fontSize: 14, marginRight: 2 }}>Next</Text>
             <ChevronRight size={18} color="white" strokeWidth={2.5} />
           </Pressable>
-        </View>
+        </Animated.View>
       )}
     </SafeAreaView>
   );

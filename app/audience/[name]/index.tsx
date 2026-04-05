@@ -12,6 +12,7 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import Animated, { FadeInDown, FadeInUp, SlideInDown } from "react-native-reanimated";
 
 const SECTION_CARDS = [
   {
@@ -50,7 +51,8 @@ export default function AudiencePage() {
   return (
     <SafeAreaView style={globalStyle.screen}>
       {/* Back */}
-      <View
+      <Animated.View
+        entering={FadeInDown.duration(300)}
         style={[
           {
             flexDirection: "row",
@@ -87,21 +89,20 @@ export default function AudiencePage() {
         >
           {label}
         </Text>
-      </View>
+      </Animated.View>
 
       <ScrollView
         contentContainerStyle={{ paddingHorizontal: 18, paddingBottom: 48 }}
         showsVerticalScrollIndicator={false}
       >
-        {/* Title */}
-
         {/* Description */}
         {isLoading ? (
           <View style={{ marginVertical: 16 }}>
             <ActivityIndicator size="small" color={theme.red} />
           </View>
         ) : audience?.introduction ? (
-          <Text
+          <Animated.Text
+            entering={FadeInDown.duration(400).delay(100)}
             style={{
               fontSize: 15,
               fontFamily: theme.font,
@@ -113,13 +114,14 @@ export default function AudiencePage() {
             }}
           >
             {audience.introduction}
-          </Text>
+          </Animated.Text>
         ) : (
           <View style={{ height: 24 }} />
         )}
 
         {/* Divider */}
-        <View
+        <Animated.View
+          entering={FadeInDown.duration(400).delay(200)}
           style={{
             height: 2,
             width: 40,
@@ -130,7 +132,8 @@ export default function AudiencePage() {
         />
 
         {/* "Here's what we have for you" */}
-        <Text
+        <Animated.Text
+          entering={FadeInDown.duration(400).delay(250)}
           style={{
             fontSize: 18,
             fontFamily: theme.fontBold,
@@ -139,76 +142,75 @@ export default function AudiencePage() {
           }}
         >
           Here's what we have for you
-        </Text>
+        </Animated.Text>
 
         {/* Section cards */}
-        {SECTION_CARDS.map((card) => {
+        {SECTION_CARDS.map((card, index) => {
           const Icon = card.icon;
           return (
-            <Link key={card.key} href={`/audience/${name}/${card.key}`} asChild>
-              <Pressable>
-                {({ pressed }) => (
-                  <View
-                    style={[
-                      {
-                        alignItems: "center",
-                        backgroundColor: theme.backgroundColorLight,
-                        borderRadius: 18,
-                        paddingVertical: 28,
-                        paddingHorizontal: 20,
-                        marginBottom: 14,
-                        // borderWidth: 1,
-                        // borderColor: "rgba(0,0,0,0.07)",
-                        elevation: 1,
-                        // shadowColor: "#000",
-                        // shadowOffset: { width: 0, height: 2 },
-                        // shadowOpacity: 0.1,
-                        // shadowRadius: 6,
-                      },
-                      pressed && {
-                        opacity: 0.88,
-                        transform: [{ scale: 0.97 }],
-                      },
-                    ]}
-                  >
+            <Animated.View
+              key={card.key}
+              entering={SlideInDown.duration(450).delay(index * 100)}
+            >
+              <Link href={`/audience/${name}/${card.key}`} asChild>
+                <Pressable>
+                  {({ pressed }) => (
                     <View
-                      style={{
-                        width: 72,
-                        height: 72,
-                        borderRadius: 36,
-                        backgroundColor: card.bg,
-                        alignItems: "center",
-                        justifyContent: "center",
-                        marginBottom: 14,
-                      }}
+                      style={[
+                        {
+                          alignItems: "center",
+                          backgroundColor: theme.backgroundColorLight,
+                          borderRadius: 18,
+                          paddingVertical: 28,
+                          paddingHorizontal: 20,
+                          marginBottom: 14,
+                          elevation: 1,
+                        },
+                        pressed && {
+                          opacity: 0.88,
+                          transform: [{ scale: 0.97 }],
+                        },
+                      ]}
                     >
-                      <Icon size={34} color={card.color} strokeWidth={1.6} />
+                      <View
+                        style={{
+                          width: 72,
+                          height: 72,
+                          borderRadius: 36,
+                          backgroundColor: card.bg,
+                          alignItems: "center",
+                          justifyContent: "center",
+                          marginBottom: 14,
+                        }}
+                      >
+                        <Icon size={34} color={card.color} strokeWidth={1.6} />
+                      </View>
+                      <Text
+                        style={{
+                          fontSize: 18,
+                          fontFamily: theme.fontBold,
+                          color: theme.sectionHeadingColor,
+                          marginBottom: 6,
+                          textAlign: "center",
+                        }}
+                      >
+                        {card.label}
+                      </Text>
+                      <Text
+                        style={{
+                          fontSize: 13,
+                          fontFamily: theme.font,
+                          color: "hsl(0,0%,55%)",
+                          textAlign: "center",
+                        }}
+                      >
+                        {card.description}
+                      </Text>
                     </View>
-                    <Text
-                      style={{
-                        fontSize: 18,
-                        fontFamily: theme.fontBold,
-                        color: theme.sectionHeadingColor,
-                        marginBottom: 6,
-                        textAlign: "center",
-                      }}
-                    >
-                      {card.label}
-                    </Text>
-                    <Text
-                      style={{
-                        fontSize: 13,
-                        fontFamily: theme.font,
-                        color: "hsl(0,0%,55%)",
-                        textAlign: "center",
-                      }}
-                    >
-                      {card.description}
-                    </Text>
-                  </View>
-                )}
-              </Pressable>
-            </Link>
+                  )}
+                </Pressable>
+              </Link>
+            </Animated.View>
           );
         })}
       </ScrollView>

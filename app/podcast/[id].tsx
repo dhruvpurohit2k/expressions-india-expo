@@ -6,10 +6,10 @@ import { ChevronLeft } from "lucide-react-native";
 import { ActivityIndicator, Pressable, ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { WebView } from "react-native-webview";
+import Animated, { FadeInDown, FadeInUp } from "react-native-reanimated";
 
 function getYouTubeEmbedUrl(link: string): string | null {
   let videoId: string | null = null;
-
   try {
     const url = new URL(link);
     if (url.hostname.includes("youtube.com")) {
@@ -20,7 +20,6 @@ function getYouTubeEmbedUrl(link: string): string | null {
   } catch {
     return null;
   }
-
   if (!videoId) return null;
   return `https://www.youtube.com/embed/${videoId}?modestbranding=1&rel=0&showinfo=0&controls=1&disablekb=1&fs=0&iv_load_policy=3&playsinline=1`;
 }
@@ -32,9 +31,7 @@ export default function PodcastDetail() {
 
   if (isLoading) {
     return (
-      <SafeAreaView
-        style={[globalStyle.screen, { alignItems: "center", justifyContent: "center" }]}
-      >
+      <SafeAreaView style={[globalStyle.screen, { alignItems: "center", justifyContent: "center" }]}>
         <ActivityIndicator size="large" color={theme.red} />
         <Text style={globalStyle.text}>Loading podcast...</Text>
       </SafeAreaView>
@@ -43,9 +40,7 @@ export default function PodcastDetail() {
 
   if (error || !podcast) {
     return (
-      <SafeAreaView
-        style={[globalStyle.screen, { alignItems: "center", justifyContent: "center", padding: 20 }]}
-      >
+      <SafeAreaView style={[globalStyle.screen, { alignItems: "center", justifyContent: "center", padding: 20 }]}>
         <Text style={[globalStyle.sectionHeading, { textAlign: "center" }]}>
           {error ? "Could not load podcast" : "Podcast not found"}
         </Text>
@@ -65,7 +60,8 @@ export default function PodcastDetail() {
 
   return (
     <SafeAreaView style={globalStyle.screen}>
-      <View
+      <Animated.View
+        entering={FadeInDown.duration(300)}
         style={{
           flexDirection: "row",
           alignItems: "center",
@@ -76,33 +72,28 @@ export default function PodcastDetail() {
         <Pressable
           onPress={() => router.back()}
           style={({ pressed }) => [
-            {
-              padding: 6,
-              borderRadius: 8,
-              backgroundColor: "hsl(0, 0%, 95%)",
-            },
+            { padding: 6, borderRadius: 8, backgroundColor: "hsl(0, 0%, 95%)" },
             pressed && { opacity: 0.7 },
           ]}
         >
           <ChevronLeft size={24} color={theme.text} strokeWidth={2} />
         </Pressable>
-      </View>
+      </Animated.View>
 
       <ScrollView
         contentContainerStyle={{ paddingHorizontal: 15, paddingBottom: 40 }}
         showsVerticalScrollIndicator={false}
       >
-        <Text
-          style={[
-            globalStyle.sectionHeading,
-            { marginTop: 0, marginBottom: 12 },
-          ]}
+        <Animated.Text
+          entering={FadeInDown.duration(400).delay(80)}
+          style={[globalStyle.sectionHeading, { marginTop: 0, marginBottom: 12 }]}
         >
           {podcast.title}
-        </Text>
+        </Animated.Text>
 
         {embedUrl && (
-          <View
+          <Animated.View
+            entering={FadeInUp.duration(450).delay(160)}
             style={{
               aspectRatio: 16 / 9,
               width: "100%",
@@ -138,14 +129,12 @@ export default function PodcastDetail() {
                 return false;
               }}
             />
-          </View>
+          </Animated.View>
         )}
 
         {tags.length > 0 && (
-          <View style={{ marginBottom: 16 }}>
-            <Text style={{ fontSize: 18, color: "#777", marginBottom: 8 }}>
-              Tags
-            </Text>
+          <Animated.View entering={FadeInUp.duration(400).delay(220)} style={{ marginBottom: 16 }}>
+            <Text style={{ fontSize: 18, color: "#777", marginBottom: 8 }}>Tags</Text>
             <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
               {tags.map((tag, index) => (
                 <View
@@ -157,54 +146,31 @@ export default function PodcastDetail() {
                     borderRadius: 20,
                   }}
                 >
-                  <Text
-                    style={{
-                      color: "white",
-                      fontSize: 13,
-                      fontFamily: theme.fontBold,
-                    }}
-                  >
+                  <Text style={{ color: "white", fontSize: 13, fontFamily: theme.fontBold }}>
                     {tag}
                   </Text>
                 </View>
               ))}
             </View>
-          </View>
+          </Animated.View>
         )}
 
         {podcast.description && (
-          <View style={{ marginBottom: 16 }}>
-            <Text style={{ fontSize: 18, color: "#777", marginBottom: 8 }}>
-              Description
-            </Text>
-            <Text
-              style={{
-                fontSize: 15,
-                color: theme.text,
-                textAlign: "justify",
-                lineHeight: 22,
-              }}
-            >
+          <Animated.View entering={FadeInUp.duration(400).delay(280)} style={{ marginBottom: 16 }}>
+            <Text style={{ fontSize: 18, color: "#777", marginBottom: 8 }}>Description</Text>
+            <Text style={{ fontSize: 15, color: theme.text, textAlign: "justify", lineHeight: 22 }}>
               {podcast.description}
             </Text>
-          </View>
+          </Animated.View>
         )}
 
         {!!podcast.transcript && (
-          <View style={{ marginBottom: 16 }}>
-            <Text style={{ fontSize: 18, color: "#777", marginBottom: 8 }}>
-              Transcript
-            </Text>
-            <Text
-              style={{
-                fontSize: 14,
-                color: theme.text,
-                lineHeight: 22,
-              }}
-            >
+          <Animated.View entering={FadeInUp.duration(400).delay(340)} style={{ marginBottom: 16 }}>
+            <Text style={{ fontSize: 18, color: "#777", marginBottom: 8 }}>Transcript</Text>
+            <Text style={{ fontSize: 14, color: theme.text, lineHeight: 22 }}>
               {podcast.transcript}
             </Text>
-          </View>
+          </Animated.View>
         )}
       </ScrollView>
     </SafeAreaView>

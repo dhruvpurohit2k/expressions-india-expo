@@ -127,6 +127,25 @@ function UpcomingEventDetail({
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.backgroundColorLight }}>
+      {/* Floating back button */}
+      <Pressable
+        onPress={() => router.back()}
+        style={({ pressed }) => [
+          {
+            position: "absolute",
+            top: 14,
+            left: 15,
+            zIndex: 20,
+            padding: 8,
+            borderRadius: 10,
+            backgroundColor: "rgba(0,0,0,0.35)",
+          },
+          pressed && { opacity: 0.7 },
+        ]}
+      >
+        <ChevronLeft size={22} color="white" strokeWidth={2.5} />
+      </Pressable>
+
       {/* Hero image carousel */}
       <View
         style={{

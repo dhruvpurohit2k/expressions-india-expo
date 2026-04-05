@@ -1,3 +1,4 @@
+import Animated, { FadeInDown, FadeInLeft, FadeInUp, SlideInDown } from "react-native-reanimated";
 import { useState } from "react";
 import {
   ActivityIndicator,
@@ -97,11 +98,15 @@ export default function Resources() {
 
   return (
     <SafeAreaView style={globalStyle.screen}>
-      <Text style={[globalStyle.sectionHeading, { marginHorizontal: 15 }]}>
+      <Animated.Text
+        entering={FadeInDown.duration(350)}
+        style={[globalStyle.sectionHeading, { marginHorizontal: 15 }]}
+      >
         Resources
-      </Text>
+      </Animated.Text>
 
-      <View
+      <Animated.View
+        entering={FadeInDown.duration(350).delay(60)}
         style={{
           flexDirection: "row",
           marginHorizontal: 15,
@@ -135,7 +140,7 @@ export default function Resources() {
             </Text>
           </Pressable>
         ))}
-      </View>
+      </Animated.View>
 
       {activeTab === "podcasts" && (
         <>
@@ -166,49 +171,55 @@ export default function Resources() {
                 gap: 8,
                 paddingBottom: 12,
               }}
-              renderItem={({ item }) => (
-                <Link href={`/podcast/${item.id}`} asChild>
-                  <Pressable>
-                    {({ pressed }) => (
-                      <View
-                        style={[
-                          {
-                            backgroundColor: "hsl(0, 0%, 100%)",
-                            borderRadius: 5,
-                            elevation: 1,
-                            padding: 12,
-                          },
-                          pressed && {
-                            opacity: 0.85,
-                            transform: [{ scale: 0.99 }],
-                          },
-                        ]}
-                      >
-                        <Text
-                          numberOfLines={1}
-                          ellipsizeMode="tail"
-                          style={{
-                            fontSize: 15,
-                            color: "hsl(0, 0%, 30%)",
-                            marginBottom: 6,
-                          }}
+              renderItem={({ item, index }) => (
+                <Animated.View
+                  entering={SlideInDown.duration(450).delay(
+                    Math.min(index, 8) * 60,
+                  )}
+                >
+                  <Link href={`/podcast/${item.id}`} asChild>
+                    <Pressable>
+                      {({ pressed }) => (
+                        <View
+                          style={[
+                            {
+                              backgroundColor: "hsl(0, 0%, 100%)",
+                              borderRadius: 5,
+                              elevation: 1,
+                              padding: 12,
+                            },
+                            pressed && {
+                              opacity: 0.85,
+                              transform: [{ scale: 0.99 }],
+                            },
+                          ]}
                         >
-                          {item.title}
-                        </Text>
-                        <Text
-                          style={{
-                            fontSize: 11,
-                            fontWeight: "bold",
-                            color: "hsl(0, 120%, 50%)",
-                            textAlign: "right",
-                          }}
-                        >
-                          {formatDate(item.createdAt)}
-                        </Text>
-                      </View>
-                    )}
-                  </Pressable>
-                </Link>
+                          <Text
+                            numberOfLines={1}
+                            ellipsizeMode="tail"
+                            style={{
+                              fontSize: 15,
+                              color: "hsl(0, 0%, 30%)",
+                              marginBottom: 6,
+                            }}
+                          >
+                            {item.title}
+                          </Text>
+                          <Text
+                            style={{
+                              fontSize: 11,
+                              fontWeight: "bold",
+                              color: "hsl(0, 120%, 50%)",
+                              textAlign: "right",
+                            }}
+                          >
+                            {formatDate(item.createdAt)}
+                          </Text>
+                        </View>
+                      )}
+                    </Pressable>
+                  </Link>
+                </Animated.View>
               )}
               ListEmptyComponent={
                 <Text
@@ -336,49 +347,55 @@ export default function Resources() {
                 gap: 8,
                 paddingBottom: 12,
               }}
-              renderItem={({ item }) => (
-                <Link href={`/journal/${item.id}`} asChild>
-                  <Pressable>
-                    {({ pressed }) => (
-                      <View
-                        style={[
-                          {
-                            backgroundColor: "hsl(0, 0%, 100%)",
-                            borderRadius: 5,
-                            elevation: 1,
-                            padding: 12,
-                          },
-                          pressed && {
-                            opacity: 0.85,
-                            transform: [{ scale: 0.99 }],
-                          },
-                        ]}
-                      >
-                        <Text
-                          numberOfLines={1}
-                          ellipsizeMode="tail"
-                          style={{
-                            fontSize: 15,
-                            color: "hsl(0, 0%, 30%)",
-                            marginBottom: 6,
-                          }}
+              renderItem={({ item, index }) => (
+                <Animated.View
+                  entering={SlideInDown.duration(450).delay(
+                    Math.min(index, 8) * 60,
+                  )}
+                >
+                  <Link href={`/journal/${item.id}`} asChild>
+                    <Pressable>
+                      {({ pressed }) => (
+                        <View
+                          style={[
+                            {
+                              backgroundColor: "hsl(0, 0%, 100%)",
+                              borderRadius: 5,
+                              elevation: 1,
+                              padding: 12,
+                            },
+                            pressed && {
+                              opacity: 0.85,
+                              transform: [{ scale: 0.99 }],
+                            },
+                          ]}
                         >
-                          {item.title}
-                        </Text>
-                        <Text
-                          style={{
-                            fontSize: 11,
-                            fontWeight: "bold",
-                            color: "hsl(0, 120%, 50%)",
-                            textAlign: "right",
-                          }}
-                        >
-                          {item.startMonth}–{item.endMonth} {item.year}
-                        </Text>
-                      </View>
-                    )}
-                  </Pressable>
-                </Link>
+                          <Text
+                            numberOfLines={1}
+                            ellipsizeMode="tail"
+                            style={{
+                              fontSize: 15,
+                              color: "hsl(0, 0%, 30%)",
+                              marginBottom: 6,
+                            }}
+                          >
+                            {item.title}
+                          </Text>
+                          <Text
+                            style={{
+                              fontSize: 11,
+                              fontWeight: "bold",
+                              color: "hsl(0, 120%, 50%)",
+                              textAlign: "right",
+                            }}
+                          >
+                            {item.startMonth}–{item.endMonth} {item.year}
+                          </Text>
+                        </View>
+                      )}
+                    </Pressable>
+                  </Link>
+                </Animated.View>
               )}
               ListEmptyComponent={
                 <Text
@@ -505,108 +522,114 @@ export default function Resources() {
                 gap: 8,
                 paddingBottom: 12,
               }}
-              renderItem={({ item }) => (
-                <Link href={`/article/${item.id}`} asChild>
-                  <Pressable>
-                    {({ pressed }) => (
-                      <View
-                        style={[
-                          {
-                            backgroundColor: "hsl(0, 0%, 100%)",
-                            borderRadius: 8,
-                            elevation: 1,
-                            flexDirection: "row",
-                            overflow: "hidden",
-                          },
-                          pressed && {
-                            opacity: 0.85,
-                            transform: [{ scale: 0.99 }],
-                          },
-                        ]}
-                      >
-                        {item.thumbnailUrl ? (
-                          <Image
-                            source={{ uri: item.thumbnailUrl }}
-                            style={{
-                              width: 88,
-                              height: 88,
-                              resizeMode: "cover",
-                              backgroundColor: theme.backgroundColorDark,
-                            }}
-                          />
-                        ) : (
-                          <View
-                            style={{
-                              width: 88,
-                              height: 88,
-                              backgroundColor: theme.backgroundColorDark,
-                              alignItems: "center",
-                              justifyContent: "center",
-                            }}
-                          >
-                            <Text style={{ fontSize: 22 }}>📄</Text>
-                          </View>
-                        )}
+              renderItem={({ item, index }) => (
+                <Animated.View
+                  entering={SlideInDown.duration(450).delay(
+                    Math.min(index, 8) * 60,
+                  )}
+                >
+                  <Link href={`/article/${item.id}`} asChild>
+                    <Pressable>
+                      {({ pressed }) => (
                         <View
-                          style={{
-                            flex: 1,
-                            padding: 10,
-                            justifyContent: "space-between",
-                          }}
-                        >
-                          <Text
-                            numberOfLines={2}
-                            ellipsizeMode="tail"
-                            style={{
-                              fontSize: 14,
-                              fontFamily: theme.fontBold,
-                              color: "hsl(0, 0%, 20%)",
-                              lineHeight: 19,
-                            }}
-                          >
-                            {item.title}
-                          </Text>
-                          <View
-                            style={{
+                          style={[
+                            {
+                              backgroundColor: "hsl(0, 0%, 100%)",
+                              borderRadius: 8,
+                              elevation: 1,
                               flexDirection: "row",
-                              justifyContent: "space-between",
-                              alignItems: "center",
-                              marginTop: 6,
-                            }}
-                          >
+                              overflow: "hidden",
+                            },
+                            pressed && {
+                              opacity: 0.85,
+                              transform: [{ scale: 0.99 }],
+                            },
+                          ]}
+                        >
+                          {item.thumbnailUrl ? (
+                            <Image
+                              source={{ uri: item.thumbnailUrl }}
+                              style={{
+                                width: 88,
+                                height: 88,
+                                resizeMode: "cover",
+                                backgroundColor: theme.backgroundColorDark,
+                              }}
+                            />
+                          ) : (
                             <View
                               style={{
-                                backgroundColor: theme.red + "18",
-                                borderRadius: 20,
-                                paddingHorizontal: 8,
-                                paddingVertical: 2,
+                                width: 88,
+                                height: 88,
+                                backgroundColor: theme.backgroundColorDark,
+                                alignItems: "center",
+                                justifyContent: "center",
                               }}
                             >
+                              <Text style={{ fontSize: 22 }}>📄</Text>
+                            </View>
+                          )}
+                          <View
+                            style={{
+                              flex: 1,
+                              padding: 10,
+                              justifyContent: "space-between",
+                            }}
+                          >
+                            <Text
+                              numberOfLines={2}
+                              ellipsizeMode="tail"
+                              style={{
+                                fontSize: 14,
+                                fontFamily: theme.fontBold,
+                                color: "hsl(0, 0%, 20%)",
+                                lineHeight: 19,
+                              }}
+                            >
+                              {item.title}
+                            </Text>
+                            <View
+                              style={{
+                                flexDirection: "row",
+                                justifyContent: "space-between",
+                                alignItems: "center",
+                                marginTop: 6,
+                              }}
+                            >
+                              <View
+                                style={{
+                                  backgroundColor: theme.red + "18",
+                                  borderRadius: 20,
+                                  paddingHorizontal: 8,
+                                  paddingVertical: 2,
+                                }}
+                              >
+                                <Text
+                                  style={{
+                                    fontSize: 10,
+                                    color: theme.red,
+                                    fontFamily: theme.fontBold,
+                                  }}
+                                >
+                                  {item.category}
+                                </Text>
+                              </View>
                               <Text
                                 style={{
                                   fontSize: 10,
-                                  color: theme.red,
-                                  fontFamily: theme.fontBold,
+                                  color: "hsl(0,0%,55%)",
+                                  fontFamily: theme.font,
                                 }}
                               >
-                                {item.category}
+                                {formatDate(item.createdAt)}
                               </Text>
                             </View>
-                            <Text
-                              style={{
-                                fontSize: 10,
-                                color: "hsl(0,0%,55%)",
-                                fontFamily: theme.font,
-                              }}
-                            >
-                              {formatDate(item.createdAt)}
-                            </Text>
                           </View>
                         </View>
-                      </View>
-                    )}
-                  </Pressable>
-                </Link>
+                      )}
+                    </Pressable>
+                  </Link>
+                </Animated.View>
               )}
               ListEmptyComponent={
                 <Text
