@@ -1,8 +1,26 @@
 import { Pressable } from "react-native";
-import Animated, { FadeInDown } from "react-native-reanimated";
+import Animated, {
+  Easing,
+  Keyframe,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
+
+const slideInFromTop = new Keyframe({
+  0: { opacity: 0, transform: [{ translateY: -24 }] },
+  100: { opacity: 1, transform: [{ translateY: 0 }] },
+}).duration(320);
+import { useEffect } from "react";
 import { theme } from "../theme";
 import { Text } from "react-native";
-import { styleFactory } from "../styleFactory";
+
+type NavBarProps = {
+  title: string;
+  tabs: { key: string; label: string }[];
+  currentTab: string;
+  currentTabSetter: any;
+};
 
 export function NavBar({
   title,
@@ -10,75 +28,90 @@ export function NavBar({
   currentTab,
   currentTabSetter,
 }: NavBarProps) {
-  const globalStyle = styleFactory();
   return (
     <>
       <Animated.Text
-        entering={FadeInDown.duration(350)}
-        style={[
-          {
-            marginHorizontal: "auto",
-            marginVertical: 10,
-            fontSize: 32,
-            // fontFamily: theme.fontBold,
-            color: "rgb(225,0,0)",
-          },
-        ]}
+        entering={slideInFromTop}
+        style={{
+          marginHorizontal: "auto",
+          marginVertical: 10,
+          fontSize: 32,
+          color: "rgb(225,0,0)",
+        }}
       >
         {title}
       </Animated.Text>
 
       <Animated.View
-        entering={FadeInDown.duration(350).delay(70)}
+        entering={slideInFromTop.delay(70)}
         style={{
           flexDirection: "row",
           marginHorizontal: 15,
           marginVertical: 10,
           borderRadius: 10,
-          overflow: "hidden",
           padding: 5,
-          // backgroundColor: theme.red,
           backgroundColor: "rgb(255,245,245)",
-          // borderWidth: 1,
-          // borderColor: theme.red,
         }}
       >
         {tabs.map((tab) => (
-          <Pressable
+          <NavBarTab
             key={tab.key}
+            tab={tab}
+            isActive={currentTab === tab.key}
             onPress={() => currentTabSetter(tab.key)}
-            style={{
-              flex: 1,
-              paddingVertical: 10,
-              alignItems: "center",
-              borderRadius: 10,
-              elevation: currentTab === tab.key ? 5 : 0,
-              backgroundColor:
-                currentTab === tab.key ? theme.red : "transparent",
-            }}
-          >
-            <Text
-              style={{
-                color: currentTab === tab.key ? "white" : theme.red,
-                fontFamily: theme.fontBold,
-                fontSize: 14,
-              }}
-            >
-              {tab.label}
-            </Text>
-          </Pressable>
+          />
         ))}
       </Animated.View>
     </>
   );
 }
 
-type NavBarProps = {
-  title: string;
-  tabs: {
-    key: string;
-    label: string;
-  }[];
-  currentTab: string;
-  currentTabSetter: any;
-};
+function NavBarTab({
+  tab,
+  isActive,
+  onPress,
+}: {
+  tab: { key: string; label: string };
+  isActive: boolean;
+  onPress: () => void;
+}) {
+  const scale = useSharedValue(isActive ? 1 : 0.9);
+
+  useEffect(() => {
+    scale.value = withTiming(isActive ? 1 : 0.9, {
+      duration: 180,
+      easing: Easing.out(Easing.cubic),
+    });
+  }, [isActive]);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
+
+  return (
+    <Pressable onPress={onPress} style={{ flex: 1 }}>
+      <Animated.View
+        style={[
+          {
+            paddingVertical: 10,
+            alignItems: "center",
+            borderRadius: 8,
+            backgroundColor: isActive ? theme.red : "transparent",
+            elevation: isActive ? 5 : 0,
+          },
+          animatedStyle,
+        ]}
+      >
+        <Text
+          style={{
+            color: isActive ? "white" : theme.red,
+            fontFamily: theme.fontBold,
+            fontSize: 14,
+          }}
+        >
+          {tab.label}
+        </Text>
+      </Animated.View>
+    </Pressable>
+  );
+}

@@ -15,7 +15,7 @@ import { format } from "date-fns";
 import Animated, { FadeInUp, SlideInDown } from "react-native-reanimated";
 import Pagination from "./Pagination";
 
-const LIMIT = 2;
+const LIMIT = 6;
 
 function formatDate(date: Date) {
   return format(date, "do MMM - yy");
@@ -58,16 +58,19 @@ export default function UpcomingEvents() {
         <FlatList
           data={events}
           keyExtractor={(item) => item.id}
+          numColumns={2}
           contentContainerStyle={{
-            paddingHorizontal: 15,
-            gap: 16,
+            paddingHorizontal: 10,
             paddingBottom: 12,
             marginTop: 16,
+            gap: 10,
           }}
+          columnWrapperStyle={{ gap: 10, paddingHorizontal: 5 }}
           renderItem={({ item, index }) => (
             <Animated.View
+              style={{ flex: 1 }}
               entering={SlideInDown.duration(500).delay(
-                Math.min(index, 7) * 80,
+                Math.min(index, 7) * 60,
               )}
             >
               <Link href={`/event/${item.id}`} asChild>
@@ -94,92 +97,77 @@ export default function UpcomingEvents() {
                       {item.thumbnailUrl ? (
                         <Image
                           source={{ uri: item.thumbnailUrl }}
-                          style={{ width: "100%", aspectRatio: 16 / 9 }}
+                          style={{ width: "100%", aspectRatio: 2 / 1 }}
                           resizeMode="cover"
                         />
                       ) : (
                         <View
                           style={{
                             width: "100%",
-                            aspectRatio: 16 / 9,
+                            aspectRatio: 2 / 1,
                             backgroundColor: theme.sectionHeadingColor,
                             alignItems: "center",
                             justifyContent: "center",
                           }}
                         >
-                          <Text
-                            style={{
-                              color: "white",
-                              fontSize: 36,
-                              opacity: 0.6,
-                            }}
-                          >
-                            🌸
-                          </Text>
+                          <Text style={{ color: "white", fontSize: 36, opacity: 0.6 }}>🌸</Text>
                         </View>
                       )}
 
-                      <View style={{ padding: 12 }}>
+                      <View style={{ padding: 8, gap: 6 }}>
                         <Text
                           numberOfLines={2}
                           ellipsizeMode="tail"
                           style={{
-                            fontSize: 15,
+                            fontSize: 12,
                             fontFamily: theme.fontBold,
                             color: theme.text,
-                            marginBottom: 6,
-                            lineHeight: 21,
+                            lineHeight: 17,
                           }}
                         >
                           {item.title}
                         </Text>
                         <View
                           style={{
-                            flexDirection: "row",
-                            alignItems: "center",
-                            justifyContent: "space-between",
+                            backgroundColor: "hsla(4, 84%, 42%, 0.1)",
+                            paddingHorizontal: 6,
+                            paddingVertical: 3,
+                            borderRadius: 5,
+                            alignSelf: "flex-start",
                           }}
                         >
-                          <View
+                          <Text
                             style={{
-                              backgroundColor: "hsla(4, 84%, 42%, 0.1)",
-                              paddingHorizontal: 10,
-                              paddingVertical: 4,
-                              borderRadius: 6,
+                              fontSize: 10,
+                              fontFamily: theme.fontBold,
+                              color: theme.sectionHeadingColor,
                             }}
                           >
-                            <Text
-                              style={{
-                                fontSize: 11,
-                                fontFamily: theme.fontBold,
-                                color: theme.sectionHeadingColor,
-                              }}
-                            >
-                              {formatDateRange(item.startDate, item.endDate)}
-                            </Text>
-                          </View>
-                          <View
+                            {formatDateRange(item.startDate, item.endDate)}
+                          </Text>
+                        </View>
+                        <View
+                          style={{
+                            backgroundColor: item.isOnline
+                              ? "hsla(120, 60%, 40%, 0.1)"
+                              : "hsla(220, 60%, 50%, 0.1)",
+                            paddingHorizontal: 6,
+                            paddingVertical: 3,
+                            borderRadius: 5,
+                            alignSelf: "flex-start",
+                          }}
+                        >
+                          <Text
                             style={{
-                              backgroundColor: item.isOnline
-                                ? "hsla(120, 60%, 40%, 0.1)"
-                                : "hsla(220, 60%, 50%, 0.1)",
-                              paddingHorizontal: 10,
-                              paddingVertical: 4,
-                              borderRadius: 6,
+                              fontSize: 10,
+                              fontFamily: theme.fontBold,
+                              color: item.isOnline
+                                ? "hsl(120, 60%, 30%)"
+                                : "hsl(220, 60%, 40%)",
                             }}
                           >
-                            <Text
-                              style={{
-                                fontSize: 11,
-                                fontFamily: theme.fontBold,
-                                color: item.isOnline
-                                  ? "hsl(120, 60%, 30%)"
-                                  : "hsl(220, 60%, 40%)",
-                              }}
-                            >
-                              {item.isOnline ? "Online" : "In-Person"}
-                            </Text>
-                          </View>
+                            {item.isOnline ? "Online" : "In-Person"}
+                          </Text>
                         </View>
                       </View>
                     </View>

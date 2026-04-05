@@ -1,9 +1,4 @@
-import Animated, {
-  FadeInDown,
-  FadeInLeft,
-  FadeInUp,
-  SlideInDown,
-} from "react-native-reanimated";
+import Animated, { SlideInDown } from "react-native-reanimated";
 import { useState } from "react";
 import {
   ActivityIndicator,
@@ -23,6 +18,7 @@ import { Link } from "expo-router";
 import { format } from "date-fns";
 import { NavBar } from "@/src/components/NavBar";
 import Pagination from "@/src/components/Pagination";
+import { Mic } from "lucide-react-native";
 
 type Tab = "podcasts" | "journals" | "articles";
 
@@ -38,20 +34,6 @@ function formatDate(date: Date) {
   return format(date, "do MMM - yy");
 }
 
-const MONTHS = [
-  "Jan",
-  "Feb",
-  "Mar",
-  "Apr",
-  "May",
-  "Jun",
-  "Jul",
-  "Aug",
-  "Sept",
-  "Oct",
-  "Nov",
-  "Dec",
-];
 
 export default function Resources() {
   const [activeTab, setActiveTab] = useState<Tab>("podcasts");
@@ -134,55 +116,70 @@ export default function Resources() {
             <FlatList
               data={podcasts}
               keyExtractor={(item) => item.id}
-              contentContainerStyle={{
-                paddingHorizontal: 15,
-                gap: 8,
-                paddingBottom: 12,
-              }}
+              numColumns={2}
+              contentContainerStyle={{ paddingHorizontal: 10, gap: 10, paddingBottom: 12, marginTop: 8 }}
+              columnWrapperStyle={{ gap: 10, paddingHorizontal: 5 }}
               renderItem={({ item, index }) => (
                 <Animated.View
-                  entering={SlideInDown.duration(450).delay(
-                    Math.min(index, 8) * 60,
-                  )}
+                  style={{ flex: 1 }}
+                  entering={SlideInDown.duration(450).delay(Math.min(index, 8) * 60)}
                 >
                   <Link href={`/podcast/${item.id}`} asChild>
-                    <Pressable>
+                    <Pressable style={{ flex: 1 }}>
                       {({ pressed }) => (
                         <View
                           style={[
                             {
                               backgroundColor: "hsl(0, 0%, 100%)",
-                              borderRadius: 5,
+                              borderRadius: 12,
                               elevation: 1,
-                              padding: 12,
+                              overflow: "hidden",
+                              shadowColor: "#000",
+                              shadowOffset: { width: 0, height: 1 },
+                              shadowOpacity: 0.06,
+                              shadowRadius: 4,
                             },
-                            pressed && {
-                              opacity: 0.85,
-                              transform: [{ scale: 0.99 }],
-                            },
+                            pressed && { opacity: 0.85, transform: [{ scale: 0.98 }] },
                           ]}
                         >
-                          <Text
-                            numberOfLines={1}
-                            ellipsizeMode="tail"
+                          <View
                             style={{
-                              fontSize: 15,
-                              color: "hsl(0, 0%, 30%)",
-                              marginBottom: 6,
+                              width: "100%",
+                              aspectRatio: 1,
+                              backgroundColor: theme.red + "12",
+                              alignItems: "center",
+                              justifyContent: "center",
                             }}
                           >
-                            {item.title}
-                          </Text>
-                          <Text
-                            style={{
-                              fontSize: 11,
-                              fontWeight: "bold",
-                              color: "hsl(0, 120%, 50%)",
-                              textAlign: "right",
-                            }}
-                          >
-                            {formatDate(item.createdAt)}
-                          </Text>
+                            <Mic size={36} color={theme.red} strokeWidth={1.5} />
+                          </View>
+                          <View style={{ padding: 8, gap: 6 }}>
+                            <Text
+                              numberOfLines={2}
+                              ellipsizeMode="tail"
+                              style={{
+                                fontSize: 12,
+                                fontFamily: theme.fontBold,
+                                color: theme.text,
+                                lineHeight: 17,
+                              }}
+                            >
+                              {item.title}
+                            </Text>
+                            <View
+                              style={{
+                                backgroundColor: theme.red + "12",
+                                alignSelf: "flex-start",
+                                paddingHorizontal: 6,
+                                paddingVertical: 3,
+                                borderRadius: 5,
+                              }}
+                            >
+                              <Text style={{ fontSize: 10, fontFamily: theme.fontBold, color: theme.red }}>
+                                {formatDate(item.createdAt)}
+                              </Text>
+                            </View>
+                          </View>
                         </View>
                       )}
                     </Pressable>
@@ -190,12 +187,7 @@ export default function Resources() {
                 </Animated.View>
               )}
               ListEmptyComponent={
-                <Text
-                  style={[
-                    globalStyle.text,
-                    { textAlign: "center", marginTop: 40 },
-                  ]}
-                >
+                <Text style={[globalStyle.text, { textAlign: "center", marginTop: 40 }]}>
                   No podcasts available.
                 </Text>
               }
@@ -413,112 +405,89 @@ export default function Resources() {
             <FlatList
               data={articles}
               keyExtractor={(item) => item.id}
-              contentContainerStyle={{
-                paddingHorizontal: 15,
-                gap: 8,
-                paddingBottom: 12,
-              }}
+              numColumns={2}
+              contentContainerStyle={{ paddingHorizontal: 10, gap: 10, paddingBottom: 12, marginTop: 8 }}
+              columnWrapperStyle={{ gap: 10, paddingHorizontal: 5 }}
               renderItem={({ item, index }) => (
                 <Animated.View
-                  entering={SlideInDown.duration(450).delay(
-                    Math.min(index, 8) * 60,
-                  )}
+                  style={{ flex: 1 }}
+                  entering={SlideInDown.duration(450).delay(Math.min(index, 8) * 60)}
                 >
                   <Link href={`/article/${item.id}`} asChild>
-                    <Pressable>
+                    <Pressable style={{ flex: 1 }}>
                       {({ pressed }) => (
                         <View
                           style={[
                             {
                               backgroundColor: "hsl(0, 0%, 100%)",
-                              borderRadius: 8,
+                              borderRadius: 12,
                               elevation: 1,
-                              flexDirection: "row",
                               overflow: "hidden",
+                              shadowColor: "#000",
+                              shadowOffset: { width: 0, height: 1 },
+                              shadowOpacity: 0.06,
+                              shadowRadius: 4,
                             },
-                            pressed && {
-                              opacity: 0.85,
-                              transform: [{ scale: 0.99 }],
-                            },
+                            pressed && { opacity: 0.85, transform: [{ scale: 0.98 }] },
                           ]}
                         >
                           {item.thumbnailUrl ? (
                             <Image
                               source={{ uri: item.thumbnailUrl }}
-                              style={{
-                                width: 88,
-                                height: 88,
-                                resizeMode: "cover",
-                                backgroundColor: theme.backgroundColorDark,
-                              }}
+                              style={{ width: "100%", aspectRatio: 1 }}
+                              resizeMode="cover"
                             />
                           ) : (
                             <View
                               style={{
-                                width: 88,
-                                height: 88,
+                                width: "100%",
+                                aspectRatio: 1,
                                 backgroundColor: theme.backgroundColorDark,
                                 alignItems: "center",
                                 justifyContent: "center",
                               }}
                             >
-                              <Text style={{ fontSize: 22 }}>📄</Text>
+                              <Text style={{ fontSize: 28 }}>📄</Text>
                             </View>
                           )}
-                          <View
-                            style={{
-                              flex: 1,
-                              padding: 10,
-                              justifyContent: "space-between",
-                            }}
-                          >
+                          <View style={{ padding: 8, gap: 6 }}>
                             <Text
                               numberOfLines={2}
                               ellipsizeMode="tail"
                               style={{
-                                fontSize: 14,
+                                fontSize: 12,
                                 fontFamily: theme.fontBold,
-                                color: "hsl(0, 0%, 20%)",
-                                lineHeight: 19,
+                                color: theme.text,
+                                lineHeight: 17,
                               }}
                             >
                               {item.title}
                             </Text>
-                            <View
-                              style={{
-                                flexDirection: "row",
-                                justifyContent: "space-between",
-                                alignItems: "center",
-                                marginTop: 6,
-                              }}
-                            >
+                            <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 4 }}>
                               <View
                                 style={{
                                   backgroundColor: theme.red + "18",
-                                  borderRadius: 20,
-                                  paddingHorizontal: 8,
-                                  paddingVertical: 2,
+                                  borderRadius: 5,
+                                  paddingHorizontal: 6,
+                                  paddingVertical: 3,
                                 }}
                               >
-                                <Text
-                                  style={{
-                                    fontSize: 10,
-                                    color: theme.red,
-                                    fontFamily: theme.fontBold,
-                                  }}
-                                >
+                                <Text style={{ fontSize: 10, color: theme.red, fontFamily: theme.fontBold }}>
                                   {item.category}
                                 </Text>
                               </View>
-                              <Text
+                              <View
                                 style={{
-                                  fontSize: 10,
-                                  color: "hsl(0,0%,55%)",
-                                  fontFamily: theme.font,
+                                  backgroundColor: theme.backgroundColorDark,
+                                  borderRadius: 5,
+                                  paddingHorizontal: 6,
+                                  paddingVertical: 3,
                                 }}
                               >
-                                {formatDate(item.createdAt)}
-                              </Text>
+                                <Text style={{ fontSize: 10, color: "hsl(0,0%,45%)", fontFamily: theme.font }}>
+                                  {formatDate(item.createdAt)}
+                                </Text>
+                              </View>
                             </View>
                           </View>
                         </View>
@@ -528,12 +497,7 @@ export default function Resources() {
                 </Animated.View>
               )}
               ListEmptyComponent={
-                <Text
-                  style={[
-                    globalStyle.text,
-                    { textAlign: "center", marginTop: 40 },
-                  ]}
-                >
+                <Text style={[globalStyle.text, { textAlign: "center", marginTop: 40 }]}>
                   No articles available.
                 </Text>
               }
