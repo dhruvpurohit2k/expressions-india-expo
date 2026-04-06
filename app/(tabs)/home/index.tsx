@@ -16,31 +16,34 @@ import { useQuery } from "@tanstack/react-query";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import { ExternalLink } from "lucide-react-native";
 
+const lightRed = "hsl(4, 65%, 50%)";
+
 export default function Home() {
   const globalStyle = styleFactory();
   const { data: images = [], isPending: homePageImagesPending } =
     useHomePageImageQuery();
 
   return (
-    <SafeAreaView
-      style={{ backgroundColor: theme.backgroundColor, flex: 1 }}
-      edges={["top", "left", "right"]}
-    >
+    <SafeAreaView style={[globalStyle.screen]} edges={["top", "left", "right"]}>
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* Header */}
         <Animated.View
           entering={FadeInDown.duration(400)}
-          style={{
-            paddingHorizontal: 18,
-            paddingTop: 18,
-            paddingBottom: 10,
-          }}
+          style={
+            {
+              // paddingHorizontal: 18,
+              // paddingTop: 18,
+              // paddingBottom: 10,
+            }
+          }
         >
           <Text
             style={{
-              fontFamily: "Delius_400Regular",
+              // fontFamily: "Delius_400Regular",
               fontSize: 30,
-              color: theme.sectionHeadingColor,
+              color: "rgb(225,0,0)",
+              textAlign: "center",
+              marginVertical: 10,
             }}
           >
             Expressions India
@@ -49,6 +52,7 @@ export default function Home() {
             style={{
               fontFamily: theme.font,
               fontSize: 13,
+              textAlign: "center",
               color: "hsl(0,0%,55%)",
               marginTop: 2,
             }}
@@ -101,7 +105,7 @@ export default function Home() {
               style={{
                 width: 4,
                 height: 22,
-                backgroundColor: theme.red,
+                backgroundColor: lightRed,
                 borderRadius: 2,
               }}
             />
@@ -109,7 +113,7 @@ export default function Home() {
               style={{
                 fontSize: 20,
                 fontFamily: theme.fontBold,
-                color: theme.sectionHeadingColor,
+                color: lightRed,
               }}
             >
               Downloads
@@ -160,14 +164,15 @@ function DownloadCard({
         onPress={() => Linking.openURL(url)}
         style={({ pressed }) => [
           {
-            backgroundColor: theme.backgroundColorLight,
+            backgroundColor: theme.backgroundColor,
             borderRadius: 16,
+            padding: 10,
             overflow: "hidden",
-            shadowColor: "#000",
-            shadowOffset: { width: 0, height: 2 },
-            shadowOpacity: 0.08,
-            shadowRadius: 8,
-            elevation: 3,
+            // shadowColor: "#000",
+            // shadowOffset: { width: 0, height: 2 },
+            // shadowOpacity: 0.08,
+            // shadowRadius: 8,
+            // elevation: 3,
           },
           pressed && { opacity: 0.88, transform: [{ scale: 0.985 }] },
         ]}
@@ -190,7 +195,7 @@ function DownloadCard({
               style={{
                 fontFamily: theme.fontBold,
                 fontSize: 16,
-                color: theme.sectionHeadingColor,
+                color: lightRed,
                 marginBottom: 4,
               }}
             >
@@ -218,7 +223,7 @@ function DownloadCard({
               flexShrink: 0,
             }}
           >
-            <ExternalLink size={18} color={theme.red} strokeWidth={2} />
+            <ExternalLink size={18} color={lightRed} strokeWidth={2} />
           </View>
         </View>
       </Pressable>
@@ -229,10 +234,10 @@ function DownloadCard({
 const fetchHomePageImages = async () => {
   try {
     const response = await fetch(
-      `${process.env.EXPO_PUBLIC_API_URL}/api/home/images`,
+      `${process.env.EXPO_PUBLIC_API_URL}/home/images`,
     );
     const data = await response.json();
-    return data as string[];
+    return data.data as string[];
   } catch (error) {}
 };
 

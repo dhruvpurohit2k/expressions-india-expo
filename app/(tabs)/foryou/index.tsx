@@ -4,6 +4,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { View, Text, Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Animated, { FadeInDown } from "react-native-reanimated";
+import { styleFactory } from "@/src/styleFactory";
 
 type Option = {
   icon: React.ComponentProps<typeof Ionicons>["name"];
@@ -122,16 +123,18 @@ function BentoCard({
 }
 
 export default function ForYou() {
+  const globalStyle = styleFactory();
+
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: theme.backgroundColor }}>
+    <SafeAreaView style={[globalStyle.screen]}>
       <Text
         style={{
           marginHorizontal: 18,
-          marginTop: 74,
-          marginBottom: 18,
+          marginVertical: 74,
           fontSize: 32,
-          // fontFamily: theme.fontBold,
-          color: theme.sectionHeadingColor,
+          fontFamily: theme.fontBold,
+          color: "hsl(0,0%,60%)",
+          textAlign: "center",
         }}
       >
         Who are you?
@@ -142,8 +145,9 @@ export default function ForYou() {
           flex: 1,
           flexDirection: "row",
           flexWrap: "wrap",
-          justifyContent: "center",
-          alignContent: "center",
+          // marginVertical: "auto",
+          // justifyContent: "center",
+          // alignContent: "center",
           paddingHorizontal: 14,
           gap: 10,
         }}

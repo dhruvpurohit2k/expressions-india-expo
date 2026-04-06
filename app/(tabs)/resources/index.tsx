@@ -34,7 +34,6 @@ function formatDate(date: Date) {
   return format(date, "do MMM - yy");
 }
 
-
 export default function Resources() {
   const [activeTab, setActiveTab] = useState<Tab>("podcasts");
   const [podcastPage, setPodcastPage] = useState(1);
@@ -117,12 +116,19 @@ export default function Resources() {
               data={podcasts}
               keyExtractor={(item) => item.id}
               numColumns={2}
-              contentContainerStyle={{ paddingHorizontal: 10, gap: 10, paddingBottom: 12, marginTop: 8 }}
+              contentContainerStyle={{
+                paddingHorizontal: 10,
+                gap: 10,
+                paddingBottom: 12,
+                marginTop: 8,
+              }}
               columnWrapperStyle={{ gap: 10, paddingHorizontal: 5 }}
               renderItem={({ item, index }) => (
                 <Animated.View
                   style={{ flex: 1 }}
-                  entering={SlideInDown.duration(450).delay(Math.min(index, 8) * 60)}
+                  entering={SlideInDown.duration(450).delay(
+                    Math.min(index, 8) * 60,
+                  )}
                 >
                   <Link href={`/podcast/${item.id}`} asChild>
                     <Pressable style={{ flex: 1 }}>
@@ -139,7 +145,10 @@ export default function Resources() {
                               shadowOpacity: 0.06,
                               shadowRadius: 4,
                             },
-                            pressed && { opacity: 0.85, transform: [{ scale: 0.98 }] },
+                            pressed && {
+                              opacity: 0.85,
+                              transform: [{ scale: 0.98 }],
+                            },
                           ]}
                         >
                           <View
@@ -151,7 +160,11 @@ export default function Resources() {
                               justifyContent: "center",
                             }}
                           >
-                            <Mic size={36} color={theme.red} strokeWidth={1.5} />
+                            <Mic
+                              size={36}
+                              color={theme.red}
+                              strokeWidth={1.5}
+                            />
                           </View>
                           <View style={{ padding: 8, gap: 6 }}>
                             <Text
@@ -175,7 +188,13 @@ export default function Resources() {
                                 borderRadius: 5,
                               }}
                             >
-                              <Text style={{ fontSize: 10, fontFamily: theme.fontBold, color: theme.red }}>
+                              <Text
+                                style={{
+                                  fontSize: 10,
+                                  fontFamily: theme.fontBold,
+                                  color: theme.red,
+                                }}
+                              >
                                 {formatDate(item.createdAt)}
                               </Text>
                             </View>
@@ -187,7 +206,12 @@ export default function Resources() {
                 </Animated.View>
               )}
               ListEmptyComponent={
-                <Text style={[globalStyle.text, { textAlign: "center", marginTop: 40 }]}>
+                <Text
+                  style={[
+                    globalStyle.text,
+                    { textAlign: "center", marginTop: 40 },
+                  ]}
+                >
                   No podcasts available.
                 </Text>
               }
@@ -227,8 +251,9 @@ export default function Resources() {
               data={journals}
               keyExtractor={(item) => item.id}
               contentContainerStyle={{
+                marginTop: 10,
                 paddingHorizontal: 15,
-                gap: 8,
+                gap: 10,
                 paddingBottom: 12,
               }}
               renderItem={({ item, index }) => (
@@ -243,9 +268,13 @@ export default function Resources() {
                         <View
                           style={[
                             {
-                              backgroundColor: "hsl(0, 0%, 100%)",
-                              borderRadius: 5,
-                              elevation: 1,
+                              // backgroundColor: "hsl(0, 0%, 100%)",
+                              // borderRadius: 5,
+                              // elevation: 1,
+                              // borderWidth: 1,
+                              borderBottomWidth: 1,
+                              borderColor: "hsl(0, 0%, 90%)",
+                              // borderRadius: 5,
                               padding: 12,
                             },
                             pressed && {
@@ -406,12 +435,19 @@ export default function Resources() {
               data={articles}
               keyExtractor={(item) => item.id}
               numColumns={2}
-              contentContainerStyle={{ paddingHorizontal: 10, gap: 10, paddingBottom: 12, marginTop: 8 }}
+              contentContainerStyle={{
+                paddingHorizontal: 10,
+                gap: 10,
+                paddingBottom: 12,
+                marginTop: 8,
+              }}
               columnWrapperStyle={{ gap: 10, paddingHorizontal: 5 }}
               renderItem={({ item, index }) => (
                 <Animated.View
                   style={{ flex: 1 }}
-                  entering={SlideInDown.duration(450).delay(Math.min(index, 8) * 60)}
+                  entering={SlideInDown.duration(450).delay(
+                    Math.min(index, 8) * 60,
+                  )}
                 >
                   <Link href={`/article/${item.id}`} asChild>
                     <Pressable style={{ flex: 1 }}>
@@ -428,7 +464,10 @@ export default function Resources() {
                               shadowOpacity: 0.06,
                               shadowRadius: 4,
                             },
-                            pressed && { opacity: 0.85, transform: [{ scale: 0.98 }] },
+                            pressed && {
+                              opacity: 0.85,
+                              transform: [{ scale: 0.98 }],
+                            },
                           ]}
                         >
                           {item.thumbnailUrl ? (
@@ -463,7 +502,13 @@ export default function Resources() {
                             >
                               {item.title}
                             </Text>
-                            <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 4 }}>
+                            <View
+                              style={{
+                                flexDirection: "row",
+                                flexWrap: "wrap",
+                                gap: 4,
+                              }}
+                            >
                               <View
                                 style={{
                                   backgroundColor: theme.red + "18",
@@ -472,7 +517,13 @@ export default function Resources() {
                                   paddingVertical: 3,
                                 }}
                               >
-                                <Text style={{ fontSize: 10, color: theme.red, fontFamily: theme.fontBold }}>
+                                <Text
+                                  style={{
+                                    fontSize: 10,
+                                    color: theme.red,
+                                    fontFamily: theme.fontBold,
+                                  }}
+                                >
                                   {item.category}
                                 </Text>
                               </View>
@@ -484,7 +535,13 @@ export default function Resources() {
                                   paddingVertical: 3,
                                 }}
                               >
-                                <Text style={{ fontSize: 10, color: "hsl(0,0%,45%)", fontFamily: theme.font }}>
+                                <Text
+                                  style={{
+                                    fontSize: 10,
+                                    color: "hsl(0,0%,45%)",
+                                    fontFamily: theme.font,
+                                  }}
+                                >
                                   {formatDate(item.createdAt)}
                                 </Text>
                               </View>
@@ -497,7 +554,12 @@ export default function Resources() {
                 </Animated.View>
               )}
               ListEmptyComponent={
-                <Text style={[globalStyle.text, { textAlign: "center", marginTop: 40 }]}>
+                <Text
+                  style={[
+                    globalStyle.text,
+                    { textAlign: "center", marginTop: 40 },
+                  ]}
+                >
                   No articles available.
                 </Text>
               }

@@ -55,7 +55,7 @@ export default function Carousel({ images }: { images: string[] }) {
       currentIndexRef.current = START_INDEX;
     }, 50);
     return () => clearTimeout(timeout);
-  }, [count > 0]); // Only run once when images become available
+  }, [count]); // Re-run whenever the number of images changes
 
   // Auto-scroll timer
   useEffect(() => {

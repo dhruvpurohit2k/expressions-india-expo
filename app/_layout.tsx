@@ -85,7 +85,6 @@ export default function RootLayout() {
             <Stack.Screen name="event" options={{ headerShown: false }} />
             <Stack.Screen name="podcast" options={{ headerShown: false }} />
             <Stack.Screen name="journal" options={{ headerShown: false }} />
-            <Stack.Screen name="workshop" options={{ headerShown: false }} />
             <Stack.Screen name="article" options={{ headerShown: false }} />
             <Stack.Screen
               name="audience/[name]"

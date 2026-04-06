@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { View, StyleSheet, Dimensions } from "react-native";
+import { View, StyleSheet } from "react-native";
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -7,216 +7,162 @@ import Animated, {
   withTiming,
   withDelay,
   withSequence,
-  withSpring,
+  withRepeat,
+  withSpring, // used for text slide
   interpolate,
   Easing,
-  runOnJS,
 } from "react-native-reanimated";
 import Svg, { Path, Circle, G } from "react-native-svg";
 import { theme } from "@/src/theme";
 
-const AnimatedPath = Animated.createAnimatedComponent(Path);
+const AnimatedG      = Animated.createAnimatedComponent(G);
+const AnimatedPath   = Animated.createAnimatedComponent(Path);
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
-const AnimatedG = Animated.createAnimatedComponent(G);
 
-const { width, height } = Dimensions.get("window");
 const CX = 150;
 const CY = 150;
 
-interface SplashScreenProps {
-  onFinish: () => void;
-}
+// Distance from SVG view center (150) to stem base (275) — used for sway pivot
+const SWAY_OFFSET_Y = 125;
 
-// Petal path generator - creates a teardrop/petal shape at a given angle
-function petalPath(angle: number, innerR: number, outerR: number, spread: number): string {
-  const rad = (angle * Math.PI) / 180;
-  const radLeft = ((angle - spread) * Math.PI) / 180;
+function petalPath(angle: number, innerR: number, outerR: number, spread: number) {
+  const rad      = (angle * Math.PI) / 180;
+  const radLeft  = ((angle - spread) * Math.PI) / 180;
   const radRight = ((angle + spread) * Math.PI) / 180;
-
-  const x1 = CX + innerR * Math.cos(rad);
-  const y1 = CY + innerR * Math.sin(rad);
-
-  const xTip = CX + outerR * Math.cos(rad);
-  const yTip = CY + outerR * Math.sin(rad);
-
-  const xLeft = CX + (outerR * 0.6) * Math.cos(radLeft);
-  const yLeft = CY + (outerR * 0.6) * Math.sin(radLeft);
-
-  const xRight = CX + (outerR * 0.6) * Math.cos(radRight);
-  const yRight = CY + (outerR * 0.6) * Math.sin(radRight);
-
+  const x1    = CX + innerR * Math.cos(rad);
+  const y1    = CY + innerR * Math.sin(rad);
+  const xTip  = CX + outerR * Math.cos(rad);
+  const yTip  = CY + outerR * Math.sin(rad);
+  const xLeft  = CX + outerR * 0.6 * Math.cos(radLeft);
+  const yLeft  = CY + outerR * 0.6 * Math.sin(radLeft);
+  const xRight = CX + outerR * 0.6 * Math.cos(radRight);
+  const yRight = CY + outerR * 0.6 * Math.sin(radRight);
   return `M ${x1} ${y1} Q ${xLeft} ${yLeft} ${xTip} ${yTip} Q ${xRight} ${yRight} ${x1} ${y1} Z`;
 }
 
-const PETAL_COUNT = 8;
-const INNER_PETAL_COUNT = 6;
+const OUTER_COUNT = 8;
+const INNER_COUNT = 6;
 
-const outerPetals = Array.from({ length: PETAL_COUNT }, (_, i) => ({
-  angle: (360 / PETAL_COUNT) * i - 90,
-  path: petalPath((360 / PETAL_COUNT) * i - 90, 8, 70, 18),
-  color: "hsl(4, 74%, 52%)",
+const outerPetals = Array.from({ length: OUTER_COUNT }, (_, i) => ({
+  path: petalPath((360 / OUTER_COUNT) * i - 90, 8, 70, 18),
+}));
+const innerPetals = Array.from({ length: INNER_COUNT }, (_, i) => ({
+  path: petalPath((360 / INNER_COUNT) * i - 60, 6, 45, 22),
 }));
 
-const innerPetals = Array.from({ length: INNER_PETAL_COUNT }, (_, i) => ({
-  angle: (360 / INNER_PETAL_COUNT) * i - 60,
-  path: petalPath((360 / INNER_PETAL_COUNT) * i - 60, 6, 45, 22),
-  color: "hsl(4, 84%, 42%)",
-}));
-
-function Petal({
-  path,
-  color,
-  delay,
-  bloom,
-}: {
-  path: string;
-  color: string;
-  delay: number;
-  bloom: Animated.SharedValue<number>;
-}) {
-  const animatedProps = useAnimatedProps(() => {
-    const scale = interpolate(bloom.value, [0, 1], [0, 1]);
-    return {
-      opacity: interpolate(bloom.value, [0, 0.3, 1], [0, 0.8, 1]),
-      strokeWidth: interpolate(bloom.value, [0, 1], [0, 1.5]),
-    };
+// Wrap each petal in AnimatedG so scale/origin work reliably on Android
+function OuterPetal({ path, bloom, index }: { path: string; bloom: Animated.SharedValue<number>; index: number }) {
+  const start = (index / OUTER_COUNT) * 0.55;
+  const gProps = useAnimatedProps(() => {
+    const p = interpolate(bloom.value, [start, start + 0.5], [0, 1], "clamp");
+    return { scale: p, originX: CX, originY: CY, opacity: p };
   });
-
-  const animatedStyle = useAnimatedStyle(() => {
-    return {
-      transform: [
-        { scale: withDelay(delay, withSpring(bloom.value, { damping: 8, stiffness: 80 })) },
-      ],
-    };
-  });
-
   return (
-    <AnimatedPath
-      d={path}
-      fill={color}
-      stroke="hsl(4, 84%, 35%)"
-      animatedProps={animatedProps}
-    />
+    <AnimatedG animatedProps={gProps}>
+      <Path d={path} fill="hsl(4, 74%, 52%)" stroke="hsl(4, 84%, 35%)" strokeWidth={1.5} />
+    </AnimatedG>
   );
 }
 
-export default function SplashScreen({ onFinish }: SplashScreenProps) {
-  const bloom = useSharedValue(0);
-  const centerScale = useSharedValue(0);
-  const textOpacity = useSharedValue(0);
-  const textTranslateY = useSharedValue(30);
+function InnerPetal({ path, bloom, index }: { path: string; bloom: Animated.SharedValue<number>; index: number }) {
+  const start = 0.15 + (index / INNER_COUNT) * 0.45;
+  const gProps = useAnimatedProps(() => {
+    const p = interpolate(bloom.value, [start, start + 0.5], [0, 1], "clamp");
+    return { scale: p, originX: CX, originY: CY, opacity: p };
+  });
+  return (
+    <AnimatedG animatedProps={gProps}>
+      <Path d={path} fill="hsl(4, 84%, 42%)" stroke="hsl(4, 70%, 30%)" strokeWidth={1} />
+    </AnimatedG>
+  );
+}
+
+export default function SplashScreen({ onFinish }: { onFinish: () => void }) {
+  const stemProgress    = useSharedValue(0);
+  const centerScale     = useSharedValue(0);
+  const bloom           = useSharedValue(0);
+  const swayAngle       = useSharedValue(0);
+  const textOpacity     = useSharedValue(0);
+  const textY           = useSharedValue(20);
   const subtitleOpacity = useSharedValue(0);
-  const wholeScale = useSharedValue(0.8);
-  const stemHeight = useSharedValue(0);
 
   useEffect(() => {
-    // Stem grows
-    stemHeight.value = withTiming(1, { duration: 600, easing: Easing.out(Easing.cubic) });
+    // 1. Stem grows
+    stemProgress.value = withTiming(1, { duration: 700, easing: Easing.out(Easing.cubic) });
 
-    // Flower blooms
-    bloom.value = withDelay(400, withTiming(1, { duration: 1000, easing: Easing.out(Easing.cubic) }));
+    // 2. Pistil pops in — timing with slight overshoot, no oscillation
+    centerScale.value = withDelay(620, withTiming(1, { duration: 300, easing: Easing.out(Easing.back(1.8)) }));
 
-    // Center circle pops in
-    centerScale.value = withDelay(900, withSpring(1, { damping: 6, stiffness: 100 }));
+    // 3. Petals bloom outward from center, staggered via single bloom 0→1
+    bloom.value = withDelay(950, withTiming(1, { duration: 900, easing: Easing.out(Easing.cubic) }));
 
-    // Whole flower settles
-    wholeScale.value = withDelay(200, withSpring(1, { damping: 12, stiffness: 90 }));
+    // 4. Sway — starts after petals are open
+    swayAngle.value = withDelay(
+      1950,
+      withRepeat(
+        withSequence(
+          withTiming( 5, { duration:  900, easing: Easing.inOut(Easing.sin) }),
+          withTiming(-5, { duration: 1800, easing: Easing.inOut(Easing.sin) }),
+          withTiming( 0, { duration:  900, easing: Easing.inOut(Easing.sin) }),
+        ),
+        -1,
+        false,
+      ),
+    );
 
-    // Text appears
-    textOpacity.value = withDelay(1200, withTiming(1, { duration: 600 }));
-    textTranslateY.value = withDelay(1200, withSpring(0, { damping: 12, stiffness: 100 }));
+    textOpacity.value     = withDelay(1700, withTiming(1, { duration: 600 }));
+    textY.value           = withDelay(1700, withSpring(0, { damping: 14, stiffness: 100 }));
+    subtitleOpacity.value = withDelay(2200, withTiming(1, { duration: 500 }));
 
-    // Subtitle
-    subtitleOpacity.value = withDelay(1600, withTiming(1, { duration: 500 }));
-
-    // Finish after hold
-    const timeout = setTimeout(() => {
-      onFinish();
-    }, 3200);
-
-    return () => clearTimeout(timeout);
+    const t = setTimeout(() => onFinish(), 4000);
+    return () => clearTimeout(t);
   }, []);
 
-  const flowerStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: wholeScale.value }],
-  }));
-
   const stemProps = useAnimatedProps(() => {
-    const h = interpolate(stemHeight.value, [0, 1], [0, 60]);
+    const h = interpolate(stemProgress.value, [0, 1], [0, 60]);
     return {
       d: `M ${CX} ${CY + 65} Q ${CX + 5} ${CY + 65 + h * 0.5} ${CX} ${CY + 65 + h}`,
-      strokeWidth: interpolate(stemHeight.value, [0, 1], [0, 3]),
-      opacity: stemHeight.value,
+      strokeWidth: 3,
+      opacity: stemProgress.value,
     };
   });
 
   const leaf1Props = useAnimatedProps(() => {
-    const progress = interpolate(stemHeight.value, [0.4, 1], [0, 1], "clamp");
+    const p = interpolate(stemProgress.value, [0.45, 1], [0, 1], "clamp");
     return {
       d: `M ${CX} ${CY + 95} Q ${CX - 25} ${CY + 80} ${CX - 20} ${CY + 92}`,
       strokeWidth: 2,
-      opacity: progress,
+      opacity: p,
     };
   });
 
   const leaf2Props = useAnimatedProps(() => {
-    const progress = interpolate(stemHeight.value, [0.5, 1], [0, 1], "clamp");
+    const p = interpolate(stemProgress.value, [0.6, 1], [0, 1], "clamp");
     return {
-      d: `M ${CX} ${CY + 105} Q ${CX + 25} ${CY + 90} ${CX + 22} ${CY + 102}`,
+      d: `M ${CX} ${CY + 108} Q ${CX + 25} ${CY + 93} ${CX + 22} ${CY + 105}`,
       strokeWidth: 2,
-      opacity: progress,
+      opacity: p,
     };
   });
 
   const centerProps = useAnimatedProps(() => ({
-    r: interpolate(centerScale.value, [0, 1], [0, 12]),
+    r:       interpolate(centerScale.value, [0, 1], [0, 12]),
     opacity: centerScale.value,
   }));
 
-  const outerPetalProps = outerPetals.map((_, i) =>
-    useAnimatedProps(() => {
-      const stagger = i * 60;
-      const progress = interpolate(
-        bloom.value,
-        [0, 0.3, 1],
-        [0, 0, 1],
-      );
-      return {
-        opacity: progress,
-        strokeWidth: interpolate(progress, [0, 1], [0, 1]),
-      };
-    })
-  );
-
-  const outerPetalStyles = outerPetals.map((_, i) =>
-    useAnimatedStyle(() => {
-      const stagger = i * 60;
-      return {
-        transform: [
-          {
-            scale: withDelay(
-              stagger,
-              withSpring(bloom.value, { damping: 8, stiffness: 80 })
-            ),
-          },
-        ],
-      };
-    })
-  );
-
-  const innerPetalProps = innerPetals.map((_, i) =>
-    useAnimatedProps(() => {
-      const progress = interpolate(bloom.value, [0.2, 0.6, 1], [0, 0, 1]);
-      return {
-        opacity: progress,
-        strokeWidth: interpolate(progress, [0, 1], [0, 1]),
-      };
-    })
-  );
+  // Sway: rotate the whole SVG around the stem base using View transforms.
+  // Stem base is 125px below the SVG center → translateY trick to shift pivot.
+  const swayStyle = useAnimatedStyle(() => ({
+    transform: [
+      { translateY:  SWAY_OFFSET_Y },
+      { rotate: `${swayAngle.value}deg` },
+      { translateY: -SWAY_OFFSET_Y },
+    ],
+  }));
 
   const textStyle = useAnimatedStyle(() => ({
     opacity: textOpacity.value,
-    transform: [{ translateY: textTranslateY.value }],
+    transform: [{ translateY: textY.value }],
   }));
 
   const subtitleStyle = useAnimatedStyle(() => ({
@@ -225,10 +171,9 @@ export default function SplashScreen({ onFinish }: SplashScreenProps) {
 
   return (
     <View style={styles.container}>
-      {/* Soft radial glow behind flower */}
-      <Animated.View style={[styles.glow, flowerStyle]} />
+      <View style={styles.glow} />
 
-      <Animated.View style={flowerStyle}>
+      <Animated.View style={swayStyle}>
         <Svg width={300} height={300} viewBox="0 0 300 300">
           {/* Stem */}
           <AnimatedPath
@@ -253,74 +198,29 @@ export default function SplashScreen({ onFinish }: SplashScreenProps) {
           />
 
           {/* Outer petals */}
-          {outerPetals.map((petal, i) => (
-            <AnimatedPath
-              key={`outer-${i}`}
-              d={petal.path}
-              fill={petal.color}
-              stroke="hsl(4, 84%, 35%)"
-              animatedProps={outerPetalProps[i]}
-            />
+          {outerPetals.map((p, i) => (
+            <OuterPetal key={`o${i}`} path={p.path} bloom={bloom} index={i} />
           ))}
 
           {/* Inner petals */}
-          {innerPetals.map((petal, i) => (
-            <AnimatedPath
-              key={`inner-${i}`}
-              d={petal.path}
-              fill={petal.color}
-              stroke="hsl(4, 70%, 30%)"
-              animatedProps={innerPetalProps[i]}
-            />
+          {innerPetals.map((p, i) => (
+            <InnerPetal key={`n${i}`} path={p.path} bloom={bloom} index={i} />
           ))}
 
-          {/* Center */}
+          {/* Pistil */}
           <AnimatedCircle
-            cx={CX}
-            cy={CY}
+            cx={CX} cy={CY}
             fill="hsl(45, 90%, 60%)"
             stroke="hsl(35, 80%, 50%)"
             strokeWidth={2}
             animatedProps={centerProps}
           />
-
-          {/* Center detail dots */}
-          <AnimatedCircle
-            cx={CX - 3}
-            cy={CY - 2}
-            fill="hsl(35, 80%, 45%)"
-            animatedProps={useAnimatedProps(() => ({
-              r: interpolate(centerScale.value, [0, 1], [0, 2]),
-              opacity: centerScale.value,
-            }))}
-          />
-          <AnimatedCircle
-            cx={CX + 3}
-            cy={CY + 2}
-            fill="hsl(35, 80%, 45%)"
-            animatedProps={useAnimatedProps(() => ({
-              r: interpolate(centerScale.value, [0, 1], [0, 2]),
-              opacity: centerScale.value,
-            }))}
-          />
-          <AnimatedCircle
-            cx={CX + 1}
-            cy={CY - 4}
-            fill="hsl(35, 80%, 45%)"
-            animatedProps={useAnimatedProps(() => ({
-              r: interpolate(centerScale.value, [0, 1], [0, 1.5]),
-              opacity: centerScale.value,
-            }))}
-          />
         </Svg>
       </Animated.View>
 
-      {/* Title text */}
       <Animated.Text style={[styles.title, textStyle]}>
         Expressions India
       </Animated.Text>
-
-      {/* Subtle tagline */}
       <Animated.Text style={[styles.subtitle, subtitleStyle]}>
         Nurturing Minds, Enriching Lives
       </Animated.Text>

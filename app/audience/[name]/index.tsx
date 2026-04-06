@@ -12,7 +12,11 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import Animated, { FadeInDown, FadeInUp, SlideInDown } from "react-native-reanimated";
+import Animated, {
+  FadeInDown,
+  FadeInUp,
+  SlideInDown,
+} from "react-native-reanimated";
 
 const SECTION_CARDS = [
   {
@@ -64,6 +68,7 @@ export default function AudiencePage() {
         <View
           style={{
             flexDirection: "row",
+            // alignItems: "center",
             alignItems: "center",
             paddingHorizontal: 15,
             paddingVertical: 10,
@@ -81,7 +86,7 @@ export default function AudiencePage() {
         </View>
         <Text
           style={{
-            fontSize: 30,
+            fontSize: 26,
             fontFamily: theme.fontBold,
             color: theme.sectionHeadingColor,
             marginBottom: 4,
@@ -96,7 +101,7 @@ export default function AudiencePage() {
         showsVerticalScrollIndicator={false}
       >
         {/* Description */}
-        <View style={{ minHeight: 96 }}>
+        <View style={{ minHeight: 200 }}>
           {isLoading ? (
             <View style={{ marginVertical: 16 }}>
               <ActivityIndicator size="small" color={theme.red} />

@@ -1,5 +1,7 @@
 import { View, Text } from "react-native";
 import { theme } from "../theme";
+
+const lightRed = "hsl(4, 65%, 50%)";
 import { CalendarDays } from "lucide-react-native";
 import Animated, { FadeInDown } from "react-native-reanimated";
 
@@ -28,7 +30,7 @@ export default function LatestEvents() {
           style={{
             width: 4,
             height: 22,
-            backgroundColor: theme.red,
+            backgroundColor: lightRed,
             borderRadius: 2,
           }}
         />
@@ -36,7 +38,7 @@ export default function LatestEvents() {
           style={{
             fontSize: 20,
             fontFamily: theme.fontBold,
-            color: theme.sectionHeadingColor,
+            color: lightRed,
           }}
         >
           Latest Activities
@@ -49,17 +51,17 @@ export default function LatestEvents() {
             key={i}
             entering={FadeInDown.duration(400).delay(i * 70)}
             style={{
-              backgroundColor: theme.backgroundColorLight,
+              backgroundColor: theme.backgroundColor,
               borderRadius: 12,
               padding: 14,
               flexDirection: "row",
               alignItems: "center",
               gap: 12,
-              shadowColor: "#000",
-              shadowOffset: { width: 0, height: 1 },
-              shadowOpacity: 0.06,
-              shadowRadius: 4,
-              elevation: 2,
+              // shadowColor: "#000",
+              // shadowOffset: { width: 0, height: 1 },
+              // shadowOpacity: 0.06,
+              // shadowRadius: 4,
+              // elevation: 2,
             }}
           >
             <View
@@ -67,13 +69,13 @@ export default function LatestEvents() {
                 width: 36,
                 height: 36,
                 borderRadius: 10,
-                backgroundColor: "white",
+                backgroundColor: lightRed,
                 alignItems: "center",
                 justifyContent: "center",
                 flexShrink: 0,
               }}
             >
-              <CalendarDays size={18} color={theme.red} strokeWidth={2} />
+              <CalendarDays size={18} color={"white"} strokeWidth={2} />
             </View>
             <Text
               style={{
@@ -89,7 +91,7 @@ export default function LatestEvents() {
             {event.date && (
               <View
                 style={{
-                  backgroundColor: "white",
+                  backgroundColor: "transparent",
                   borderRadius: 6,
                   paddingHorizontal: 8,
                   paddingVertical: 4,
