@@ -12,34 +12,27 @@ import * as Linking from "expo-linking";
 import { SafeAreaView } from "react-native-safe-area-context";
 import RecentFeed from "@/src/components/RecentFeed";
 import Carousel from "@/src/components/Carousel";
-import { useQuery } from "@tanstack/react-query";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import { ExternalLink } from "lucide-react-native";
+import { useUpcomingCarouselImages } from "@/src/hooks/useUpcomingCarouselImages";
+import { useCompletedCarouselImages } from "@/src/hooks/useCompletedCarouselImages";
 
 const lightRed = "hsl(4, 65%, 50%)";
 
 export default function Home() {
   const globalStyle = styleFactory();
-  const { data: images = [], isPending: homePageImagesPending } =
-    useHomePageImageQuery();
+  const { data: upcomingImages = [], isPending: upcomingPending } =
+    useUpcomingCarouselImages();
+  const { data: completedImages = [], isPending: completedPending } =
+    useCompletedCarouselImages();
 
   return (
     <SafeAreaView style={[globalStyle.screen]} edges={["top", "left", "right"]}>
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* Header */}
-        <Animated.View
-          entering={FadeInDown.duration(400)}
-          style={
-            {
-              // paddingHorizontal: 18,
-              // paddingTop: 18,
-              // paddingBottom: 10,
-            }
-          }
-        >
+        <Animated.View entering={FadeInDown.duration(400)}>
           <Text
             style={{
-              // fontFamily: "Delius_400Regular",
               fontSize: 30,
               color: "rgb(225,0,0)",
               textAlign: "center",
@@ -61,25 +54,33 @@ export default function Home() {
           </Text>
         </Animated.View>
 
-        {/* Carousel */}
-        {homePageImagesPending ? (
-          <View
-            style={{
-              height: 260,
-              alignItems: "center",
-              justifyContent: "center",
-              marginHorizontal: 15,
-              borderRadius: 20,
-              backgroundColor: theme.backgroundColorDark,
-            }}
-          >
-            <ActivityIndicator size="large" color={theme.red} />
-          </View>
-        ) : (
-          <Carousel images={images} />
-        )}
+        {/* Upcoming Events Carousel */}
+        {upcomingPending ? (
+          <>
+            <SectionTitle label="Upcoming Events" />
+            <CarouselPlaceholder />
+          </>
+        ) : upcomingImages.length > 0 ? (
+          <>
+            <SectionTitle label="Upcoming Events" />
+            <Carousel images={upcomingImages} />
+          </>
+        ) : null}
 
-        {/* Latest Activities */}
+        {/* Completed Events Carousel */}
+        {completedPending ? (
+          <>
+            <SectionTitle label="Completed Events" />
+            <CarouselPlaceholder />
+          </>
+        ) : completedImages.length > 0 ? (
+          <>
+            <SectionTitle label="Completed Events" />
+            <Carousel images={completedImages} />
+          </>
+        ) : null}
+
+        {/* Recent Activity */}
         <Animated.View entering={FadeInDown.duration(500).delay(100)}>
           <RecentFeed />
         </Animated.View>
@@ -93,32 +94,7 @@ export default function Home() {
             gap: 14,
           }}
         >
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              gap: 8,
-              marginBottom: 2,
-            }}
-          >
-            <View
-              style={{
-                width: 4,
-                height: 22,
-                backgroundColor: lightRed,
-                borderRadius: 2,
-              }}
-            />
-            <Text
-              style={{
-                fontSize: 20,
-                fontFamily: theme.fontBold,
-                color: lightRed,
-              }}
-            >
-              Downloads
-            </Text>
-          </View>
+          <SectionTitle label="Downloads" />
 
           <DownloadCard
             title="Almanac 2026"
@@ -140,6 +116,56 @@ export default function Home() {
         </View>
       </ScrollView>
     </SafeAreaView>
+  );
+}
+
+function SectionTitle({ label }: { label: string }) {
+  return (
+    <View
+      style={{
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 8,
+        paddingHorizontal: 15,
+        marginTop: 24,
+        marginBottom: 4,
+      }}
+    >
+      <View
+        style={{
+          width: 4,
+          height: 22,
+          backgroundColor: lightRed,
+          borderRadius: 2,
+        }}
+      />
+      <Text
+        style={{
+          fontSize: 20,
+          fontFamily: theme.fontBold,
+          color: lightRed,
+        }}
+      >
+        {label}
+      </Text>
+    </View>
+  );
+}
+
+function CarouselPlaceholder() {
+  return (
+    <View
+      style={{
+        height: 260,
+        alignItems: "center",
+        justifyContent: "center",
+        marginHorizontal: 15,
+        borderRadius: 20,
+        backgroundColor: theme.backgroundColorDark,
+      }}
+    >
+      <ActivityIndicator size="large" color={theme.red} />
+    </View>
   );
 }
 
@@ -168,11 +194,6 @@ function DownloadCard({
             borderRadius: 16,
             padding: 10,
             overflow: "hidden",
-            // shadowColor: "#000",
-            // shadowOffset: { width: 0, height: 2 },
-            // shadowOpacity: 0.08,
-            // shadowRadius: 8,
-            // elevation: 3,
           },
           pressed && { opacity: 0.88, transform: [{ scale: 0.985 }] },
         ]}
@@ -230,23 +251,3 @@ function DownloadCard({
     </Animated.View>
   );
 }
-
-const fetchHomePageImages = async () => {
-  try {
-    const response = await fetch(
-      `${process.env.EXPO_PUBLIC_API_URL}/home/images`,
-    );
-    const data = await response.json();
-    return data.data as string[];
-  } catch (error) {}
-};
-
-const useHomePageImageQuery = () => {
-  return useQuery({
-    queryKey: ["homeImages"],
-    queryFn: fetchHomePageImages,
-    retry: 3,
-    refetchInterval: 60000,
-    refetchIntervalInBackground: false,
-  });
-};

@@ -28,6 +28,10 @@ export const queryKeys = {
   latestFeed: {
     all: () => ["latestFeed"] as const,
   },
+  homeImages: {
+    upcoming: () => ["homeImages", "upcoming"] as const,
+    completed: () => ["homeImages", "completed"] as const,
+  },
   audience: {
     detail: (name: string) => ["audience", name] as const,
     events: (name: string, params?: { limit?: number; offset?: number }) =>

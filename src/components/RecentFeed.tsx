@@ -65,7 +65,7 @@ export default function RecentFeed() {
             color: lightRed,
           }}
         >
-          Recent Activity
+          Recent Additions
         </Text>
       </View>
 
@@ -83,7 +83,7 @@ export default function RecentFeed() {
             paddingVertical: 16,
           }}
         >
-          Nothing to show right now.
+          No recent additions.
         </Text>
       ) : (
         <View style={{ gap: 8 }}>
