@@ -1,5 +1,5 @@
 import Animated, { SlideInDown } from "react-native-reanimated";
-import { useState } from "react";
+import { memo, useCallback, useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
@@ -19,6 +19,8 @@ import { format } from "date-fns";
 import { NavBar } from "@/src/components/NavBar";
 import Pagination from "@/src/components/Pagination";
 import { Mic } from "lucide-react-native";
+import type { PodcastListItem } from "@/src/types/podcast";
+import type { ListRenderItem } from "react-native";
 
 type Tab = "podcasts" | "journals" | "articles";
 
@@ -34,6 +36,290 @@ function formatDate(date: Date) {
   return format(date, "do MMM - yy");
 }
 
+function getYouTubeThumbnail(url: string): string | null {
+  const match = url.match(
+    /(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|v\/|v=|shorts\/))([^&?/\s]+)/i,
+  );
+  if (!match) return null;
+  return `https://img.youtube.com/vi/${match[1]}/hqdefault.jpg`;
+}
+
+const PodcastCard = memo(function PodcastCard({
+  item,
+  index,
+}: {
+  item: PodcastListItem;
+  index: number;
+}) {
+  const thumb = getYouTubeThumbnail(item.link);
+  console.log(thumb);
+  return (
+    <Animated.View
+      style={{ flex: 1 }}
+      entering={SlideInDown.duration(450).delay(Math.min(index, 8) * 60)}
+    >
+      <Link href={`/podcast/${item.id}`} asChild>
+        <Pressable style={{ flex: 1 }}>
+          {({ pressed }) => (
+            <View
+              style={[
+                {
+                  backgroundColor: "hsl(0, 0%, 100%)",
+                  borderRadius: 12,
+                  elevation: 1,
+                  overflow: "hidden",
+                  shadowColor: "#000",
+                  shadowOffset: { width: 0, height: 1 },
+                  shadowOpacity: 0.06,
+                  shadowRadius: 4,
+                },
+                pressed && { opacity: 0.85, transform: [{ scale: 0.98 }] },
+              ]}
+            >
+              {thumb ? (
+                <Image
+                  source={{ uri: thumb }}
+                  style={{ width: "100%", aspectRatio: 16 / 9 }}
+                  resizeMode="cover"
+                />
+              ) : (
+                <View
+                  style={{
+                    width: "100%",
+                    aspectRatio: 16 / 9,
+                    backgroundColor: theme.red + "12",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Mic size={36} color={theme.red} strokeWidth={1.5} />
+                </View>
+              )}
+              <View style={{ padding: 8, gap: 6 }}>
+                <Text
+                  numberOfLines={2}
+                  ellipsizeMode="tail"
+                  style={{
+                    fontSize: 12,
+                    fontFamily: theme.fontBold,
+                    color: theme.text,
+                    lineHeight: 17,
+                  }}
+                >
+                  {item.title}
+                </Text>
+                <View
+                  style={{
+                    backgroundColor: theme.red + "12",
+                    alignSelf: "flex-start",
+                    paddingHorizontal: 6,
+                    paddingVertical: 3,
+                    borderRadius: 5,
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontSize: 10,
+                      fontFamily: theme.fontBold,
+                      color: "white",
+                    }}
+                  >
+                    {formatDate(item.createdAt)}
+                  </Text>
+                </View>
+              </View>
+            </View>
+          )}
+        </Pressable>
+      </Link>
+    </Animated.View>
+  );
+});
+
+type JournalItem = {
+  id: string;
+  title: string;
+  startMonth: string;
+  endMonth: string;
+  year: number;
+};
+
+const JournalCard = memo(function JournalCard({
+  item,
+  index,
+}: {
+  item: JournalItem;
+  index: number;
+}) {
+  return (
+    <Animated.View
+      entering={SlideInDown.duration(450).delay(Math.min(index, 8) * 60)}
+    >
+      <Link href={`/journal/${item.id}`} asChild>
+        <Pressable>
+          {({ pressed }) => (
+            <View
+              style={[
+                {
+                  borderBottomWidth: 1,
+                  borderColor: "hsl(0, 0%, 90%)",
+                  padding: 12,
+                },
+                pressed && { opacity: 0.85, transform: [{ scale: 0.99 }] },
+              ]}
+            >
+              <Text
+                numberOfLines={1}
+                ellipsizeMode="tail"
+                style={{
+                  fontSize: 15,
+                  color: "hsl(0, 0%, 30%)",
+                  marginBottom: 6,
+                }}
+              >
+                {item.title}
+              </Text>
+              <Text
+                style={{
+                  fontSize: 11,
+                  fontWeight: "bold",
+                  color: "hsl(0, 120%, 50%)",
+                  textAlign: "right",
+                }}
+              >
+                {item.startMonth}–{item.endMonth} {item.year}
+              </Text>
+            </View>
+          )}
+        </Pressable>
+      </Link>
+    </Animated.View>
+  );
+});
+
+type ArticleItem = {
+  id: string;
+  title: string;
+  category: string;
+  createdAt: Date;
+  thumbnailUrl?: string | null;
+};
+
+const ArticleCard = memo(function ArticleCard({
+  item,
+  index,
+}: {
+  item: ArticleItem;
+  index: number;
+}) {
+  return (
+    <Animated.View
+      style={{ flex: 1 }}
+      entering={SlideInDown.duration(450).delay(Math.min(index, 8) * 60)}
+    >
+      <Link href={`/article/${item.id}`} asChild>
+        <Pressable style={{ flex: 1 }}>
+          {({ pressed }) => (
+            <View
+              style={[
+                {
+                  backgroundColor: "hsl(0, 0%, 100%)",
+                  borderRadius: 12,
+                  elevation: 1,
+                  overflow: "hidden",
+                  shadowColor: "#000",
+                  shadowOffset: { width: 0, height: 1 },
+                  shadowOpacity: 0.06,
+                  shadowRadius: 4,
+                },
+                pressed && { opacity: 0.85, transform: [{ scale: 0.98 }] },
+              ]}
+            >
+              {item.thumbnailUrl ? (
+                <Image
+                  source={{ uri: item.thumbnailUrl }}
+                  style={{ width: "100%", aspectRatio: 1 }}
+                  resizeMode="cover"
+                />
+              ) : (
+                <View
+                  style={{
+                    width: "100%",
+                    aspectRatio: 1,
+                    backgroundColor: theme.backgroundColorDark,
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Text style={{ fontSize: 28 }}>📄</Text>
+                </View>
+              )}
+              <View style={{ padding: 8, gap: 6 }}>
+                <Text
+                  numberOfLines={2}
+                  ellipsizeMode="tail"
+                  style={{
+                    fontSize: 12,
+                    fontFamily: theme.fontBold,
+                    color: theme.text,
+                    lineHeight: 17,
+                  }}
+                >
+                  {item.title}
+                </Text>
+                <View
+                  style={{ flexDirection: "row", flexWrap: "wrap", gap: 4 }}
+                >
+                  <View
+                    style={{
+                      backgroundColor: theme.red + "18",
+                      borderRadius: 5,
+                      paddingHorizontal: 6,
+                      paddingVertical: 3,
+                    }}
+                  >
+                    <Text
+                      style={{
+                        fontSize: 10,
+                        color: theme.red,
+                        fontFamily: theme.fontBold,
+                      }}
+                    >
+                      {item.category}
+                    </Text>
+                  </View>
+                  <View
+                    style={{
+                      backgroundColor: theme.backgroundColorDark,
+                      borderRadius: 5,
+                      paddingHorizontal: 6,
+                      paddingVertical: 3,
+                    }}
+                  >
+                    <Text
+                      style={{
+                        fontSize: 10,
+                        color: "hsl(0,0%,45%)",
+                        fontFamily: theme.font,
+                      }}
+                    >
+                      {formatDate(item.createdAt)}
+                    </Text>
+                  </View>
+                </View>
+              </View>
+            </View>
+          )}
+        </Pressable>
+      </Link>
+    </Animated.View>
+  );
+});
+
+// ---------------------------------------------------------------------------
+// Screen
+// ---------------------------------------------------------------------------
+
 export default function Resources() {
   const [activeTab, setActiveTab] = useState<Tab>("podcasts");
   const [podcastPage, setPodcastPage] = useState(1);
@@ -45,43 +331,49 @@ export default function Resources() {
     data: podcastData,
     isLoading: podcastLoading,
     error: podcastError,
-  } = usePodcastQuery({
-    limit: LIMIT,
-    offset: (podcastPage - 1) * LIMIT,
-  });
+  } = usePodcastQuery({ limit: LIMIT, offset: (podcastPage - 1) * LIMIT });
 
   const podcasts = podcastData?.data ?? [];
-  const podcastTotal = podcastData?.meta?.total ?? 0;
   const podcastTotalPages =
-    podcastData?.meta?.totalPages ?? Math.ceil(podcastTotal / LIMIT);
+    podcastData?.meta?.totalPages ??
+    Math.ceil((podcastData?.meta?.total ?? 0) / LIMIT);
 
   const {
     data: journalData,
     isLoading: journalLoading,
     error: journalError,
-  } = useJournalQuery({
-    limit: LIMIT,
-    offset: (journalPage - 1) * LIMIT,
-  });
+  } = useJournalQuery({ limit: LIMIT, offset: (journalPage - 1) * LIMIT });
 
   const journals = journalData?.data ?? [];
-  const journalTotal = journalData?.meta?.total ?? 0;
   const journalTotalPages =
-    journalData?.meta?.totalPages ?? Math.ceil(journalTotal / LIMIT);
+    journalData?.meta?.totalPages ??
+    Math.ceil((journalData?.meta?.total ?? 0) / LIMIT);
 
   const {
     data: articleData,
     isLoading: articleLoading,
     error: articleError,
-  } = useArticleQuery({
-    limit: LIMIT,
-    offset: (articlePage - 1) * LIMIT,
-  });
+  } = useArticleQuery({ limit: LIMIT, offset: (articlePage - 1) * LIMIT });
 
   const articles = articleData?.data ?? [];
-  const articleTotal = articleData?.meta?.total ?? 0;
   const articleTotalPages =
-    articleData?.meta?.totalPages ?? Math.ceil(articleTotal / LIMIT);
+    articleData?.meta?.totalPages ??
+    Math.ceil((articleData?.meta?.total ?? 0) / LIMIT);
+
+  const renderPodcast: ListRenderItem<PodcastListItem> = useCallback(
+    ({ item, index }) => <PodcastCard item={item} index={index} />,
+    [],
+  );
+
+  const renderJournal: ListRenderItem<JournalItem> = useCallback(
+    ({ item, index }) => <JournalCard item={item} index={index} />,
+    [],
+  );
+
+  const renderArticle: ListRenderItem<ArticleItem> = useCallback(
+    ({ item, index }) => <ArticleCard item={item} index={index} />,
+    [],
+  );
 
   return (
     <SafeAreaView style={globalStyle.screen} edges={["top"]}>
@@ -91,6 +383,7 @@ export default function Resources() {
         currentTab={activeTab}
         currentTabSetter={setActiveTab}
       />
+
       {activeTab === "podcasts" && (
         <>
           {podcastError && (
@@ -100,7 +393,6 @@ export default function Resources() {
               </Text>
             </View>
           )}
-
           {podcastLoading ? (
             <View
               style={{
@@ -123,88 +415,7 @@ export default function Resources() {
                 marginTop: 8,
               }}
               columnWrapperStyle={{ gap: 10, paddingHorizontal: 5 }}
-              renderItem={({ item, index }) => (
-                <Animated.View
-                  style={{ flex: 1 }}
-                  entering={SlideInDown.duration(450).delay(
-                    Math.min(index, 8) * 60,
-                  )}
-                >
-                  <Link href={`/podcast/${item.id}`} asChild>
-                    <Pressable style={{ flex: 1 }}>
-                      {({ pressed }) => (
-                        <View
-                          style={[
-                            {
-                              backgroundColor: "hsl(0, 0%, 100%)",
-                              borderRadius: 12,
-                              elevation: 1,
-                              overflow: "hidden",
-                              shadowColor: "#000",
-                              shadowOffset: { width: 0, height: 1 },
-                              shadowOpacity: 0.06,
-                              shadowRadius: 4,
-                            },
-                            pressed && {
-                              opacity: 0.85,
-                              transform: [{ scale: 0.98 }],
-                            },
-                          ]}
-                        >
-                          <View
-                            style={{
-                              width: "100%",
-                              aspectRatio: 1,
-                              backgroundColor: theme.red + "12",
-                              alignItems: "center",
-                              justifyContent: "center",
-                            }}
-                          >
-                            <Mic
-                              size={36}
-                              color={theme.red}
-                              strokeWidth={1.5}
-                            />
-                          </View>
-                          <View style={{ padding: 8, gap: 6 }}>
-                            <Text
-                              numberOfLines={2}
-                              ellipsizeMode="tail"
-                              style={{
-                                fontSize: 12,
-                                fontFamily: theme.fontBold,
-                                color: theme.text,
-                                lineHeight: 17,
-                              }}
-                            >
-                              {item.title}
-                            </Text>
-                            <View
-                              style={{
-                                backgroundColor: theme.red + "12",
-                                alignSelf: "flex-start",
-                                paddingHorizontal: 6,
-                                paddingVertical: 3,
-                                borderRadius: 5,
-                              }}
-                            >
-                              <Text
-                                style={{
-                                  fontSize: 10,
-                                  fontFamily: theme.fontBold,
-                                  color: theme.red,
-                                }}
-                              >
-                                {formatDate(item.createdAt)}
-                              </Text>
-                            </View>
-                          </View>
-                        </View>
-                      )}
-                    </Pressable>
-                  </Link>
-                </Animated.View>
-              )}
+              renderItem={renderPodcast}
               ListEmptyComponent={
                 <Text
                   style={[
@@ -217,12 +428,13 @@ export default function Resources() {
               }
             />
           )}
-
-          <Pagination
-            page={podcastPage}
-            totalPages={podcastTotalPages}
-            setPage={setPodcastPage}
-          />
+          {podcastTotalPages > 0 && (
+            <Pagination
+              page={podcastPage}
+              totalPages={podcastTotalPages}
+              setPage={setPodcastPage}
+            />
+          )}
         </>
       )}
 
@@ -235,7 +447,6 @@ export default function Resources() {
               </Text>
             </View>
           )}
-
           {journalLoading ? (
             <View
               style={{
@@ -256,60 +467,7 @@ export default function Resources() {
                 gap: 10,
                 paddingBottom: 12,
               }}
-              renderItem={({ item, index }) => (
-                <Animated.View
-                  entering={SlideInDown.duration(450).delay(
-                    Math.min(index, 8) * 60,
-                  )}
-                >
-                  <Link href={`/journal/${item.id}`} asChild>
-                    <Pressable>
-                      {({ pressed }) => (
-                        <View
-                          style={[
-                            {
-                              // backgroundColor: "hsl(0, 0%, 100%)",
-                              // borderRadius: 5,
-                              // elevation: 1,
-                              // borderWidth: 1,
-                              borderBottomWidth: 1,
-                              borderColor: "hsl(0, 0%, 90%)",
-                              // borderRadius: 5,
-                              padding: 12,
-                            },
-                            pressed && {
-                              opacity: 0.85,
-                              transform: [{ scale: 0.99 }],
-                            },
-                          ]}
-                        >
-                          <Text
-                            numberOfLines={1}
-                            ellipsizeMode="tail"
-                            style={{
-                              fontSize: 15,
-                              color: "hsl(0, 0%, 30%)",
-                              marginBottom: 6,
-                            }}
-                          >
-                            {item.title}
-                          </Text>
-                          <Text
-                            style={{
-                              fontSize: 11,
-                              fontWeight: "bold",
-                              color: "hsl(0, 120%, 50%)",
-                              textAlign: "right",
-                            }}
-                          >
-                            {item.startMonth}–{item.endMonth} {item.year}
-                          </Text>
-                        </View>
-                      )}
-                    </Pressable>
-                  </Link>
-                </Animated.View>
-              )}
+              renderItem={renderJournal}
               ListEmptyComponent={
                 <Text
                   style={[
@@ -322,94 +480,16 @@ export default function Resources() {
               }
             />
           )}
-          <Pagination
-            page={journalPage}
-            totalPages={journalTotalPages}
-            setPage={setJournalPage}
-          />
-          {/*<View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "space-between",
-              paddingHorizontal: 15,
-              paddingVertical: 12,
-              borderTopWidth: 1,
-              borderTopColor: theme.backgroundColorDark,
-            }}
-          >
-            <Pressable
-              onPress={() => setJournalPage((p) => p - 1)}
-              disabled={journalPage === 1}
-              style={({ pressed }) => [
-                {
-                  flexDirection: "row",
-                  alignItems: "center",
-                  backgroundColor: theme.red,
-                  paddingVertical: 8,
-                  paddingHorizontal: 14,
-                  borderRadius: 8,
-                  opacity: journalPage === 1 ? 0.35 : 1,
-                },
-                pressed && { opacity: 0.75 },
-              ]}
-            >
-              <ChevronLeft size={18} color="white" strokeWidth={2.5} />
-              <Text
-                style={{
-                  color: "white",
-                  fontFamily: theme.fontBold,
-                  fontSize: 14,
-                  marginLeft: 2,
-                }}
-              >
-                Prev
-              </Text>
-            </Pressable>
-
-            <Text
-              style={{
-                color: theme.text,
-                fontFamily: theme.font,
-                fontSize: 14,
-              }}
-            >
-              {journalTotalPages > 0
-                ? `${journalPage} / ${journalTotalPages}`
-                : "—"}
-            </Text>
-
-            <Pressable
-              onPress={() => setJournalPage((p) => p + 1)}
-              disabled={journalPage >= journalTotalPages}
-              style={({ pressed }) => [
-                {
-                  flexDirection: "row",
-                  alignItems: "center",
-                  backgroundColor: theme.red,
-                  paddingVertical: 8,
-                  paddingHorizontal: 14,
-                  borderRadius: 8,
-                  opacity: journalPage >= journalTotalPages ? 0.35 : 1,
-                },
-                pressed && { opacity: 0.75 },
-              ]}
-            >
-              <Text
-                style={{
-                  color: "white",
-                  fontFamily: theme.fontBold,
-                  fontSize: 14,
-                  marginRight: 2,
-                }}
-              >
-                Next
-              </Text>
-              <ChevronRight size={18} color="white" strokeWidth={2.5} />
-            </Pressable>
-          </View>*/}
+          {journalTotalPages > 0 && (
+            <Pagination
+              page={journalPage}
+              totalPages={journalTotalPages}
+              setPage={setJournalPage}
+            />
+          )}
         </>
       )}
+
       {activeTab === "articles" && (
         <>
           {articleError && (
@@ -419,7 +499,6 @@ export default function Resources() {
               </Text>
             </View>
           )}
-
           {articleLoading ? (
             <View
               style={{
@@ -442,117 +521,7 @@ export default function Resources() {
                 marginTop: 8,
               }}
               columnWrapperStyle={{ gap: 10, paddingHorizontal: 5 }}
-              renderItem={({ item, index }) => (
-                <Animated.View
-                  style={{ flex: 1 }}
-                  entering={SlideInDown.duration(450).delay(
-                    Math.min(index, 8) * 60,
-                  )}
-                >
-                  <Link href={`/article/${item.id}`} asChild>
-                    <Pressable style={{ flex: 1 }}>
-                      {({ pressed }) => (
-                        <View
-                          style={[
-                            {
-                              backgroundColor: "hsl(0, 0%, 100%)",
-                              borderRadius: 12,
-                              elevation: 1,
-                              overflow: "hidden",
-                              shadowColor: "#000",
-                              shadowOffset: { width: 0, height: 1 },
-                              shadowOpacity: 0.06,
-                              shadowRadius: 4,
-                            },
-                            pressed && {
-                              opacity: 0.85,
-                              transform: [{ scale: 0.98 }],
-                            },
-                          ]}
-                        >
-                          {item.thumbnailUrl ? (
-                            <Image
-                              source={{ uri: item.thumbnailUrl }}
-                              style={{ width: "100%", aspectRatio: 1 }}
-                              resizeMode="cover"
-                            />
-                          ) : (
-                            <View
-                              style={{
-                                width: "100%",
-                                aspectRatio: 1,
-                                backgroundColor: theme.backgroundColorDark,
-                                alignItems: "center",
-                                justifyContent: "center",
-                              }}
-                            >
-                              <Text style={{ fontSize: 28 }}>📄</Text>
-                            </View>
-                          )}
-                          <View style={{ padding: 8, gap: 6 }}>
-                            <Text
-                              numberOfLines={2}
-                              ellipsizeMode="tail"
-                              style={{
-                                fontSize: 12,
-                                fontFamily: theme.fontBold,
-                                color: theme.text,
-                                lineHeight: 17,
-                              }}
-                            >
-                              {item.title}
-                            </Text>
-                            <View
-                              style={{
-                                flexDirection: "row",
-                                flexWrap: "wrap",
-                                gap: 4,
-                              }}
-                            >
-                              <View
-                                style={{
-                                  backgroundColor: theme.red + "18",
-                                  borderRadius: 5,
-                                  paddingHorizontal: 6,
-                                  paddingVertical: 3,
-                                }}
-                              >
-                                <Text
-                                  style={{
-                                    fontSize: 10,
-                                    color: theme.red,
-                                    fontFamily: theme.fontBold,
-                                  }}
-                                >
-                                  {item.category}
-                                </Text>
-                              </View>
-                              <View
-                                style={{
-                                  backgroundColor: theme.backgroundColorDark,
-                                  borderRadius: 5,
-                                  paddingHorizontal: 6,
-                                  paddingVertical: 3,
-                                }}
-                              >
-                                <Text
-                                  style={{
-                                    fontSize: 10,
-                                    color: "hsl(0,0%,45%)",
-                                    fontFamily: theme.font,
-                                  }}
-                                >
-                                  {formatDate(item.createdAt)}
-                                </Text>
-                              </View>
-                            </View>
-                          </View>
-                        </View>
-                      )}
-                    </Pressable>
-                  </Link>
-                </Animated.View>
-              )}
+              renderItem={renderArticle}
               ListEmptyComponent={
                 <Text
                   style={[
@@ -565,12 +534,13 @@ export default function Resources() {
               }
             />
           )}
-
-          <Pagination
-            page={articlePage}
-            totalPages={articleTotalPages}
-            setPage={setArticlePage}
-          />
+          {articleTotalPages > 0 && (
+            <Pagination
+              page={articlePage}
+              totalPages={articleTotalPages}
+              setPage={setArticlePage}
+            />
+          )}
         </>
       )}
     </SafeAreaView>

@@ -15,6 +15,7 @@ import Button from "@/src/components/ui/button";
 import { useForm } from "@tanstack/react-form";
 import { z } from "zod";
 import Animated, { FadeInDown } from "react-native-reanimated";
+import { styleFactory } from "@/src/styleFactory";
 
 const ContactFormSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -145,9 +146,9 @@ export default function WriteToUs() {
       }
     },
   });
-
+  const globalStyle = styleFactory();
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: theme.backgroundColor }}>
+    <SafeAreaView style={[globalStyle.screen]}>
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === "ios" ? "padding" : undefined}

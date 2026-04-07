@@ -25,6 +25,9 @@ export const queryKeys = {
       ["articles", "list", params] as const,
     detail: (id: string) => ["articles", "detail", id] as const,
   },
+  latestFeed: {
+    all: () => ["latestFeed"] as const,
+  },
   audience: {
     detail: (name: string) => ["audience", name] as const,
     events: (name: string, params?: { limit?: number; offset?: number }) =>

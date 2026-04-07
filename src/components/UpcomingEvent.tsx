@@ -17,13 +17,10 @@ import Pagination from "./Pagination";
 
 const LIMIT = 6;
 
-function formatDate(date: Date) {
-  return format(date, "do MMM - yy");
-}
-
 function formatDateRange(startDate: Date, endDate: Date | null) {
-  if (!endDate) return formatDate(startDate);
-  return `${formatDate(startDate)} – ${formatDate(endDate)}`;
+  const start = format(startDate, "do MMM - yy");
+  if (!endDate) return start;
+  return `${start} – ${format(endDate, "do MMM - yy")}`;
 }
 
 export default function UpcomingEvents() {
@@ -49,9 +46,7 @@ export default function UpcomingEvents() {
         </View>
       )}
       {isLoading ? (
-        <View
-          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-        >
+        <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
           <ActivityIndicator size="large" color={theme.red} />
         </View>
       ) : (
@@ -69,9 +64,7 @@ export default function UpcomingEvents() {
           renderItem={({ item, index }) => (
             <Animated.View
               style={{ flex: 1 }}
-              entering={SlideInDown.duration(500).delay(
-                Math.min(index, 7) * 60,
-              )}
+              entering={SlideInDown.duration(500).delay(Math.min(index, 7) * 60)}
             >
               <Link href={`/event/${item.id}`} asChild>
                 <Pressable>
@@ -88,10 +81,7 @@ export default function UpcomingEvents() {
                           shadowRadius: 6,
                           overflow: "hidden",
                         },
-                        pressed && {
-                          opacity: 0.88,
-                          transform: [{ scale: 0.985 }],
-                        },
+                        pressed && { opacity: 0.88, transform: [{ scale: 0.985 }] },
                       ]}
                     >
                       {item.thumbnailUrl ? (
@@ -113,7 +103,6 @@ export default function UpcomingEvents() {
                           <Text style={{ color: "white", fontSize: 36, opacity: 0.6 }}>🌸</Text>
                         </View>
                       )}
-
                       <View style={{ padding: 8, gap: 6 }}>
                         <Text
                           numberOfLines={2}
@@ -146,29 +135,6 @@ export default function UpcomingEvents() {
                             {formatDateRange(item.startDate, item.endDate)}
                           </Text>
                         </View>
-                        <View
-                          style={{
-                            backgroundColor: item.isOnline
-                              ? "hsla(120, 60%, 40%, 0.1)"
-                              : "hsla(220, 60%, 50%, 0.1)",
-                            paddingHorizontal: 6,
-                            paddingVertical: 3,
-                            borderRadius: 5,
-                            alignSelf: "flex-start",
-                          }}
-                        >
-                          <Text
-                            style={{
-                              fontSize: 10,
-                              fontFamily: theme.fontBold,
-                              color: item.isOnline
-                                ? "hsl(120, 60%, 30%)"
-                                : "hsl(220, 60%, 40%)",
-                            }}
-                          >
-                            {item.isOnline ? "Online" : "In-Person"}
-                          </Text>
-                        </View>
                       </View>
                     </View>
                   )}
@@ -186,7 +152,9 @@ export default function UpcomingEvents() {
           }
         />
       )}
-      <Pagination page={page} totalPages={totalPages} setPage={setPage} />
+      {totalPages > 0 && (
+        <Pagination page={page} totalPages={totalPages} setPage={setPage} />
+      )}
     </>
   );
 }

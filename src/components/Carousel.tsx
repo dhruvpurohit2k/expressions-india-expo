@@ -61,19 +61,31 @@ export default function Carousel({ images }: { images: string[] }) {
   useEffect(() => {
     if (count === 0) return;
     const timer = setInterval(() => {
-      if (flatListRef.current) {
-        const nextIndex = currentIndexRef.current + 1;
-        if (nextIndex < extendedImages.length) {
-          flatListRef.current.scrollToIndex({
-            index: nextIndex,
-            animated: true,
-          });
-          currentIndexRef.current = nextIndex;
-        }
+      if (!flatListRef.current) return;
+
+      let nextIndex = currentIndexRef.current + 1;
+
+      // Approaching the end — silently jump to the equivalent middle position
+      if (nextIndex >= extendedImages.length - count) {
+        nextIndex = START_INDEX + (nextIndex % count);
+        currentIndexRef.current = nextIndex;
+        flatListRef.current.scrollToOffset({
+          offset: nextIndex * ITEM_WIDTH,
+          animated: false,
+        });
+        return;
       }
+
+      currentIndexRef.current = nextIndex;
+      // scrollToOffset avoids the silent failure that scrollToIndex has
+      // when the target item is outside the FlatList render window
+      flatListRef.current.scrollToOffset({
+        offset: nextIndex * ITEM_WIDTH,
+        animated: true,
+      });
     }, 3000);
     return () => clearInterval(timer);
-  }, [count, extendedImages]);
+  }, [count, extendedImages, ITEM_WIDTH, START_INDEX]);
 
   // If no images exist, exit early
   if (count === 0) return null;
@@ -111,10 +123,9 @@ export default function Carousel({ images }: { images: string[] }) {
         })}
         onScroll={scrollHandler}
         onMomentumScrollEnd={(event) => {
-          const newIndex = Math.round(
+          currentIndexRef.current = Math.round(
             event.nativeEvent.contentOffset.x / ITEM_WIDTH,
           );
-          currentIndexRef.current = newIndex;
         }}
         style={{
           flex: 1,

@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import * as Linking from "expo-linking";
 import { SafeAreaView } from "react-native-safe-area-context";
-import LatestEvents from "@/src/components/LatestEvents";
+import RecentFeed from "@/src/components/RecentFeed";
 import Carousel from "@/src/components/Carousel";
 import { useQuery } from "@tanstack/react-query";
 import Animated, { FadeInDown } from "react-native-reanimated";
@@ -81,7 +81,7 @@ export default function Home() {
 
         {/* Latest Activities */}
         <Animated.View entering={FadeInDown.duration(500).delay(100)}>
-          <LatestEvents />
+          <RecentFeed />
         </Animated.View>
 
         {/* Downloads */}

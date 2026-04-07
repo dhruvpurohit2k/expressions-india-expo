@@ -13,21 +13,14 @@ import Pagination from "./Pagination";
 import { usePastEventQuery } from "../hooks/usePastEventQuery";
 import { useState } from "react";
 import Animated, { FadeInUp, SlideInDown } from "react-native-reanimated";
+import { format } from "date-fns";
 
-const LIMIT = 10;
-
-const MONTHS = [
-  "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-  "Jul", "Aug", "Sept", "Oct", "Nov", "Dec",
-];
-
-function formatDate(date: Date) {
-  return `${date.getDate()} ${MONTHS[date.getMonth()]} ${date.getFullYear()}`;
-}
+const LIMIT = 6;
 
 function formatDateRange(startDate: Date, endDate: Date | null) {
-  if (!endDate) return formatDate(startDate);
-  return `${formatDate(startDate)} - ${formatDate(endDate)}`;
+  const start = format(startDate, "do MMM - yy");
+  if (!endDate) return start;
+  return `${start} – ${format(endDate, "do MMM - yy")}`;
 }
 
 export default function CompletedEvents() {
@@ -69,7 +62,10 @@ export default function CompletedEvents() {
           }}
           columnWrapperStyle={{ gap: 10, paddingHorizontal: 5 }}
           renderItem={({ item, index }) => (
-            <Animated.View style={{ flex: 1 }} entering={SlideInDown.duration(500).delay(Math.min(index, 7) * 60)}>
+            <Animated.View
+              style={{ flex: 1 }}
+              entering={SlideInDown.duration(500).delay(Math.min(index, 7) * 60)}
+            >
               <Link href={`/event/${item.id}`} asChild>
                 <Pressable>
                   {({ pressed }) => (
@@ -78,7 +74,7 @@ export default function CompletedEvents() {
                         {
                           backgroundColor: "hsl(0, 0%, 100%)",
                           borderRadius: 12,
-                          elevation: 3,
+                          elevation: 1,
                           shadowColor: "#000",
                           shadowOffset: { width: 0, height: 2 },
                           shadowOpacity: 0.08,
@@ -99,32 +95,14 @@ export default function CompletedEvents() {
                           style={{
                             width: "100%",
                             aspectRatio: 2 / 1,
-                            backgroundColor: "hsl(0, 0%, 85%)",
+                            backgroundColor: theme.sectionHeadingColor,
                             alignItems: "center",
                             justifyContent: "center",
                           }}
                         >
-                          <Text style={{ fontSize: 36, opacity: 0.4 }}>📷</Text>
+                          <Text style={{ color: "white", fontSize: 36, opacity: 0.6 }}>🌸</Text>
                         </View>
                       )}
-
-                      {/* Completed badge */}
-                      <View
-                        style={{
-                          position: "absolute",
-                          top: 10,
-                          right: 10,
-                          backgroundColor: "rgba(0,0,0,0.55)",
-                          paddingHorizontal: 8,
-                          paddingVertical: 3,
-                          borderRadius: 5,
-                        }}
-                      >
-                        <Text style={{ color: "white", fontSize: 10, fontFamily: theme.fontBold }}>
-                          COMPLETED
-                        </Text>
-                      </View>
-
                       <View style={{ padding: 8, gap: 6 }}>
                         <Text
                           numberOfLines={2}
@@ -141,10 +119,10 @@ export default function CompletedEvents() {
                         <View
                           style={{
                             backgroundColor: "hsla(4, 84%, 42%, 0.1)",
-                            alignSelf: "flex-start",
                             paddingHorizontal: 6,
                             paddingVertical: 3,
                             borderRadius: 5,
+                            alignSelf: "flex-start",
                           }}
                         >
                           <Text
@@ -174,8 +152,9 @@ export default function CompletedEvents() {
           }
         />
       )}
-
-      <Pagination page={page} totalPages={totalPages} setPage={setPage} />
+      {totalPages > 0 && (
+        <Pagination page={page} totalPages={totalPages} setPage={setPage} />
+      )}
     </>
   );
 }

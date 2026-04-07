@@ -3,6 +3,7 @@ import { z } from "zod";
 export const PodcastListItemSchema = z.object({
   id: z.uuid(),
   title: z.string(),
+  link: z.string(),
   createdAt: z.coerce.date(),
 });
 
