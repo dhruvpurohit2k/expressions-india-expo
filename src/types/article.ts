@@ -5,8 +5,9 @@ export const ArticleListItemSchema = z.object({
   title: z.string(),
   category: z.string(),
   thumbnailUrl: z.string().nullable().optional(),
-  createdAt: z.coerce.date(),
-  updatedAt: z.coerce.date(),
+  createdAt: z.coerce.date().nullable().optional(),
+  updatedAt: z.coerce.date().nullable().optional(),
+  publishedAt: z.coerce.date(),
 });
 export type ArticleListItem = z.infer<typeof ArticleListItemSchema>;
 

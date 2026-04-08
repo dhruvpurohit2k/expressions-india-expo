@@ -201,7 +201,7 @@ type ArticleItem = {
   id: string;
   title: string;
   category: string;
-  createdAt: Date;
+  publishedAt: Date;
   thumbnailUrl?: string | null;
 };
 
@@ -303,7 +303,7 @@ const ArticleCard = memo(function ArticleCard({
                         fontFamily: theme.font,
                       }}
                     >
-                      {formatDate(item.createdAt)}
+                      {formatDate(item.publishedAt)}
                     </Text>
                   </View>
                 </View>
