@@ -6,10 +6,10 @@ export default function Director() {
   const screenWidth = Dimensions.get("window").width;
   return (
     <ScrollView
-      style={
-        (globalStyle.screen,
-        { paddingHorizontal: 20, backgroundColor: theme.backgroundColorLight })
-      }
+      style={[
+        globalStyle.screen,
+        { paddingHorizontal: 20, backgroundColor: theme.backgroundColorLight },
+      ]}
     >
       {/*<View
         style={[

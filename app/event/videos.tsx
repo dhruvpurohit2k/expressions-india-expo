@@ -16,7 +16,12 @@ function extractYouTubeId(url: string): string | null {
 
 export default function Videos() {
   const { urls } = useLocalSearchParams<{ urls: string }>();
-  const links: string[] = urls ? JSON.parse(urls) : [];
+  let links: string[] = [];
+  try {
+    links = urls ? JSON.parse(urls) : [];
+  } catch (e) {
+    console.error("Failed to parse videos:", e);
+  }
 
   return (
     <SafeAreaView

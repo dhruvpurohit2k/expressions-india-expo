@@ -17,6 +17,9 @@ const screenWidth = Dimensions.get("window").width;
 
 export default function AboutUs() {
   const scrollX = useSharedValue(0);
+  const scrollHandler = useAnimatedScrollHandler((event) => {
+    scrollX.value = event.contentOffset.x;
+  });
 
   return (
     <SafeAreaView
@@ -39,9 +42,7 @@ export default function AboutUs() {
         pagingEnabled={true}
         decelerationRate={"fast"}
         showsHorizontalScrollIndicator={false}
-        onScroll={useAnimatedScrollHandler((event) => {
-          scrollX.value = event.contentOffset.x;
-        })}
+        onScroll={scrollHandler}
         scrollEventThrottle={16}
       >
         <AboutTheOrg />
@@ -66,6 +67,13 @@ function AboutTheOrg() {
       transform: [{ translateY: withSpring(opacity === 0 ? 20 : 0) }],
     };
   });
+
+  const scrollHandler = useAnimatedScrollHandler((event) => {
+    scrollY.value = event.contentOffset.y;
+    contentHeight.value = event.contentSize.height;
+    layoutHeight.value = event.layoutMeasurement.height;
+  });
+
   return (
     <View style={[globalStyle.aboutCard, { width: screenWidth - 30 }]}>
       <Animated.ScrollView
@@ -74,11 +82,7 @@ function AboutTheOrg() {
           backgroundColor: theme.backgroundColorLight,
           paddingHorizontal: 10,
         }}
-        onScroll={useAnimatedScrollHandler((event) => {
-          scrollY.value = event.contentOffset.y;
-          contentHeight.value = event.contentSize.height;
-          layoutHeight.value = event.layoutMeasurement.height;
-        })}
+        onScroll={scrollHandler}
         onLayout={(event) => {
           layoutHeight.value = event.nativeEvent.layout.height;
         }}

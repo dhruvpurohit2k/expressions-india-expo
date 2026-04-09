@@ -17,26 +17,67 @@ import Animated, {
   useSharedValue,
 } from "react-native-reanimated";
 import { SafeAreaView } from "react-native-safe-area-context";
-import events from "@/data/events/events";
+import { usePastEventQuery } from "@/src/hooks/usePastEventQuery";
+
 export default function PastEvents() {
+  const { data: pastEventResponse, isLoading, error } = usePastEventQuery({});
+
+  if (isLoading) {
+    return (
+      <SafeAreaView
+        style={{ backgroundColor: theme.backgroundColorLight, flex: 1 }}
+      >
+        <Text style={{ padding: 16 }}>Loading past events...</Text>
+      </SafeAreaView>
+    );
+  }
+
+  if (error) {
+    return (
+      <SafeAreaView
+        style={{ backgroundColor: theme.backgroundColorLight, flex: 1 }}
+      >
+        <Text style={{ padding: 16, color: "red" }}>
+          Error loading past events
+        </Text>
+      </SafeAreaView>
+    );
+  }
+
+  const events = pastEventResponse?.data ?? [];
+
   return (
     <SafeAreaView
       style={{ backgroundColor: theme.backgroundColorLight, flex: 1 }}
     >
       <ScrollView style={{ flex: 1 }}>
         {events.map((event, i) => (
-          <Event key={i} event={event} />
+          <Event key={event.id} event={event} />
         ))}
       </ScrollView>
     </SafeAreaView>
   );
 }
 
-function Event({ event }: { event: { name: string; images: any[] } }) {
+function Event({ event }: { event: { id: string; name: string; images?: string } }) {
   const scrollX = useSharedValue<number>(0);
   const { setImage } = useImageContext();
   const globalStyle = styleFactory();
   const screenWidth = Dimensions.get("window").width;
+
+  const scrollHandler = useAnimatedScrollHandler((scrollEvent) => {
+    scrollX.value = scrollEvent.contentOffset.x;
+  });
+
+  let images: string[] = [];
+  if (event.images) {
+    try {
+      images = JSON.parse(event.images);
+    } catch (e) {
+      console.error("Failed to parse event images:", e);
+    }
+  }
+
   return (
     <View
       style={{
@@ -55,15 +96,13 @@ function Event({ event }: { event: { name: string; images: any[] } }) {
         pagingEnabled={true}
         decelerationRate={"fast"}
         showsHorizontalScrollIndicator={false}
-        onScroll={useAnimatedScrollHandler((event) => {
-          scrollX.value = event.contentOffset.x;
-        })}
+        onScroll={scrollHandler}
         style={{
           // marginHorizontal: 10,
           borderRadius: 10,
         }}
       >
-        {event.images.map((image, i) => (
+        {images.map((image, i) => (
           <View
             key={i}
             style={{
@@ -89,7 +128,7 @@ function Event({ event }: { event: { name: string; images: any[] } }) {
           </View>
         ))}
       </Animated.ScrollView>
-      <AnimatedDots scrollX={scrollX} count={event.images.length} />
+      <AnimatedDots scrollX={scrollX} count={images.length} />
     </View>
   );
 }

@@ -26,7 +26,12 @@ export default function Gallery() {
   const { urls } = useLocalSearchParams<{ urls: string }>();
   const { setImage } = useImageContext();
 
-  const images: string[] = urls ? JSON.parse(urls) : [];
+  let images: string[] = [];
+  try {
+    images = urls ? JSON.parse(urls) : [];
+  } catch (e) {
+    console.error("Failed to parse gallery images:", e);
+  }
 
   return (
     <SafeAreaView

@@ -183,7 +183,7 @@ const JournalCard = memo(function JournalCard({
                 style={{
                   fontSize: 11,
                   fontWeight: "bold",
-                  color: "hsl(0, 120%, 50%)",
+                  color: "hsl(0, 100%, 50%)",
                   textAlign: "right",
                 }}
               >

@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, Pressable } from "react-native";
+import { View, Text, ScrollView, Pressable, Alert } from "react-native";
 import { styleFactory } from "../styleFactory";
 import { format as formatDateTime } from "date-fns";
 
@@ -84,7 +84,10 @@ export default function WorkShops() {
                     return (
                       <Pressable
                         key={workshop.id}
-                        onPress={() => router.push(`/workshop/${workshop.id}`)}
+                        onPress={() => {
+                          // TODO: Create /app/workshop/[id].tsx route for workshop details
+                          Alert.alert("Coming Soon", "Workshop details page is under development");
+                        }}
                       >
                         <Animated.View
                           entering={FadeInUp.duration(250).delay(index * 100)}

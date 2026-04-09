@@ -20,8 +20,8 @@ import Animated, {
 import AnimatedDots from "./AnimatedDots";
 import { useImageContext } from "../context/imageContext";
 import { Link } from "expo-router";
-import UpcomingEvents from "./UpcomingEvents";
-import PastEvents from "./PastEvents";
+import UpcomingEvent from "./UpcomingEvent";
+import CompletedEvents from "./CompletedEvents";
 import { useIsFocused } from "@react-navigation/native";
 
 const globalStyle = styleFactory();
@@ -32,10 +32,10 @@ export default function Events() {
   return (
     <Animated.View style={[globalStyle.screen]}>
       <Animated.View entering={SlideInLeft.duration(700).delay(50)}>
-        <UpcomingEvents />
+        <UpcomingEvent />
       </Animated.View>
       <Animated.View entering={SlideInDown.duration(700).delay(200)}>
-        <PastEvents />
+        <CompletedEvents />
       </Animated.View>
     </Animated.View>
   );

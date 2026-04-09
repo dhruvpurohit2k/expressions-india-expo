@@ -1,10 +1,11 @@
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Text, View, TextInput, Pressable, ScrollView } from "react-native";
+import { Text, View, TextInput, Pressable, ScrollView, Alert } from "react-native";
 import { useForm } from "@tanstack/react-form";
 import { styleFactory } from "@/src/styleFactory";
 import { z } from "zod";
-import React from "react";
+import React, { useState } from "react";
 import { theme } from "@/src/theme";
+import { submitRegistration } from "@/src/api/submitRegistration";
 
 const FormSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -15,6 +16,7 @@ const FormSchema = z.object({
 
 export default function Registration() {
   const globalStyles = styleFactory();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const form = useForm({
     defaultValues: {
@@ -24,7 +26,16 @@ export default function Registration() {
       email: "",
     },
     onSubmit: async ({ value }) => {
-      console.log("Registration form submitted:", value);
+      setIsSubmitting(true);
+      try {
+        await submitRegistration(value);
+        Alert.alert("Success!", "Your registration has been submitted successfully.");
+        form.reset();
+      } catch (error) {
+        Alert.alert("Error", error instanceof Error ? error.message : "Failed to submit registration. Please try again later.");
+      } finally {
+        setIsSubmitting(false);
+      }
     },
   });
 
