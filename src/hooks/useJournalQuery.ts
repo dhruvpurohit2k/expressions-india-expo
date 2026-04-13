@@ -7,13 +7,17 @@ const refreshTime = Number(process.env.EXPO_PUBLIC_REFRESH_TIME) || 60_000;
 export function useJournalQuery({
   limit,
   offset,
+  enabled = true,
 }: {
   limit?: number;
   offset?: number;
+  enabled?: boolean;
 }) {
   return useQuery({
     queryKey: queryKeys.journals.list({ limit, offset }),
     queryFn: () => fetchJournalList({ limit, offset }),
     refetchInterval: refreshTime,
+    refetchIntervalInBackground: false,
+    enabled,
   });
 }

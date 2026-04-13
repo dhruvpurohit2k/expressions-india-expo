@@ -12,6 +12,7 @@ import { theme } from "../theme";
 import Pagination from "./Pagination";
 import { usePastEventQuery } from "../hooks/usePastEventQuery";
 import { useState } from "react";
+import { useIsFocused } from "@react-navigation/native";
 import Animated, { FadeInUp, SlideInDown } from "react-native-reanimated";
 import { format } from "date-fns";
 
@@ -26,10 +27,12 @@ function formatDateRange(startDate: Date, endDate: Date | null) {
 export default function CompletedEvents() {
   const [page, setPage] = useState(1);
   const globalStyle = styleFactory();
+  const isFocused = useIsFocused();
 
   const { data, isLoading, error } = usePastEventQuery({
     limit: LIMIT,
     offset: (page - 1) * LIMIT,
+    enabled: isFocused,
   });
 
   const events = data?.data ?? [];

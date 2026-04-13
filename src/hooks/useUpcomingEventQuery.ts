@@ -7,13 +7,17 @@ const refreshTime = Number(process.env.EXPO_PUBLIC_REFRESH_TIME) || 60_000;
 export function useUpcomingEventQuery({
   limit,
   offset,
+  enabled = true,
 }: {
   limit?: number;
   offset?: number;
+  enabled?: boolean;
 }) {
   return useQuery({
     queryKey: queryKeys.events.upcoming({ limit, offset }),
     queryFn: () => fetchUpcomingEventList({ limit, offset }),
     refetchInterval: refreshTime,
+    refetchIntervalInBackground: false,
+    enabled,
   });
 }

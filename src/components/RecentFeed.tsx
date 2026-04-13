@@ -8,6 +8,7 @@ import {
 } from "lucide-react-native";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import { useLatestFeed } from "../hooks/useLatestFeed";
+import { useIsFocused } from "@react-navigation/native";
 import { LatestFeedItem } from "../types/latestFeed";
 
 const lightRed = "hsl(4, 65%, 50%)";
@@ -38,7 +39,8 @@ function formatDate(dateStr: string | null): string | null {
 }
 
 export default function RecentFeed() {
-  const { data, isPending, isError } = useLatestFeed();
+  const isFocused = useIsFocused();
+  const { data, isPending, isError } = useLatestFeed({ enabled: isFocused });
 
   return (
     <View style={{ paddingHorizontal: 15, marginTop: 24, marginBottom: 8 }}>

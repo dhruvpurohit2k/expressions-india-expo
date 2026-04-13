@@ -48,6 +48,7 @@ export function NavBar({
           flexDirection: "row",
           marginHorizontal: 15,
           marginVertical: 10,
+          alignItems: "center",
           borderRadius: 10,
           padding: 5,
           backgroundColor: "rgb(255,245,245)",
@@ -95,7 +96,10 @@ function NavBarTab({
           {
             paddingVertical: 10,
             alignItems: "center",
+            justifyContent: "center",
+            // alignText: "center",
             borderRadius: 8,
+            // height: "100%",
             backgroundColor: isActive ? theme.red : "transparent",
             elevation: isActive ? 5 : 0,
           },
@@ -106,6 +110,8 @@ function NavBarTab({
           style={{
             color: isActive ? "white" : theme.red,
             fontFamily: theme.fontBold,
+            textAlign: "center",
+            textAlignVertical: "center",
             fontSize: 14,
           }}
         >

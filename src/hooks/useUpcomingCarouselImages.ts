@@ -4,11 +4,12 @@ import { queryKeys } from "../lib/queryKeys";
 
 const refreshTime = Number(process.env.EXPO_PUBLIC_REFRESH_TIME) || 60_000;
 
-export function useUpcomingCarouselImages() {
+export function useUpcomingCarouselImages({ enabled = true }: { enabled?: boolean } = {}) {
   return useQuery({
     queryKey: queryKeys.homeImages.upcoming(),
     queryFn: fetchUpcomingCarouselImages,
     refetchInterval: refreshTime,
     refetchIntervalInBackground: false,
+    enabled,
   });
 }

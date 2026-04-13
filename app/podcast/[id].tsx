@@ -1,4 +1,5 @@
 import { usePodcast } from "@/src/hooks/usePodcast";
+import { useIsFocused } from "@react-navigation/native";
 import { styleFactory } from "@/src/styleFactory";
 import { theme } from "@/src/theme";
 import { router, useLocalSearchParams } from "expo-router";
@@ -27,7 +28,8 @@ function getYouTubeEmbedUrl(link: string): string | null {
 export default function PodcastDetail() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const globalStyle = styleFactory();
-  const { data: podcast, isLoading, error } = usePodcast(id);
+  const isFocused = useIsFocused();
+  const { data: podcast, isLoading, error } = usePodcast(id, { enabled: isFocused });
 
   if (isLoading) {
     return (

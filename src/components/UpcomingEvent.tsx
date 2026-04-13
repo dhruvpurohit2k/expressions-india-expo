@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useIsFocused } from "@react-navigation/native";
 import { useUpcomingEventQuery } from "../hooks/useUpcomingEventQuery";
 import { styleFactory } from "../styleFactory";
 import {
@@ -26,10 +27,12 @@ function formatDateRange(startDate: Date, endDate: Date | null) {
 export default function UpcomingEvents() {
   const [page, setPage] = useState(1);
   const globalStyle = styleFactory();
+  const isFocused = useIsFocused();
 
   const { data, isLoading, error } = useUpcomingEventQuery({
     limit: LIMIT,
     offset: (page - 1) * LIMIT,
+    enabled: isFocused,
   });
 
   const events = data?.data ?? [];

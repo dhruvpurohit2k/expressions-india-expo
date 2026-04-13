@@ -25,6 +25,17 @@ export const queryKeys = {
       ["articles", "list", params] as const,
     detail: (id: string) => ["articles", "detail", id] as const,
   },
+  courses: {
+    all: () => ["courses"] as const,
+    list: (params?: object) => ["courses", "list", params] as const,
+    detail: (id: string) => ["courses", "detail", id] as const,
+    chapter: (courseId: string, chapterId: string) =>
+      ["courses", "detail", courseId, "chapter", chapterId] as const,
+  },
+  team: {
+    all: () => ["team"] as const,
+    list: () => ["team", "list"] as const,
+  },
   latestFeed: {
     all: () => ["latestFeed"] as const,
   },
@@ -40,5 +51,7 @@ export const queryKeys = {
       ["audience", name, "articles", params] as const,
     podcasts: (name: string, params?: { limit?: number; offset?: number }) =>
       ["audience", name, "podcasts", params] as const,
+    courses: (name: string, params?: { limit?: number; offset?: number }) =>
+      ["audience", name, "courses", params] as const,
   },
 };

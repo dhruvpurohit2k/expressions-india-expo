@@ -1,4 +1,5 @@
 import { useJournal } from "@/src/hooks/useJournal";
+import { useIsFocused } from "@react-navigation/native";
 import { styleFactory } from "@/src/styleFactory";
 import { theme } from "@/src/theme";
 import { router, useLocalSearchParams } from "expo-router";
@@ -24,7 +25,8 @@ function toAbsoluteUrl(url?: string | null) {
 export default function JournalDetail() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const globalStyle = styleFactory();
-  const { data: journal, isLoading, error } = useJournal(id);
+  const isFocused = useIsFocused();
+  const { data: journal, isLoading, error } = useJournal(id, { enabled: isFocused });
 
   if (isLoading) {
     return (

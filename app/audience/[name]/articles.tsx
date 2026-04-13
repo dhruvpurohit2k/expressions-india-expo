@@ -6,6 +6,7 @@ import { router, useLocalSearchParams, Link } from "expo-router";
 import { format } from "date-fns";
 import { ChevronLeft, ChevronRight } from "lucide-react-native";
 import { useState } from "react";
+import { useIsFocused } from "@react-navigation/native";
 import {
   ActivityIndicator,
   FlatList,
@@ -23,11 +24,13 @@ export default function AudienceArticles() {
   const { name } = useLocalSearchParams<{ name: string }>();
   const globalStyle = styleFactory();
   const [page, setPage] = useState(1);
+  const isFocused = useIsFocused();
 
   const { data, isLoading, error } = useArticlesByAudience({
     audience: name,
     limit: LIMIT,
     offset: (page - 1) * LIMIT,
+    enabled: isFocused,
   });
 
   const articles = data?.data ?? [];

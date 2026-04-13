@@ -3,7 +3,8 @@ import { AUDIENCE_LABELS } from "@/src/types/audience";
 import { styleFactory } from "@/src/styleFactory";
 import { theme } from "@/src/theme";
 import { router, useLocalSearchParams, Link } from "expo-router";
-import { BookOpen, CalendarDays, Mic, ChevronLeft } from "lucide-react-native";
+import { Zap, Newspaper, Headphones, Award, ChevronLeft } from "lucide-react-native";
+import { useIsFocused } from "@react-navigation/native";
 import {
   ActivityIndicator,
   Pressable,
@@ -23,32 +24,41 @@ const SECTION_CARDS = [
     key: "events",
     label: "Events",
     description: "Upcoming events curated for you",
-    icon: CalendarDays,
-    color: "#3b82f6",
-    bg: "#eff6ff",
+    icon: Zap,
+    color: "#ef4444",
+    bg: "#fee2e2",
   },
   {
     key: "articles",
     label: "Articles",
     description: "Reads selected for your journey",
-    icon: BookOpen,
-    color: "#10b981",
-    bg: "#ecfdf5",
+    icon: Newspaper,
+    color: "#0891b2",
+    bg: "#ecf0ff",
   },
   {
     key: "podcasts",
     label: "Podcasts",
     description: "Listen to expert conversations",
-    icon: Mic,
-    color: "#8b5cf6",
-    bg: "#f5f3ff",
+    icon: Headphones,
+    color: "#7c3aed",
+    bg: "#f3e8ff",
+  },
+  {
+    key: "courses",
+    label: "Courses",
+    description: "Structured learning paths for you",
+    icon: Award,
+    color: "#059669",
+    bg: "#ecfdf5",
   },
 ] as const;
 
 export default function AudiencePage() {
   const { name } = useLocalSearchParams<{ name: string }>();
   const globalStyle = styleFactory();
-  const { data: audience, isLoading } = useAudience(name);
+  const isFocused = useIsFocused();
+  const { data: audience, isLoading } = useAudience(name, { enabled: isFocused });
 
   const label = AUDIENCE_LABELS[name] ?? name;
 

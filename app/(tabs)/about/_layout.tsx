@@ -3,6 +3,7 @@ export default function AboutLayout() {
   return (
     <Stack>
       <Stack.Screen name="index" options={{ headerShown: false }} />
+      <Stack.Screen name="writetous" options={{ headerShown: false }} />
     </Stack>
   );
 }

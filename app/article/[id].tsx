@@ -1,4 +1,5 @@
 import { useArticle } from "@/src/hooks/useArticle";
+import { useIsFocused } from "@react-navigation/native";
 import { styleFactory } from "@/src/styleFactory";
 import { theme } from "@/src/theme";
 import { format } from "date-fns";
@@ -21,7 +22,8 @@ const { width: SCREEN_WIDTH } = Dimensions.get("window");
 export default function ArticleDetail() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const globalStyle = styleFactory();
-  const { data: article, isLoading, error } = useArticle(id);
+  const isFocused = useIsFocused();
+  const { data: article, isLoading, error } = useArticle(id, { enabled: isFocused });
 
   if (isLoading) {
     return (

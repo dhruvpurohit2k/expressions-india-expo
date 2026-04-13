@@ -16,15 +16,17 @@ import Animated, { FadeInDown } from "react-native-reanimated";
 import { ExternalLink } from "lucide-react-native";
 import { useUpcomingCarouselImages } from "@/src/hooks/useUpcomingCarouselImages";
 import { useCompletedCarouselImages } from "@/src/hooks/useCompletedCarouselImages";
+import { useIsFocused } from "@react-navigation/native";
 
 const lightRed = "hsl(4, 65%, 50%)";
 
 export default function Home() {
   const globalStyle = styleFactory();
+  const isFocused = useIsFocused();
   const { data: upcomingImages = [], isPending: upcomingPending } =
-    useUpcomingCarouselImages();
+    useUpcomingCarouselImages({ enabled: isFocused });
   const { data: completedImages = [], isPending: completedPending } =
-    useCompletedCarouselImages();
+    useCompletedCarouselImages({ enabled: isFocused });
 
   return (
     <SafeAreaView style={[globalStyle.screen]} edges={["top", "left", "right"]}>
@@ -67,6 +69,10 @@ export default function Home() {
           </>
         ) : null}
 
+        {/* Recent Activity */}
+        <Animated.View entering={FadeInDown.duration(500).delay(100)}>
+          <RecentFeed />
+        </Animated.View>
         {/* Completed Events Carousel */}
         {completedPending ? (
           <>
@@ -75,15 +81,10 @@ export default function Home() {
           </>
         ) : completedImages.length > 0 ? (
           <>
-            <SectionTitle label="Completed Events" />
+            <SectionTitle label="Recent Events" />
             <Carousel images={completedImages} />
           </>
         ) : null}
-
-        {/* Recent Activity */}
-        <Animated.View entering={FadeInDown.duration(500).delay(100)}>
-          <RecentFeed />
-        </Animated.View>
 
         {/* Downloads */}
         <View

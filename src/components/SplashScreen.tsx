@@ -1,5 +1,12 @@
-import React, { useEffect } from "react";
-import { View, StyleSheet } from "react-native";
+import React, { useEffect, useRef } from "react";
+import {
+  View,
+  StyleSheet,
+  Text,
+  Animated as RNAnimated,
+  PanResponder,
+  Dimensions,
+} from "react-native";
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -8,33 +15,37 @@ import Animated, {
   withDelay,
   withSequence,
   withRepeat,
-  withSpring, // used for text slide
+  withSpring,
   interpolate,
   Easing,
 } from "react-native-reanimated";
 import Svg, { Path, Circle, G } from "react-native-svg";
 import { theme } from "@/src/theme";
 
-const AnimatedG      = Animated.createAnimatedComponent(G);
-const AnimatedPath   = Animated.createAnimatedComponent(Path);
+const AnimatedG = Animated.createAnimatedComponent(G);
+const AnimatedPath = Animated.createAnimatedComponent(Path);
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
 const CX = 150;
 const CY = 150;
-
-// Distance from SVG view center (150) to stem base (275) — used for sway pivot
 const SWAY_OFFSET_Y = 125;
+const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
-function petalPath(angle: number, innerR: number, outerR: number, spread: number) {
-  const rad      = (angle * Math.PI) / 180;
-  const radLeft  = ((angle - spread) * Math.PI) / 180;
+function petalPath(
+  angle: number,
+  innerR: number,
+  outerR: number,
+  spread: number,
+) {
+  const rad = (angle * Math.PI) / 180;
+  const radLeft = ((angle - spread) * Math.PI) / 180;
   const radRight = ((angle + spread) * Math.PI) / 180;
-  const x1    = CX + innerR * Math.cos(rad);
-  const y1    = CY + innerR * Math.sin(rad);
-  const xTip  = CX + outerR * Math.cos(rad);
-  const yTip  = CY + outerR * Math.sin(rad);
-  const xLeft  = CX + outerR * 0.6 * Math.cos(radLeft);
-  const yLeft  = CY + outerR * 0.6 * Math.sin(radLeft);
+  const x1 = CX + innerR * Math.cos(rad);
+  const y1 = CY + innerR * Math.sin(rad);
+  const xTip = CX + outerR * Math.cos(rad);
+  const yTip = CY + outerR * Math.sin(rad);
+  const xLeft = CX + outerR * 0.6 * Math.cos(radLeft);
+  const yLeft = CY + outerR * 0.6 * Math.sin(radLeft);
   const xRight = CX + outerR * 0.6 * Math.cos(radRight);
   const yRight = CY + outerR * 0.6 * Math.sin(radRight);
   return `M ${x1} ${y1} Q ${xLeft} ${yLeft} ${xTip} ${yTip} Q ${xRight} ${yRight} ${x1} ${y1} Z`;
@@ -50,8 +61,15 @@ const innerPetals = Array.from({ length: INNER_COUNT }, (_, i) => ({
   path: petalPath((360 / INNER_COUNT) * i - 60, 6, 45, 22),
 }));
 
-// Wrap each petal in AnimatedG so scale/origin work reliably on Android
-function OuterPetal({ path, bloom, index }: { path: string; bloom: Animated.SharedValue<number>; index: number }) {
+function OuterPetal({
+  path,
+  bloom,
+  index,
+}: {
+  path: string;
+  bloom: Animated.SharedValue<number>;
+  index: number;
+}) {
   const start = (index / OUTER_COUNT) * 0.55;
   const gProps = useAnimatedProps(() => {
     const p = interpolate(bloom.value, [start, start + 0.5], [0, 1], "clamp");
@@ -59,12 +77,25 @@ function OuterPetal({ path, bloom, index }: { path: string; bloom: Animated.Shar
   });
   return (
     <AnimatedG animatedProps={gProps}>
-      <Path d={path} fill="hsl(4, 74%, 52%)" stroke="hsl(4, 84%, 35%)" strokeWidth={1.5} />
+      <Path
+        d={path}
+        fill="hsl(4, 74%, 52%)"
+        stroke="hsl(4, 84%, 35%)"
+        strokeWidth={1.5}
+      />
     </AnimatedG>
   );
 }
 
-function InnerPetal({ path, bloom, index }: { path: string; bloom: Animated.SharedValue<number>; index: number }) {
+function InnerPetal({
+  path,
+  bloom,
+  index,
+}: {
+  path: string;
+  bloom: Animated.SharedValue<number>;
+  index: number;
+}) {
   const start = 0.15 + (index / INNER_COUNT) * 0.45;
   const gProps = useAnimatedProps(() => {
     const p = interpolate(bloom.value, [start, start + 0.5], [0, 1], "clamp");
@@ -72,52 +103,134 @@ function InnerPetal({ path, bloom, index }: { path: string; bloom: Animated.Shar
   });
   return (
     <AnimatedG animatedProps={gProps}>
-      <Path d={path} fill="hsl(4, 84%, 42%)" stroke="hsl(4, 70%, 30%)" strokeWidth={1} />
+      <Path
+        d={path}
+        fill="hsl(4, 84%, 42%)"
+        stroke="hsl(4, 70%, 30%)"
+        strokeWidth={1}
+      />
     </AnimatedG>
   );
 }
 
 export default function SplashScreen({ onFinish }: { onFinish: () => void }) {
-  const stemProgress    = useSharedValue(0);
-  const centerScale     = useSharedValue(0);
-  const bloom           = useSharedValue(0);
-  const swayAngle       = useSharedValue(0);
-  const textOpacity     = useSharedValue(0);
-  const textY           = useSharedValue(20);
+  // ── Reanimated (flower) ────────────────────────────────────────────
+  const stemProgress = useSharedValue(0);
+  const centerScale = useSharedValue(0);
+  const bloom = useSharedValue(0);
+  const swayAngle = useSharedValue(0);
+  const textOpacity = useSharedValue(0);
+  const textY = useSharedValue(20);
   const subtitleOpacity = useSharedValue(0);
 
+  // ── RN Animated (dismiss + hint) ──────────────────────────────────
+  const dismissY = useRef(new RNAnimated.Value(0)).current;
+  const dismissOpacity = useRef(new RNAnimated.Value(1)).current;
+  const hintOpacity = useRef(new RNAnimated.Value(0)).current;
+  const hintBounce = useRef(new RNAnimated.Value(0)).current;
+
+  const timerRef = useRef<ReturnType<typeof setTimeout>>();
+  const isDismissing = useRef(false);
+  const onFinishRef = useRef(onFinish);
+  onFinishRef.current = onFinish;
+
+  function dismiss() {
+    if (isDismissing.current) return;
+    isDismissing.current = true;
+    if (timerRef.current) clearTimeout(timerRef.current);
+    RNAnimated.parallel([
+      RNAnimated.timing(dismissY, {
+        toValue: -SCREEN_HEIGHT,
+        duration: 380,
+        useNativeDriver: true,
+      }),
+      RNAnimated.timing(dismissOpacity, {
+        toValue: 0,
+        duration: 280,
+        useNativeDriver: true,
+      }),
+    ]).start(() => onFinishRef.current());
+  }
+
+  // Store dismiss in a ref so PanResponder (created once) can call latest
+  const dismissRef = useRef(dismiss);
+
+  const panResponder = useRef(
+    PanResponder.create({
+      onStartShouldSetPanResponder: () => true,
+      onMoveShouldSetPanResponder: (_, gs) => gs.dy < -8,
+      onPanResponderRelease: (_, gs) => {
+        if (gs.dy < -60 || gs.vy < -0.4) {
+          dismissRef.current();
+        }
+      },
+    }),
+  ).current;
+
   useEffect(() => {
-    // 1. Stem grows
-    stemProgress.value = withTiming(1, { duration: 700, easing: Easing.out(Easing.cubic) });
-
-    // 2. Pistil pops in — timing with slight overshoot, no oscillation
-    centerScale.value = withDelay(620, withTiming(1, { duration: 300, easing: Easing.out(Easing.back(1.8)) }));
-
-    // 3. Petals bloom outward from center, staggered via single bloom 0→1
-    bloom.value = withDelay(950, withTiming(1, { duration: 900, easing: Easing.out(Easing.cubic) }));
-
-    // 4. Sway — starts after petals are open
+    // ── Flower animations ────────────────────────────────────────────
+    stemProgress.value = withTiming(1, {
+      duration: 700,
+      easing: Easing.out(Easing.cubic),
+    });
+    centerScale.value = withDelay(
+      620,
+      withTiming(1, { duration: 300, easing: Easing.out(Easing.back(1.8)) }),
+    );
+    bloom.value = withDelay(
+      950,
+      withTiming(1, { duration: 900, easing: Easing.out(Easing.cubic) }),
+    );
     swayAngle.value = withDelay(
       1950,
       withRepeat(
         withSequence(
-          withTiming( 5, { duration:  900, easing: Easing.inOut(Easing.sin) }),
+          withTiming(5, { duration: 900, easing: Easing.inOut(Easing.sin) }),
           withTiming(-5, { duration: 1800, easing: Easing.inOut(Easing.sin) }),
-          withTiming( 0, { duration:  900, easing: Easing.inOut(Easing.sin) }),
+          withTiming(0, { duration: 900, easing: Easing.inOut(Easing.sin) }),
         ),
         -1,
         false,
       ),
     );
-
-    textOpacity.value     = withDelay(1700, withTiming(1, { duration: 600 }));
-    textY.value           = withDelay(1700, withSpring(0, { damping: 14, stiffness: 100 }));
+    textOpacity.value = withDelay(1700, withTiming(1, { duration: 600 }));
+    textY.value = withDelay(1700, withSpring(0, { damping: 14, stiffness: 100 }));
     subtitleOpacity.value = withDelay(2200, withTiming(1, { duration: 500 }));
 
-    const t = setTimeout(() => onFinish(), 4000);
-    return () => clearTimeout(t);
+    // ── Hint: fade in then bounce ────────────────────────────────────
+    const hintTimer = setTimeout(() => {
+      RNAnimated.timing(hintOpacity, {
+        toValue: 1,
+        duration: 600,
+        useNativeDriver: true,
+      }).start(() => {
+        RNAnimated.loop(
+          RNAnimated.sequence([
+            RNAnimated.timing(hintBounce, {
+              toValue: -7,
+              duration: 480,
+              useNativeDriver: true,
+            }),
+            RNAnimated.timing(hintBounce, {
+              toValue: 0,
+              duration: 480,
+              useNativeDriver: true,
+            }),
+          ]),
+        ).start();
+      });
+    }, 2500);
+
+    // ── Auto-dismiss ─────────────────────────────────────────────────
+    timerRef.current = setTimeout(() => dismissRef.current(), 10000);
+
+    return () => {
+      clearTimeout(hintTimer);
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
   }, []);
 
+  // ── Animated styles (Reanimated) ──────────────────────────────────
   const stemProps = useAnimatedProps(() => {
     const h = interpolate(stemProgress.value, [0, 1], [0, 60]);
     return {
@@ -146,15 +259,13 @@ export default function SplashScreen({ onFinish }: { onFinish: () => void }) {
   });
 
   const centerProps = useAnimatedProps(() => ({
-    r:       interpolate(centerScale.value, [0, 1], [0, 12]),
+    r: interpolate(centerScale.value, [0, 1], [0, 12]),
     opacity: centerScale.value,
   }));
 
-  // Sway: rotate the whole SVG around the stem base using View transforms.
-  // Stem base is 125px below the SVG center → translateY trick to shift pivot.
   const swayStyle = useAnimatedStyle(() => ({
     transform: [
-      { translateY:  SWAY_OFFSET_Y },
+      { translateY: SWAY_OFFSET_Y },
       { rotate: `${swayAngle.value}deg` },
       { translateY: -SWAY_OFFSET_Y },
     ],
@@ -170,20 +281,23 @@ export default function SplashScreen({ onFinish }: { onFinish: () => void }) {
   }));
 
   return (
-    <View style={styles.container}>
+    <RNAnimated.View
+      style={[
+        styles.container,
+        { transform: [{ translateY: dismissY }], opacity: dismissOpacity },
+      ]}
+      {...panResponder.panHandlers}
+    >
       <View style={styles.glow} />
 
       <Animated.View style={swayStyle}>
         <Svg width={300} height={300} viewBox="0 0 300 300">
-          {/* Stem */}
           <AnimatedPath
             animatedProps={stemProps}
             stroke="hsl(120, 35%, 40%)"
             fill="none"
             strokeLinecap="round"
           />
-
-          {/* Leaves */}
           <AnimatedPath
             animatedProps={leaf1Props}
             stroke="hsl(120, 40%, 45%)"
@@ -196,20 +310,15 @@ export default function SplashScreen({ onFinish }: { onFinish: () => void }) {
             fill="hsl(120, 40%, 50%)"
             strokeLinecap="round"
           />
-
-          {/* Outer petals */}
           {outerPetals.map((p, i) => (
             <OuterPetal key={`o${i}`} path={p.path} bloom={bloom} index={i} />
           ))}
-
-          {/* Inner petals */}
           {innerPetals.map((p, i) => (
             <InnerPetal key={`n${i}`} path={p.path} bloom={bloom} index={i} />
           ))}
-
-          {/* Pistil */}
           <AnimatedCircle
-            cx={CX} cy={CY}
+            cx={CX}
+            cy={CY}
             fill="hsl(45, 90%, 60%)"
             stroke="hsl(35, 80%, 50%)"
             strokeWidth={2}
@@ -224,7 +333,20 @@ export default function SplashScreen({ onFinish }: { onFinish: () => void }) {
       <Animated.Text style={[styles.subtitle, subtitleStyle]}>
         Nurturing Minds, Enriching Lives
       </Animated.Text>
-    </View>
+
+      {/* Swipe-up hint */}
+      <RNAnimated.View style={[styles.hint, { opacity: hintOpacity }]}>
+        <RNAnimated.Text
+          style={[
+            styles.hintArrow,
+            { transform: [{ translateY: hintBounce }] },
+          ]}
+        >
+          ↑
+        </RNAnimated.Text>
+        <Text style={styles.hintText}>Swipe up to continue</Text>
+      </RNAnimated.View>
+    </RNAnimated.View>
   );
 }
 
@@ -256,5 +378,23 @@ const styles = StyleSheet.create({
     marginTop: 8,
     letterSpacing: 0.5,
     opacity: 0.7,
+  },
+  hint: {
+    position: "absolute",
+    bottom: 52,
+    alignItems: "center",
+    gap: 2,
+  },
+  hintArrow: {
+    fontSize: 20,
+    color: theme.sectionHeadingColor,
+    opacity: 0.7,
+  },
+  hintText: {
+    fontFamily: theme.font,
+    fontSize: 12,
+    color: theme.text,
+    opacity: 0.5,
+    letterSpacing: 0.3,
   },
 });

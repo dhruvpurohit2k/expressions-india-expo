@@ -23,7 +23,7 @@ export async function fetchPastEventList({
     throw new Error(json.error?.message ?? "Request failed");
   }
 
-  const parsed = z.array(EventListItemSchema).safeParse(json.data);
+  const parsed = z.array(EventListItemSchema).safeParse(json.data ?? []);
   if (!parsed.success) {
     throw new Error(parsed.error.message);
   }

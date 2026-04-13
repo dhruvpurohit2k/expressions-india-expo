@@ -1,5 +1,6 @@
 import { useImageContext } from "@/src/context/imageContext";
 import { useEvent } from "@/src/hooks/useEvent";
+import { useIsFocused } from "@react-navigation/native";
 import { styleFactory } from "@/src/styleFactory";
 import { theme } from "@/src/theme";
 import { Ionicons } from "@expo/vector-icons";
@@ -821,7 +822,8 @@ function CompletedEventDetail({
 export default function EventDetail() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const globalStyle = styleFactory();
-  const { data: event, isLoading, error } = useEvent(id);
+  const isFocused = useIsFocused();
+  const { data: event, isLoading, error } = useEvent(id, { enabled: isFocused });
 
   if (isLoading) {
     return (

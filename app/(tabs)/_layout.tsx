@@ -73,6 +73,7 @@ export default function App() {
         name="home"
         options={{
           headerShown: false,
+          title: "Home",
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="home-outline" color={color} size={size} />
           ),
@@ -82,6 +83,7 @@ export default function App() {
         name="events"
         options={{
           headerShown: false,
+          title: "Events",
           popToTopOnBlur: true,
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="calendar-clear-outline" color={color} size={size} />
@@ -92,6 +94,7 @@ export default function App() {
         name="resources"
         options={{
           headerShown: false,
+          title: "Resources",
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="library-outline" color={color} size={size} />
           ),
@@ -108,9 +111,20 @@ export default function App() {
         }}
       />
       <Tabs.Screen
+        name="course"
+        options={{
+          headerShown: false,
+          title: "Courses",
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="book-outline" color={color} size={size} />
+          ),
+        }}
+      />
+      <Tabs.Screen
         name="about"
         options={{
           headerShown: false,
+          title: "About",
           tabBarIcon: ({ color, size }) => (
             <Ionicons
               name="information-circle-outline"
@@ -121,12 +135,12 @@ export default function App() {
         }}
       />
       <Tabs.Screen
-        name="contact"
+        name="account"
         options={{
           headerShown: false,
-          title: "contact",
+          title: "Account",
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="call-outline" color={color} size={size} />
+            <Ionicons name="finger-print-outline" color={color} size={size} />
           ),
         }}
       />

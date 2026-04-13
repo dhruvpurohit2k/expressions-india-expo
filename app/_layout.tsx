@@ -10,7 +10,7 @@ import * as SystemUI from "expo-system-ui";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useState, useCallback } from "react";
-import { AppState, Platform } from "react-native";
+import { AppState, Platform, View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { ImageProvider } from "@/src/context/imageContext";
 import {
@@ -20,6 +20,8 @@ import {
 } from "@tanstack/react-query";
 import { styleFactory } from "@/src/styleFactory";
 import SplashScreen from "@/src/components/SplashScreen";
+import OnboardingScreen from "@/src/components/onboarding/OnboardingScreen";
+import { hasCompletedOnboarding } from "@/src/lib/storage";
 
 focusManager.setEventListener((handleFocus) => {
   const subscription = AppState.addEventListener("change", (state) => {
@@ -39,30 +41,55 @@ const queryClient = new QueryClient({
   },
 });
 
+type AppState = "splash" | "checking" | "onboarding" | "app";
+
 export default function RootLayout() {
   const globalStyles = styleFactory();
-  const [showSplash, setShowSplash] = useState(true);
+  const [appState, setAppState] = useState<AppState>("splash");
   const [loaded] = useFonts({
     Delius_400Regular,
     Inter_700Bold,
     Inter_400Regular,
   });
+
   useEffect(() => {
     SystemUI.setBackgroundColorAsync(theme.backgroundColor);
     NavigationBar.setBackgroundColorAsync(theme.sectionHeadingColor);
     NavigationBar.setButtonStyleAsync("light");
   }, []);
 
-  const handleSplashFinish = useCallback(() => {
-    setShowSplash(false);
+  const handleSplashFinish = useCallback(async () => {
+    setAppState("checking");
+    const done = await hasCompletedOnboarding();
+    setAppState(done ? "app" : "onboarding");
+  }, []);
+
+  const handleOnboardingComplete = useCallback(() => {
+    setAppState("app");
   }, []);
 
   if (!loaded) {
     return null;
   }
 
-  if (showSplash) {
+  if (appState === "splash") {
     return <SplashScreen onFinish={handleSplashFinish} />;
+  }
+
+  // Brief gap while reading SecureStore — blank screen prevents flash
+  if (appState === "checking") {
+    return (
+      <View style={{ flex: 1, backgroundColor: theme.backgroundColor }} />
+    );
+  }
+
+  if (appState === "onboarding") {
+    return (
+      <SafeAreaProvider>
+        <StatusBar backgroundColor="transparent" translucent style="dark" />
+        <OnboardingScreen onComplete={handleOnboardingComplete} />
+      </SafeAreaProvider>
+    );
   }
 
   return (
@@ -94,6 +121,8 @@ export default function RootLayout() {
               name="registration"
               options={{ headerShown: false }}
             />
+            <Stack.Screen name="course" options={{ headerShown: false }} />
+            <Stack.Screen name="login" options={{ headerShown: false }} />
           </Stack>
         </QueryClientProvider>
       </ImageProvider>
