@@ -55,24 +55,6 @@ export default function Home() {
             National Life Skills & School Wellness Program
           </Text>
         </Animated.View>
-
-        {/* Upcoming Events Carousel */}
-        {upcomingPending ? (
-          <>
-            <SectionTitle label="Upcoming Events" />
-            <CarouselPlaceholder />
-          </>
-        ) : upcomingImages.length > 0 ? (
-          <>
-            <SectionTitle label="Upcoming Events" />
-            <Carousel images={upcomingImages} />
-          </>
-        ) : null}
-
-        {/* Recent Activity */}
-        <Animated.View entering={FadeInDown.duration(500).delay(100)}>
-          <RecentFeed />
-        </Animated.View>
         {/* Completed Events Carousel */}
         {completedPending ? (
           <>
@@ -83,6 +65,22 @@ export default function Home() {
           <>
             <SectionTitle label="Recent Events" />
             <Carousel images={completedImages} />
+          </>
+        ) : null}
+        {/* Recent Activity */}
+        <Animated.View entering={FadeInDown.duration(500).delay(100)}>
+          <RecentFeed />
+        </Animated.View>
+        {/* Upcoming Events Carousel */}
+        {upcomingPending ? (
+          <>
+            <SectionTitle label="Upcoming Events" />
+            <CarouselPlaceholder />
+          </>
+        ) : upcomingImages.length > 0 ? (
+          <>
+            <SectionTitle label="Upcoming Events" />
+            <Carousel images={upcomingImages} />
           </>
         ) : null}
 

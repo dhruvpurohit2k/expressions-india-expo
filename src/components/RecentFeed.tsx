@@ -1,15 +1,17 @@
-import { View, Text, ActivityIndicator } from "react-native";
+import { View, Text, ActivityIndicator, Pressable } from "react-native";
 import { theme } from "../theme";
 import {
   CalendarDays,
   Headphones,
   FileText,
   BookOpen,
+  GraduationCap,
 } from "lucide-react-native";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import { useLatestFeed } from "../hooks/useLatestFeed";
 import { useIsFocused } from "@react-navigation/native";
 import { LatestFeedItem } from "../types/latestFeed";
+import { router } from "expo-router";
 
 const lightRed = "hsl(4, 65%, 50%)";
 
@@ -18,6 +20,7 @@ const TYPE_ICON: Record<LatestFeedItem["type"], React.ReactNode> = {
   podcast: <Headphones size={18} color="white" strokeWidth={2} />,
   article: <FileText size={18} color="white" strokeWidth={2} />,
   journal: <BookOpen size={18} color="white" strokeWidth={2} />,
+  course: <GraduationCap size={18} color="white" strokeWidth={2} />,
 };
 
 const TYPE_LABEL: Record<LatestFeedItem["type"], string> = {
@@ -25,7 +28,28 @@ const TYPE_LABEL: Record<LatestFeedItem["type"], string> = {
   podcast: "Podcast",
   article: "Article",
   journal: "Journal",
+  course: "Course",
 };
+
+function navigateTo(item: LatestFeedItem) {
+  switch (item.type) {
+    case "event":
+      router.push({ pathname: "/event/[id]", params: { id: item.id } });
+      break;
+    case "podcast":
+      router.push({ pathname: "/podcast/[id]", params: { id: item.id } });
+      break;
+    case "article":
+      router.push({ pathname: "/article/[id]", params: { id: item.id } });
+      break;
+    case "journal":
+      router.push({ pathname: "/journal/[id]", params: { id: item.id } });
+      break;
+    case "course":
+      router.push({ pathname: "/course/[id]", params: { id: item.id } });
+      break;
+  }
+}
 
 function formatDate(dateStr: string | null): string | null {
   if (!dateStr) return null;
@@ -93,64 +117,69 @@ export default function RecentFeed() {
             <Animated.View
               key={item.id}
               entering={FadeInDown.duration(400).delay(i * 70)}
-              style={{
-                backgroundColor: theme.backgroundColor,
-                borderRadius: 12,
-                padding: 14,
-                flexDirection: "row",
-                alignItems: "center",
-                gap: 12,
-              }}
             >
-              <View
-                style={{
-                  width: 36,
-                  height: 36,
-                  borderRadius: 10,
-                  backgroundColor: lightRed,
+              <Pressable
+                onPress={() => navigateTo(item)}
+                style={({ pressed }) => ({
+                  backgroundColor: theme.backgroundColor,
+                  borderRadius: 12,
+                  padding: 14,
+                  flexDirection: "row",
                   alignItems: "center",
-                  justifyContent: "center",
-                  flexShrink: 0,
-                }}
+                  gap: 12,
+                  opacity: pressed ? 0.7 : 1,
+                })}
               >
-                {TYPE_ICON[item.type]}
-              </View>
-
-              <View style={{ flex: 1 }}>
-                <Text
+                <View
                   style={{
-                    fontFamily: theme.font,
-                    fontSize: 14,
-                    color: theme.text,
-                    lineHeight: 20,
-                  }}
-                >
-                  {item.title}
-                </Text>
-                <Text
-                  style={{
-                    fontFamily: theme.font,
-                    fontSize: 11,
-                    color: "hsl(0,0%,55%)",
-                    marginTop: 2,
-                  }}
-                >
-                  {TYPE_LABEL[item.type]}
-                </Text>
-              </View>
-
-              {formatDate(item.start) && (
-                <Text
-                  style={{
-                    fontSize: 11,
-                    fontFamily: theme.fontBold,
-                    color: theme.red,
+                    width: 36,
+                    height: 36,
+                    borderRadius: 10,
+                    backgroundColor: lightRed,
+                    alignItems: "center",
+                    justifyContent: "center",
                     flexShrink: 0,
                   }}
                 >
-                  {formatDate(item.start)}
-                </Text>
-              )}
+                  {TYPE_ICON[item.type]}
+                </View>
+
+                <View style={{ flex: 1 }}>
+                  <Text
+                    style={{
+                      fontFamily: theme.font,
+                      fontSize: 14,
+                      color: theme.text,
+                      lineHeight: 20,
+                    }}
+                  >
+                    {item.title}
+                  </Text>
+                  <Text
+                    style={{
+                      fontFamily: theme.font,
+                      fontSize: 11,
+                      color: "hsl(0,0%,55%)",
+                      marginTop: 2,
+                    }}
+                  >
+                    {TYPE_LABEL[item.type]}
+                  </Text>
+                </View>
+
+                {formatDate(item.start) && (
+                  <Text
+                    style={{
+                      fontSize: 11,
+                      fontFamily: theme.fontBold,
+                      color: theme.red,
+                      flexShrink: 0,
+                    }}
+                  >
+                    {formatDate(item.start)}
+                  </Text>
+                )}
+              </Pressable>
             </Animated.View>
           ))}
         </View>
