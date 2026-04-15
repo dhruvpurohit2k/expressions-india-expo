@@ -4,7 +4,7 @@ import type { StoredUser } from "@/src/lib/auth";
 const BASE_URL =
   process.env.EXPO_PUBLIC_API_URL?.replace(/\/api\/?$/, "") ?? "";
 
-export type LoginResult = StoredUser & { accessToken: string };
+export type LoginResult = StoredUser & { accessToken: string; refreshToken: string };
 
 export async function loginApi(
   email: string,

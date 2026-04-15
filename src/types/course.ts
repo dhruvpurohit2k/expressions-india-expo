@@ -41,6 +41,7 @@ export const CourseDetailSchema = z.object({
   description: z.string(),
   thumbnail: CourseMediaSchema.nullable().optional(),
   introductionVideoUrl: z.string().default(""),
+  registrationUrl: z.string().nullable().optional(),
   downloadableContent: z.array(CourseMediaSchema).nullish().transform((v) => v ?? []),
   audiences: z.array(z.string()).nullish().transform((v) => v ?? []),
   chapters: z.array(CourseChapterSchema).nullish().transform((v) => v ?? []),

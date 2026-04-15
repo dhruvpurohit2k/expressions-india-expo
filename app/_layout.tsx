@@ -54,8 +54,10 @@ export default function RootLayout() {
 
   useEffect(() => {
     SystemUI.setBackgroundColorAsync(theme.backgroundColor);
-    NavigationBar.setBackgroundColorAsync(theme.sectionHeadingColor);
-    NavigationBar.setButtonStyleAsync("light");
+    if (Platform.OS === "android") {
+      NavigationBar.setBackgroundColorAsync(theme.sectionHeadingColor);
+      NavigationBar.setButtonStyleAsync("light");
+    }
   }, []);
 
   const handleSplashFinish = useCallback(async () => {
@@ -123,6 +125,7 @@ export default function RootLayout() {
             />
             <Stack.Screen name="course" options={{ headerShown: false }} />
             <Stack.Screen name="login" options={{ headerShown: false }} />
+            <Stack.Screen name="signup" options={{ headerShown: false }} />
           </Stack>
         </QueryClientProvider>
       </ImageProvider>

@@ -48,7 +48,7 @@ export default function LoginScreen() {
     setLoading(true);
     try {
       const result = await loginApi(email, password);
-      await storeAuth(result.accessToken, {
+      await storeAuth(result.accessToken, result.refreshToken, {
         userId: result.userId,
         email: result.email,
         name: result.name ?? "",

@@ -1,5 +1,6 @@
 import { CourseChapterDetailSchema, CourseChapterDetail } from "../types/course";
 import { getToken } from "../lib/auth";
+import { tryRefresh } from "./refresh";
 
 /** Thrown when the backend returns 401 (not logged in) or 403 (not enrolled). */
 export class AccessError extends Error {
@@ -16,17 +17,25 @@ export async function fetchChapter(
   courseId: string,
   chapterId: string,
 ): Promise<CourseChapterDetail> {
-  const token = await getToken();
+  const url = `${process.env.EXPO_PUBLIC_API_URL}/course/${courseId}/chapter/${chapterId}`;
 
-  const headers: Record<string, string> = {};
-  if (token) {
-    headers["Authorization"] = `Bearer ${token}`;
+  const makeRequest = async (token: string | null): Promise<Response> => {
+    const headers: Record<string, string> = {};
+    if (token) headers["Authorization"] = `Bearer ${token}`;
+    return fetch(url, { headers });
+  };
+
+  let token = await getToken();
+  let response = await makeRequest(token);
+
+  // Access token expired — try a silent refresh once, then retry
+  if (response.status === 401) {
+    const newToken = await tryRefresh();
+    if (!newToken) {
+      throw new AccessError(401, "Login required to access this chapter");
+    }
+    response = await makeRequest(newToken);
   }
-
-  const response = await fetch(
-    `${process.env.EXPO_PUBLIC_API_URL}/course/${courseId}/chapter/${chapterId}`,
-    { headers },
-  );
 
   if (response.status === 401) {
     throw new AccessError(401, "Login required to access this chapter");

@@ -59,7 +59,7 @@ export default function SignupScreen() {
     setLoading(true);
     try {
       const result = await signupApi(email, password, name, phone);
-      await storeAuth(result.accessToken, {
+      await storeAuth(result.accessToken, result.refreshToken, {
         userId: result.userId,
         email: result.email,
         name: result.name ?? "",

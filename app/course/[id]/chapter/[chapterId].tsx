@@ -358,6 +358,7 @@ export default function ChapterView() {
               javaScriptEnabled
               domStorageEnabled
               allowsInlineMediaPlayback
+              allowsFullscreenVideo
               mediaPlaybackRequiresUserAction={false}
               scrollEnabled={false}
               setSupportMultipleWindows={false}

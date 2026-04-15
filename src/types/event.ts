@@ -43,7 +43,7 @@ export const EventSchema = z.object({
   medias: z.array(MediaSchema).default([]),
   documents: z.array(MediaSchema).default([]),
   videoLinks: z.array(LinkSchema).default([]),
-  audiences: z.array(z.string()).default([]),
+  audiences: z.array(z.string()).nullish().transform((v) => v ?? []),
   thumbnail: MediaSchema.nullable().optional(),
 });
 

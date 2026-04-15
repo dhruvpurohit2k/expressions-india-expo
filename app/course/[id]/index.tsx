@@ -13,6 +13,7 @@ import { useCourseQuery } from "@/src/hooks/useCourseQuery";
 import { useIsFocused } from "@react-navigation/native";
 import { styleFactory } from "@/src/styleFactory";
 import { theme } from "@/src/theme";
+import { handleRegistration } from "@/src/lib/handleRegistration";
 
 function getEmbedHtml(url: string): string {
   const ytMatch = url.match(
@@ -141,6 +142,7 @@ export default function CourseOverview() {
               javaScriptEnabled
               domStorageEnabled
               allowsInlineMediaPlayback
+              allowsFullscreenVideo
               mediaPlaybackRequiresUserAction={false}
               scrollEnabled={false}
               setSupportMultipleWindows={false}
@@ -315,6 +317,8 @@ export default function CourseOverview() {
         </Pressable>
 
         <Pressable
+          onPress={() => handleRegistration(course.registrationUrl, id)}
+          disabled={!course.registrationUrl}
           style={({ pressed }) => [
             {
               flex: 1,
@@ -328,7 +332,9 @@ export default function CourseOverview() {
               borderWidth: 1.5,
               borderColor: theme.red,
             },
-            pressed && { opacity: 0.85, transform: [{ scale: 0.98 }] },
+            pressed && !course.registrationUrl && { opacity: 0.85, transform: [{ scale: 0.98 }] },
+            pressed && course.registrationUrl && { opacity: 0.85, transform: [{ scale: 0.98 }] },
+            !course.registrationUrl && { opacity: 0.5 },
           ]}
         >
           <ShoppingCart size={20} color={theme.red} strokeWidth={2} />

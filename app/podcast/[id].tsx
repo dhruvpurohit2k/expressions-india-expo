@@ -121,6 +121,7 @@ export default function PodcastDetail() {
               javaScriptEnabled
               domStorageEnabled
               allowsInlineMediaPlayback
+              allowsFullscreenVideo
               mediaPlaybackRequiresUserAction={false}
               scrollEnabled={false}
               setSupportMultipleWindows={false}

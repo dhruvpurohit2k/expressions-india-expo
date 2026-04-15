@@ -3,7 +3,7 @@ import type { StoredUser } from "@/src/lib/auth";
 const BASE_URL =
   process.env.EXPO_PUBLIC_API_URL?.replace(/\/api\/?$/, "") ?? "";
 
-export type SignupResult = StoredUser & { accessToken: string };
+export type SignupResult = StoredUser & { accessToken: string; refreshToken: string };
 
 export async function signupApi(
   email: string,

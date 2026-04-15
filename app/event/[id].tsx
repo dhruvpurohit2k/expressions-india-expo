@@ -6,6 +6,7 @@ import { theme } from "@/src/theme";
 import { Ionicons } from "@expo/vector-icons";
 import { format as formatDate, parse } from "date-fns";
 import { Link, router, useLocalSearchParams } from "expo-router";
+import { handleRegistration } from "@/src/lib/handleRegistration";
 import {
   ChevronLeft,
   Download,
@@ -128,7 +129,7 @@ function UpcomingEventDetail({
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.backgroundColorLight }}>
-      {/* Floating back button */}
+      {/* Floating back button — absolute so it floats over the hero */}
       <Pressable
         onPress={() => router.back()}
         style={({ pressed }) => [
@@ -147,340 +148,339 @@ function UpcomingEventDetail({
         <ChevronLeft size={22} color="white" strokeWidth={2.5} />
       </Pressable>
 
-      {/* Hero image carousel */}
-      <View
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          right: 0,
-          height: HERO_HEIGHT,
-          overflow: "hidden",
-          backgroundColor: theme.backgroundColorLight,
-        }}
-      >
-        {promoImages.length > 0 ? (
-          <>
-            <Animated.View
-              entering={SlideInUp.duration(800).withInitialValues({
-                opacity: 0,
-                transform: [{ translateY: -HERO_HEIGHT }],
-              })}
-              style={[{ width: "100%", height: "100%" }, heroAnimatedStyle]}
-            >
-              <FlatList
-                data={promoImages}
-                keyExtractor={(item) => item.id}
-                horizontal
-                pagingEnabled
-                showsHorizontalScrollIndicator={false}
-                onMomentumScrollEnd={onImageScroll}
-                renderItem={({ item }) => (
-                  <Pressable
-                    onPress={() => {
-                      setImage(item.url);
-                      router.push("/modal");
-                    }}
-                    style={{ width: SCREEN_WIDTH, height: HERO_HEIGHT }}
-                  >
-                    <Animated.Image
-                      source={{ uri: item.url }}
-                      style={{ width: "100%", height: "100%" }}
-                      resizeMode="contain"
-                    />
-                  </Pressable>
-                )}
-              />
-            </Animated.View>
-
-            {promoImages.length > 1 && (
-              <View
-                style={{
-                  position: "absolute",
-                  bottom: CARD_PEEK + 16,
-                  alignSelf: "center",
-                  flexDirection: "row",
-                  gap: 6,
-                }}
-              >
-                {promoImages.map((_, i) => (
-                  <View
-                    key={i}
-                    style={{
-                      width: activeImageIndex === i ? 20 : 8,
-                      height: 8,
-                      borderRadius: 4,
-                      backgroundColor:
-                        activeImageIndex === i
-                          ? "white"
-                          : "rgba(255,255,255,0.5)",
-                    }}
-                  />
-                ))}
-              </View>
-            )}
-
-            <Animated.View
-              pointerEvents="none"
-              style={[
-                {
-                  position: "absolute",
-                  inset: 0,
-                  backgroundColor: "black",
-                },
-                overlayAnimatedStyle,
-              ]}
-            />
-          </>
-        ) : (
-          <View
-            style={{
-              flex: 1,
-              backgroundColor: theme.sectionHeadingColor,
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <Text style={{ color: "white", fontFamily: theme.fontBold }}>
-              Event
-            </Text>
-          </View>
-        )}
-      </View>
-
-      {/* Scrollable card */}
       <Animated.ScrollView
         onScroll={onScroll}
         scrollEventThrottle={16}
         showsVerticalScrollIndicator={false}
-        entering={SlideInDown.duration(1000)
-          .delay(500)
-          .withInitialValues({ opacity: 0, translateY: SCREEN_HEIGHT })}
         bounces
         style={{ flex: 1 }}
         contentContainerStyle={{ paddingBottom: 40 }}
       >
-        <View style={{ height: HERO_HEIGHT - CARD_PEEK }} />
-
-        <View
-          style={{
-            minHeight: SCREEN_HEIGHT,
-            backgroundColor: theme.backgroundColorLight,
-            borderTopLeftRadius: 28,
-            borderTopRightRadius: 28,
-            paddingHorizontal: 20,
-          }}
-        >
-          {/* Peek area */}
-          <View style={{ alignItems: "center", paddingTop: 12 }}>
-            <View
-              style={{
-                width: 48,
-                height: 5,
-                borderRadius: 999,
-                backgroundColor: "#D0D0D0",
-                marginBottom: 8,
-              }}
-            />
-            <Text
-              ellipsizeMode="tail"
-              style={[
-                globalStyle.sectionHeading,
-                { marginTop: 0, textAlign: "center", fontSize: 18 },
-              ]}
-            >
-              {event.title}
-            </Text>
-            <Text
-              style={{
-                color: "#999",
-                fontSize: 12,
-                fontFamily: theme.font,
-                marginTop: 2,
-              }}
-            >
-              Swipe up for details
-            </Text>
-          </View>
-
-          {/* Content */}
-          <View style={{ paddingTop: 10 }}>
-            {promoVideos.length > 0 && (
-              <View style={{ marginBottom: 20 }}>
-                <Text
-                  style={{ fontSize: 20, color: "#777", marginBottom: 10 }}
-                >
-                  Promo Videos
-                </Text>
-                <View style={{ gap: 10 }}>
-                  {promoVideos.map((video) => (
+        {/* Hero — first item in ScrollView so the card scrolls on top of it.
+            Horizontal FlatList inside vertical ScrollView is handled natively. */}
+        <View style={{ height: HERO_HEIGHT, overflow: "hidden" }}>
+          {promoImages.length > 0 ? (
+            <>
+              <Animated.View
+                entering={SlideInUp.duration(800).withInitialValues({
+                  opacity: 0,
+                  transform: [{ translateY: -HERO_HEIGHT }],
+                })}
+                style={[{ width: "100%", height: "100%" }, heroAnimatedStyle]}
+              >
+                <FlatList
+                  data={promoImages}
+                  keyExtractor={(item) => item.id}
+                  horizontal
+                  pagingEnabled
+                  showsHorizontalScrollIndicator={false}
+                  onMomentumScrollEnd={onImageScroll}
+                  renderItem={({ item }) => (
                     <Pressable
-                      key={video.id}
-                      onPress={() => Linking.openURL(video.url)}
-                      style={({ pressed }) => [
-                        {
-                          borderRadius: 12,
-                          overflow: "hidden",
-                          elevation: 2,
-                          backgroundColor: "#000",
-                        },
-                        pressed && {
-                          opacity: 0.85,
-                          transform: [{ scale: 0.98 }],
-                        },
-                      ]}
+                      onPress={() => {
+                        setImage(item.url);
+                        router.push("/modal");
+                      }}
+                      style={{ width: SCREEN_WIDTH, height: HERO_HEIGHT }}
                     >
-                      <View>
-                        <Animated.Image
-                          source={{
-                            uri: getYouTubeThumbnail(video.youtubeId),
-                          }}
-                          style={{ width: "100%", aspectRatio: 16 / 9 }}
-                          resizeMode="cover"
-                        />
-                        <View
-                          style={{
-                            position: "absolute",
-                            inset: 0,
-                            alignItems: "center",
-                            justifyContent: "center",
-                            backgroundColor: "rgba(0,0,0,0.3)",
-                          }}
-                        >
-                          <View
-                            style={{
-                              width: 56,
-                              height: 56,
-                              borderRadius: 28,
-                              backgroundColor: "rgba(255,255,255,0.9)",
-                              alignItems: "center",
-                              justifyContent: "center",
-                              paddingLeft: 3,
-                            }}
-                          >
-                            <Play
-                              size={28}
-                              color={theme.sectionHeadingColor}
-                              fill={theme.sectionHeadingColor}
-                            />
-                          </View>
-                        </View>
-                      </View>
+                      <Animated.Image
+                        source={{ uri: item.url }}
+                        style={{ width: "100%", height: "100%" }}
+                        resizeMode="contain"
+                      />
                     </Pressable>
+                  )}
+                />
+              </Animated.View>
+
+              {promoImages.length > 1 && (
+                <View
+                  style={{
+                    position: "absolute",
+                    bottom: CARD_PEEK + 16,
+                    alignSelf: "center",
+                    flexDirection: "row",
+                    gap: 6,
+                  }}
+                  pointerEvents="none"
+                >
+                  {promoImages.map((_, i) => (
+                    <View
+                      key={i}
+                      style={{
+                        width: activeImageIndex === i ? 20 : 8,
+                        height: 8,
+                        borderRadius: 4,
+                        backgroundColor:
+                          activeImageIndex === i
+                            ? "white"
+                            : "rgba(255,255,255,0.5)",
+                      }}
+                    />
                   ))}
                 </View>
-              </View>
-            )}
+              )}
 
-            <View>
+              <Animated.View
+                pointerEvents="none"
+                style={[
+                  {
+                    position: "absolute",
+                    inset: 0,
+                    backgroundColor: "black",
+                  },
+                  overlayAnimatedStyle,
+                ]}
+              />
+            </>
+          ) : (
+            <View
+              style={{
+                flex: 1,
+                backgroundColor: theme.sectionHeadingColor,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Text style={{ color: "white", fontFamily: theme.fontBold }}>
+                Event
+              </Text>
+            </View>
+          )}
+        </View>
+
+        {/* Card — negative marginTop overlaps the hero bottom by CARD_PEEK.
+            Rendered after hero so it naturally appears on top when scrolled. */}
+        <Animated.View
+          entering={SlideInDown.duration(1000)
+            .delay(500)
+            .withInitialValues({ opacity: 0, translateY: SCREEN_HEIGHT })}
+        >
+          <View
+            style={{
+              marginTop: -CARD_PEEK,
+              minHeight: SCREEN_HEIGHT,
+              backgroundColor: theme.backgroundColorLight,
+              borderTopLeftRadius: 28,
+              borderTopRightRadius: 28,
+              paddingHorizontal: 20,
+            }}
+          >
+            {/* Peek area */}
+            <View style={{ alignItems: "center", paddingTop: 12 }}>
+              <View
+                style={{
+                  width: 48,
+                  height: 5,
+                  borderRadius: 999,
+                  backgroundColor: "#D0D0D0",
+                  marginBottom: 8,
+                }}
+              />
+              <Text
+                ellipsizeMode="tail"
+                style={[
+                  globalStyle.sectionHeading,
+                  { marginTop: 0, textAlign: "center", fontSize: 18 },
+                ]}
+              >
+                {event.title}
+              </Text>
               <Text
                 style={{
-                  fontSize: 18,
-                  textAlign: "justify",
-                  color: "#777",
-                  marginVertical: 20,
+                  color: "#999",
+                  fontSize: 12,
+                  fontFamily: theme.font,
+                  marginTop: 2,
                 }}
               >
-                {event.description ?? "No description available."}
+                Swipe up for details
               </Text>
             </View>
 
-            <Text style={{ fontSize: 20, color: "#777" }}>Perks</Text>
-            <View>
-              {event.perks &&
-                event.perks.map((value, index) => (
-                  <View key={index}>
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        alignItems: "flex-start",
-                      }}
-                    >
-                      <Ionicons
-                        name="checkmark-circle"
-                        size={16}
-                        color="#070"
-                      />
-                      <Text>{value}</Text>
-                    </View>
-                  </View>
-                ))}
-            </View>
-
-            <View style={{ marginVertical: 20 }}>
-              <Text
-                style={{ fontSize: 20, color: "#777", marginVertical: 5 }}
-              >
-                Date & Time
-              </Text>
-              <Text>
-                {formatDate(event.startDate, "do MMM, yy")}
-                {event.endDate
-                  ? ` - ${formatDate(event.endDate, "do MMM, yy")}`
-                  : ""}
-              </Text>
-              <Text>
-                {event.startTime &&
-                  formatDate(
-                    parse(event.startTime, "HH:mm:ss", new Date()),
-                    "hh:mm a",
-                  )}
-                {event.endTime
-                  ? ` - ${formatDate(parse(event.endTime, "HH:mm:ss", new Date()), "hh:mm a")}`
-                  : ""}
-              </Text>
-            </View>
-
-            <View>
-              <Text
-                style={{ fontSize: 20, color: "#777", marginVertical: 5 }}
-              >
-                Venue
-              </Text>
-              <Text>
-                {event.location ?? "Location will be announced soon."}
-              </Text>
-            </View>
-
-            <View>
-              <Text
-                style={{ fontSize: 20, color: "#777", marginVertical: 5 }}
-              >
-                Fee
-              </Text>
-              <Text>
-                {event.isPaid ? (
-                  <View
-                    style={{ flexDirection: "row", alignItems: "center" }}
+            {/* Content */}
+            <View style={{ paddingTop: 10 }}>
+              {promoVideos.length > 0 && (
+                <View style={{ marginBottom: 20 }}>
+                  <Text
+                    style={{ fontSize: 20, color: "#777", marginBottom: 10 }}
                   >
-                    <IndianRupee size={12} />
-                    <Text style={{ fontSize: 14 }}>{event.price ?? 0}</Text>
+                    Promo Videos
+                  </Text>
+                  <View style={{ gap: 10 }}>
+                    {promoVideos.map((video) => (
+                      <Pressable
+                        key={video.id}
+                        onPress={() => Linking.openURL(video.url)}
+                        style={({ pressed }) => [
+                          {
+                            borderRadius: 12,
+                            overflow: "hidden",
+                            elevation: 2,
+                            backgroundColor: "#000",
+                          },
+                          pressed && {
+                            opacity: 0.85,
+                            transform: [{ scale: 0.98 }],
+                          },
+                        ]}
+                      >
+                        <View>
+                          <Animated.Image
+                            source={{
+                              uri: getYouTubeThumbnail(video.youtubeId),
+                            }}
+                            style={{ width: "100%", aspectRatio: 16 / 9 }}
+                            resizeMode="cover"
+                          />
+                          <View
+                            style={{
+                              position: "absolute",
+                              inset: 0,
+                              alignItems: "center",
+                              justifyContent: "center",
+                              backgroundColor: "rgba(0,0,0,0.3)",
+                            }}
+                          >
+                            <View
+                              style={{
+                                width: 56,
+                                height: 56,
+                                borderRadius: 28,
+                                backgroundColor: "rgba(255,255,255,0.9)",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                paddingLeft: 3,
+                              }}
+                            >
+                              <Play
+                                size={28}
+                                color={theme.sectionHeadingColor}
+                                fill={theme.sectionHeadingColor}
+                              />
+                            </View>
+                          </View>
+                        </View>
+                      </Pressable>
+                    ))}
                   </View>
-                ) : (
-                  "Free"
-                )}
-              </Text>
-            </View>
+                </View>
+              )}
 
-            <Link href="/registration" asChild>
+              <View>
+                <Text
+                  style={{
+                    fontSize: 18,
+                    textAlign: "justify",
+                    color: "#777",
+                    marginVertical: 20,
+                  }}
+                >
+                  {event.description ?? "No description available."}
+                </Text>
+              </View>
+
+              <Text style={{ fontSize: 20, color: "#777" }}>Perks</Text>
+              <View>
+                {event.perks &&
+                  event.perks.map((value, index) => (
+                    <View key={index}>
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          alignItems: "flex-start",
+                        }}
+                      >
+                        <Ionicons
+                          name="checkmark-circle"
+                          size={16}
+                          color="#070"
+                        />
+                        <Text>{value}</Text>
+                      </View>
+                    </View>
+                  ))}
+              </View>
+
+              <View style={{ marginVertical: 20 }}>
+                <Text
+                  style={{ fontSize: 20, color: "#777", marginVertical: 5 }}
+                >
+                  Date & Time
+                </Text>
+                <Text>
+                  {formatDate(event.startDate, "do MMM, yy")}
+                  {event.endDate
+                    ? ` - ${formatDate(event.endDate, "do MMM, yy")}`
+                    : ""}
+                </Text>
+                <Text>
+                  {event.startTime &&
+                    formatDate(
+                      parse(event.startTime, "HH:mm:ss", new Date()),
+                      "hh:mm a",
+                    )}
+                  {event.endTime
+                    ? ` - ${formatDate(parse(event.endTime, "HH:mm:ss", new Date()), "hh:mm a")}`
+                    : ""}
+                </Text>
+              </View>
+
+              <View>
+                <Text
+                  style={{ fontSize: 20, color: "#777", marginVertical: 5 }}
+                >
+                  Venue
+                </Text>
+                <Text>
+                  {event.location ?? "Location will be announced soon."}
+                </Text>
+              </View>
+
+              <View>
+                <Text
+                  style={{ fontSize: 20, color: "#777", marginVertical: 5 }}
+                >
+                  Fee
+                </Text>
+                <Text>
+                  {event.isPaid ? (
+                    <View
+                      style={{ flexDirection: "row", alignItems: "center" }}
+                    >
+                      <IndianRupee size={12} />
+                      <Text style={{ fontSize: 14 }}>{event.price ?? 0}</Text>
+                    </View>
+                  ) : (
+                    "Free"
+                  )}
+                </Text>
+              </View>
+
               <Pressable
-                style={{
-                  backgroundColor: theme.sectionHeadingColor,
-                  padding: 14,
-                  borderRadius: 12,
-                  marginTop: 8,
-                  alignSelf: "center",
-                }}
+                onPress={() => handleRegistration(event.registrationUrl, event.id)}
+                disabled={!event.registrationUrl}
+                style={({ pressed }) => [
+                  {
+                    backgroundColor: theme.sectionHeadingColor,
+                    padding: 14,
+                    borderRadius: 12,
+                    marginTop: 8,
+                    alignSelf: "center",
+                  },
+                  pressed && event.registrationUrl && { opacity: 0.85 },
+                  !event.registrationUrl && { opacity: 0.5 },
+                ]}
               >
                 <Text
                   style={{ color: "white", fontFamily: theme.fontBold }}
                 >
-                  Registration Link
+                  Register
                 </Text>
               </Pressable>
-            </Link>
+            </View>
           </View>
-        </View>
+        </Animated.View>
       </Animated.ScrollView>
     </View>
   );

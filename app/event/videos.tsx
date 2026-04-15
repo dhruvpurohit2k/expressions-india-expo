@@ -109,6 +109,7 @@ export default function Videos() {
                     javaScriptEnabled
                     domStorageEnabled
                     allowsInlineMediaPlayback
+                    allowsFullscreenVideo
                     mediaPlaybackRequiresUserAction={false}
                     scrollEnabled={false}
                     onShouldStartLoadWithRequest={(request) => {
