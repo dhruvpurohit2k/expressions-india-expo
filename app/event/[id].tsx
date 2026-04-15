@@ -39,8 +39,7 @@ import Animated, {
 import { SafeAreaView } from "react-native-safe-area-context";
 import type { Event } from "@/src/types/event";
 
-const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } =
-  Dimensions.get("window");
+const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 const CARD_PEEK = 60;
 const HERO_HEIGHT = SCREEN_HEIGHT - CARD_PEEK;
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL;
@@ -300,73 +299,6 @@ function UpcomingEventDetail({
 
             {/* Content */}
             <View style={{ paddingTop: 10 }}>
-              {promoVideos.length > 0 && (
-                <View style={{ marginBottom: 20 }}>
-                  <Text
-                    style={{ fontSize: 20, color: "#777", marginBottom: 10 }}
-                  >
-                    Promo Videos
-                  </Text>
-                  <View style={{ gap: 10 }}>
-                    {promoVideos.map((video) => (
-                      <Pressable
-                        key={video.id}
-                        onPress={() => Linking.openURL(video.url)}
-                        style={({ pressed }) => [
-                          {
-                            borderRadius: 12,
-                            overflow: "hidden",
-                            elevation: 2,
-                            backgroundColor: "#000",
-                          },
-                          pressed && {
-                            opacity: 0.85,
-                            transform: [{ scale: 0.98 }],
-                          },
-                        ]}
-                      >
-                        <View>
-                          <Animated.Image
-                            source={{
-                              uri: getYouTubeThumbnail(video.youtubeId),
-                            }}
-                            style={{ width: "100%", aspectRatio: 16 / 9 }}
-                            resizeMode="cover"
-                          />
-                          <View
-                            style={{
-                              position: "absolute",
-                              inset: 0,
-                              alignItems: "center",
-                              justifyContent: "center",
-                              backgroundColor: "rgba(0,0,0,0.3)",
-                            }}
-                          >
-                            <View
-                              style={{
-                                width: 56,
-                                height: 56,
-                                borderRadius: 28,
-                                backgroundColor: "rgba(255,255,255,0.9)",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                paddingLeft: 3,
-                              }}
-                            >
-                              <Play
-                                size={28}
-                                color={theme.sectionHeadingColor}
-                                fill={theme.sectionHeadingColor}
-                              />
-                            </View>
-                          </View>
-                        </View>
-                      </Pressable>
-                    ))}
-                  </View>
-                </View>
-              )}
-
               <View>
                 <Text
                   style={{
@@ -456,9 +388,76 @@ function UpcomingEventDetail({
                   )}
                 </Text>
               </View>
-
+              {promoVideos.length > 0 && (
+                <View style={{ marginBottom: 20 }}>
+                  <Text
+                    style={{ fontSize: 20, color: "#777", marginBottom: 10 }}
+                  >
+                    Promo Videos
+                  </Text>
+                  <View style={{ gap: 10 }}>
+                    {promoVideos.map((video) => (
+                      <Pressable
+                        key={video.id}
+                        onPress={() => Linking.openURL(video.url)}
+                        style={({ pressed }) => [
+                          {
+                            borderRadius: 12,
+                            overflow: "hidden",
+                            elevation: 2,
+                            backgroundColor: "#000",
+                          },
+                          pressed && {
+                            opacity: 0.85,
+                            transform: [{ scale: 0.98 }],
+                          },
+                        ]}
+                      >
+                        <View>
+                          <Animated.Image
+                            source={{
+                              uri: getYouTubeThumbnail(video.youtubeId),
+                            }}
+                            style={{ width: "100%", aspectRatio: 16 / 9 }}
+                            resizeMode="cover"
+                          />
+                          <View
+                            style={{
+                              position: "absolute",
+                              inset: 0,
+                              alignItems: "center",
+                              justifyContent: "center",
+                              backgroundColor: "rgba(0,0,0,0.3)",
+                            }}
+                          >
+                            <View
+                              style={{
+                                width: 56,
+                                height: 56,
+                                borderRadius: 28,
+                                backgroundColor: "rgba(255,255,255,0.9)",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                paddingLeft: 3,
+                              }}
+                            >
+                              <Play
+                                size={28}
+                                color={theme.sectionHeadingColor}
+                                fill={theme.sectionHeadingColor}
+                              />
+                            </View>
+                          </View>
+                        </View>
+                      </Pressable>
+                    ))}
+                  </View>
+                </View>
+              )}
               <Pressable
-                onPress={() => handleRegistration(event.registrationUrl, event.id)}
+                onPress={() =>
+                  handleRegistration(event.registrationUrl, event.id)
+                }
                 disabled={!event.registrationUrl}
                 style={({ pressed }) => [
                   {
@@ -472,9 +471,7 @@ function UpcomingEventDetail({
                   !event.registrationUrl && { opacity: 0.5 },
                 ]}
               >
-                <Text
-                  style={{ color: "white", fontFamily: theme.fontBold }}
-                >
+                <Text style={{ color: "white", fontFamily: theme.fontBold }}>
                   Register
                 </Text>
               </Pressable>
@@ -550,7 +547,10 @@ function CompletedEventDetail({
       >
         {/* Title */}
         <Text
-          style={[globalStyle.sectionHeading, { marginTop: 0, marginBottom: 4 }]}
+          style={[
+            globalStyle.sectionHeading,
+            { marginTop: 0, marginBottom: 4 },
+          ]}
         >
           {event.title}
         </Text>
@@ -624,7 +624,7 @@ function CompletedEventDetail({
             <Text style={{ fontSize: 15, color: theme.text }}>
               {event.isOnline
                 ? "Online"
-                : event.location ?? "Location not specified"}
+                : (event.location ?? "Location not specified")}
             </Text>
           </View>
         </View>
@@ -655,7 +655,12 @@ function CompletedEventDetail({
                     router.push("/modal");
                   }}
                   style={({ pressed }) => [
-                    { flex: 1, aspectRatio: 1, borderRadius: 10, overflow: "hidden" },
+                    {
+                      flex: 1,
+                      aspectRatio: 1,
+                      borderRadius: 10,
+                      overflow: "hidden",
+                    },
                     pressed && { opacity: 0.8 },
                   ]}
                 >
@@ -823,7 +828,11 @@ export default function EventDetail() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const globalStyle = styleFactory();
   const isFocused = useIsFocused();
-  const { data: event, isLoading, error } = useEvent(id, { enabled: isFocused });
+  const {
+    data: event,
+    isLoading,
+    error,
+  } = useEvent(id, { enabled: isFocused });
 
   if (isLoading) {
     return (
