@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { View, Text, Pressable, Alert } from "react-native";
+import { View, Text, Pressable, Alert, Platform } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useFocusEffect, router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
@@ -30,18 +30,20 @@ export default function AccountScreen() {
     }, []),
   );
 
-  async function handleLogout() {
+  async function doLogout() {
+    await clearAuth();
+    queryClient.removeQueries({ queryKey: queryKeys.courses.all() });
+    setUser(null);
+  }
+
+  function handleLogout() {
+    if (Platform.OS === "web") {
+      if (window.confirm("Are you sure you want to log out?")) doLogout();
+      return;
+    }
     Alert.alert("Log out", "Are you sure you want to log out?", [
       { text: "Cancel", style: "cancel" },
-      {
-        text: "Log out",
-        style: "destructive",
-        onPress: async () => {
-          await clearAuth();
-          queryClient.removeQueries({ queryKey: queryKeys.courses.all() });
-          setUser(null);
-        },
-      },
+      { text: "Log out", style: "destructive", onPress: doLogout },
     ]);
   }
 
@@ -270,16 +272,6 @@ function LoggedOutView() {
           </Text>
         </Pressable>
 
-        <View style={{ flexDirection: "row", marginTop: 16, gap: 4 }}>
-          <Text style={{ fontFamily: theme.font, fontSize: 14, color: theme.text, opacity: 0.6 }}>
-            New here?
-          </Text>
-          <Pressable onPress={() => router.push("/signup")} hitSlop={8}>
-            <Text style={{ fontFamily: theme.fontBold, fontSize: 14, color: theme.red }}>
-              Create an account
-            </Text>
-          </Pressable>
-        </View>
       </Animated.View>
     </View>
   );

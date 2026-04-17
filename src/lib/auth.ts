@@ -1,4 +1,4 @@
-import * as SecureStore from "expo-secure-store";
+import * as store from "@/src/lib/secureStorage";
 
 const TOKEN_KEY = "ei_access_token";
 const REFRESH_KEY = "ei_refresh_token";
@@ -11,14 +11,14 @@ export async function storeAuth(
   refreshToken: string,
   user: StoredUser,
 ): Promise<void> {
-  await SecureStore.setItemAsync(TOKEN_KEY, accessToken);
-  await SecureStore.setItemAsync(REFRESH_KEY, refreshToken);
-  await SecureStore.setItemAsync(USER_KEY, JSON.stringify(user));
+  await store.setItem(TOKEN_KEY, accessToken);
+  await store.setItem(REFRESH_KEY, refreshToken);
+  await store.setItem(USER_KEY, JSON.stringify(user));
 }
 
 export async function getToken(): Promise<string | null> {
   try {
-    return await SecureStore.getItemAsync(TOKEN_KEY);
+    return await store.getItem(TOKEN_KEY);
   } catch {
     return null;
   }
@@ -26,7 +26,7 @@ export async function getToken(): Promise<string | null> {
 
 export async function getRefreshToken(): Promise<string | null> {
   try {
-    return await SecureStore.getItemAsync(REFRESH_KEY);
+    return await store.getItem(REFRESH_KEY);
   } catch {
     return null;
   }
@@ -34,7 +34,7 @@ export async function getRefreshToken(): Promise<string | null> {
 
 export async function getStoredUser(): Promise<StoredUser | null> {
   try {
-    const raw = await SecureStore.getItemAsync(USER_KEY);
+    const raw = await store.getItem(USER_KEY);
     return raw ? (JSON.parse(raw) as StoredUser) : null;
   } catch {
     return null;
@@ -42,9 +42,9 @@ export async function getStoredUser(): Promise<StoredUser | null> {
 }
 
 export async function clearAuth(): Promise<void> {
-  await SecureStore.deleteItemAsync(TOKEN_KEY);
-  await SecureStore.deleteItemAsync(REFRESH_KEY);
-  await SecureStore.deleteItemAsync(USER_KEY);
+  await store.deleteItem(TOKEN_KEY);
+  await store.deleteItem(REFRESH_KEY);
+  await store.deleteItem(USER_KEY);
 }
 
 export async function isLoggedIn(): Promise<boolean> {

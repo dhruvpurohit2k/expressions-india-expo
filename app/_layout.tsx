@@ -43,9 +43,17 @@ const queryClient = new QueryClient({
 
 type AppState = "splash" | "checking" | "onboarding" | "app";
 
+// Survives component remounts (e.g. web tab navigation) so splash only runs once.
+let _cachedAppState: AppState | null = null;
+
 export default function RootLayout() {
   const globalStyles = styleFactory();
-  const [appState, setAppState] = useState<AppState>("splash");
+  const [appState, setAppState] = useState<AppState>(_cachedAppState ?? "splash");
+
+  function updateAppState(next: AppState) {
+    _cachedAppState = next;
+    setAppState(next);
+  }
   const [loaded] = useFonts({
     Delius_400Regular,
     Inter_700Bold,
@@ -61,13 +69,13 @@ export default function RootLayout() {
   }, []);
 
   const handleSplashFinish = useCallback(async () => {
-    setAppState("checking");
+    updateAppState("checking");
     const done = await hasCompletedOnboarding();
-    setAppState(done ? "app" : "onboarding");
+    updateAppState(done ? "app" : "onboarding");
   }, []);
 
   const handleOnboardingComplete = useCallback(() => {
-    setAppState("app");
+    updateAppState("app");
   }, []);
 
   if (!loaded) {
@@ -104,6 +112,7 @@ export default function RootLayout() {
       <ImageProvider>
         <QueryClientProvider client={queryClient}>
           <Stack>
+            <Stack.Screen name="index" options={{ headerShown: false }} />
             <Stack.Screen
               name="(tabs)"
               options={{
@@ -125,7 +134,6 @@ export default function RootLayout() {
             />
             <Stack.Screen name="course" options={{ headerShown: false }} />
             <Stack.Screen name="login" options={{ headerShown: false }} />
-            <Stack.Screen name="signup" options={{ headerShown: false }} />
           </Stack>
         </QueryClientProvider>
       </ImageProvider>

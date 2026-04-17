@@ -21,8 +21,8 @@ type Tab = "podcasts" | "journals" | "articles";
 
 const TABS: { key: Tab; label: string }[] = [
   { key: "podcasts", label: "Podcasts" },
-  { key: "journals", label: "Journals" },
   { key: "articles", label: "Articles" },
+  { key: "journals", label: "Journals" },
 ];
 
 const LIMIT = 8;
@@ -39,7 +39,11 @@ export default function Resources() {
     data: podcastData,
     isLoading: podcastLoading,
     error: podcastError,
-  } = usePodcastQuery({ limit: LIMIT, offset: (podcastPage - 1) * LIMIT, enabled: isFocused });
+  } = usePodcastQuery({
+    limit: LIMIT,
+    offset: (podcastPage - 1) * LIMIT,
+    enabled: isFocused,
+  });
 
   const podcasts = podcastData?.data ?? [];
   const podcastTotalPages =
@@ -50,7 +54,11 @@ export default function Resources() {
     data: journalData,
     isLoading: journalLoading,
     error: journalError,
-  } = useJournalQuery({ limit: LIMIT, offset: (journalPage - 1) * LIMIT, enabled: isFocused });
+  } = useJournalQuery({
+    limit: LIMIT,
+    offset: (journalPage - 1) * LIMIT,
+    enabled: isFocused,
+  });
 
   const journals = journalData?.data ?? [];
   const journalTotalPages =
@@ -61,7 +69,11 @@ export default function Resources() {
     data: articleData,
     isLoading: articleLoading,
     error: articleError,
-  } = useArticleQuery({ limit: LIMIT, offset: (articlePage - 1) * LIMIT, enabled: isFocused });
+  } = useArticleQuery({
+    limit: LIMIT,
+    offset: (articlePage - 1) * LIMIT,
+    enabled: isFocused,
+  });
 
   const articles = articleData?.data ?? [];
   const articleTotalPages =

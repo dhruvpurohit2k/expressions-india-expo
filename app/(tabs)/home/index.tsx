@@ -106,7 +106,7 @@ export default function Home() {
               gap: 14,
             }}
           >
-            <SectionTitle label="Downloads" />
+            {/* <SectionTitle label="" /> */}
 
             {almanacPending ? (
               <DownloadCardSkeleton />
@@ -258,6 +258,7 @@ function DownloadCard({
                 fontSize: 13,
                 color: "hsl(0,0%,50%)",
                 lineHeight: 18,
+                textAlign: "justify",
               }}
             >
               {description}
