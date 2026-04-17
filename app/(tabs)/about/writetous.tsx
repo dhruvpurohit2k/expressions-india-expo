@@ -19,6 +19,7 @@ import { styleFactory } from "@/src/styleFactory";
 
 const ContactFormSchema = z.object({
   name: z.string().min(1, "Name is required"),
+  subject: z.string().min(1, "Subject is required"),
   designation: z.string().min(1, "Designation is required"),
   email: z.string().email("Invalid email address"),
   contactNumber: z.string().min(10, "Must be at least 10 digits"),
@@ -114,6 +115,7 @@ export default function WriteToUs() {
   const form = useForm({
     defaultValues: {
       name: "",
+      subject: "",
       designation: "",
       email: "",
       contactNumber: "",
@@ -128,7 +130,8 @@ export default function WriteToUs() {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               name: value.name,
-              subject: value.designation,
+              subject: value.subject,
+              designation: value.designation,
               email: value.email,
               phone: value.contactNumber,
               message: value.enquiry,
@@ -151,10 +154,12 @@ export default function WriteToUs() {
     <SafeAreaView style={[globalStyle.screen]}>
       <KeyboardAvoidingView
         style={{ flex: 1 }}
-        behavior={Platform.OS === "ios" ? "padding" : undefined}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 20}
       >
         <ScrollView
           showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
           contentContainerStyle={{ padding: 16, paddingBottom: 40 }}
         >
           <Animated.Text
@@ -210,6 +215,31 @@ export default function WriteToUs() {
             </form.Field>
 
             <form.Field
+              name="subject"
+              validators={{ onChange: ContactFormSchema.shape.subject }}
+            >
+              {(field) => (
+                <FormField
+                  label="Subject"
+                  error={
+                    field.state.meta.errors.length > 0
+                      ? getErrorMessage(field.state.meta.errors[0])
+                      : undefined
+                  }
+                  delay={120}
+                >
+                  <StyledInput
+                    placeholder="Subject of your enquiry"
+                    value={field.state.value}
+                    onChangeText={field.handleChange}
+                    onBlur={field.handleBlur}
+                    hasError={field.state.meta.errors.length > 0}
+                  />
+                </FormField>
+              )}
+            </form.Field>
+
+            <form.Field
               name="designation"
               validators={{ onChange: ContactFormSchema.shape.designation }}
             >
@@ -221,7 +251,7 @@ export default function WriteToUs() {
                       ? getErrorMessage(field.state.meta.errors[0])
                       : undefined
                   }
-                  delay={120}
+                  delay={160}
                 >
                   <StyledInput
                     placeholder="Your designation or role"
@@ -246,7 +276,7 @@ export default function WriteToUs() {
                       ? getErrorMessage(field.state.meta.errors[0])
                       : undefined
                   }
-                  delay={160}
+                  delay={200}
                 >
                   <StyledInput
                     placeholder="you@example.com"
@@ -273,7 +303,7 @@ export default function WriteToUs() {
                       ? getErrorMessage(field.state.meta.errors[0])
                       : undefined
                   }
-                  delay={200}
+                  delay={240}
                 >
                   <StyledInput
                     placeholder="+91 00000 00000"
@@ -299,7 +329,7 @@ export default function WriteToUs() {
                       ? getErrorMessage(field.state.meta.errors[0])
                       : undefined
                   }
-                  delay={240}
+                  delay={280}
                 >
                   <StyledInput
                     placeholder="Write your message here…"
@@ -313,7 +343,7 @@ export default function WriteToUs() {
               )}
             </form.Field>
 
-            <Animated.View entering={FadeInDown.duration(350).delay(280)}>
+            <Animated.View entering={FadeInDown.duration(350).delay(320)}>
               <Button
                 style={{ alignSelf: "stretch", borderRadius: 14, marginTop: 4 }}
                 onPress={() => form.handleSubmit()}

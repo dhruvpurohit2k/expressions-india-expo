@@ -15,7 +15,7 @@ export default function Carousel({ images }: { images: string[] }) {
   const scrollX = useSharedValue(0);
   const screenWidth = Dimensions.get("window").width;
 
-  const ITEM_WIDTH = screenWidth * 0.8;
+  const ITEM_WIDTH = screenWidth * 0.95;
   const SPACING = (screenWidth - ITEM_WIDTH) / 2;
 
   const count = images?.length || 0;
@@ -156,23 +156,19 @@ function CarouselItem({
 }) {
   const animatedStyle = useAnimatedStyle(() => {
     const position = index * itemWidth;
-    const inputRange = [
-      position - itemWidth,
-      position,
-      position + itemWidth,
-    ];
+    const inputRange = [position - itemWidth, position, position + itemWidth];
 
     const scale = interpolate(
       scrollX.value,
       inputRange,
       [0.85, 1, 0.85],
-      "clamp"
+      "clamp",
     );
     const opacity = interpolate(
       scrollX.value,
       inputRange,
       [0.6, 1, 0.6],
-      "clamp"
+      "clamp",
     );
 
     return {
@@ -197,7 +193,7 @@ function CarouselItem({
         style={{
           width: "95%",
           height: "100%",
-          borderRadius: 20,
+          borderRadius: 10,
           overflow: "hidden",
           backgroundColor: theme.backgroundColorLight,
           shadowColor: "#000",
@@ -209,7 +205,7 @@ function CarouselItem({
       >
         <Image
           source={typeof item === "string" ? { uri: item } : (item as any)}
-          style={{ width: "100%", height: "100%", borderRadius: 20 }}
+          style={{ width: "100%", height: "100%", borderRadius: 10 }}
           resizeMode="cover"
         />
       </View>

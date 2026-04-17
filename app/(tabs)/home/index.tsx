@@ -17,6 +17,10 @@ import { ExternalLink } from "lucide-react-native";
 import { useUpcomingCarouselImages } from "@/src/hooks/useUpcomingCarouselImages";
 import { useCompletedCarouselImages } from "@/src/hooks/useCompletedCarouselImages";
 import { useIsFocused } from "@react-navigation/native";
+import { useQuery } from "@tanstack/react-query";
+import { fetchAlmanac } from "@/src/api/fetchAlmanac";
+import { fetchBrochure } from "@/src/api/fetchBrochure";
+import { queryKeys } from "@/src/lib/queryKeys";
 
 const lightRed = "hsl(4, 65%, 50%)";
 
@@ -27,6 +31,14 @@ export default function Home() {
     useUpcomingCarouselImages({ enabled: isFocused });
   const { data: completedImages = [], isPending: completedPending } =
     useCompletedCarouselImages({ enabled: isFocused });
+  const { data: almanac, isPending: almanacPending } = useQuery({
+    queryKey: queryKeys.almanac.singleton(),
+    queryFn: fetchAlmanac,
+  });
+  const { data: brochure, isPending: brochurePending } = useQuery({
+    queryKey: queryKeys.brochure.singleton(),
+    queryFn: fetchBrochure,
+  });
 
   return (
     <SafeAreaView style={[globalStyle.screen]} edges={["top", "left", "right"]}>
@@ -85,34 +97,42 @@ export default function Home() {
         ) : null}
 
         {/* Downloads */}
-        <View
-          style={{
-            paddingHorizontal: 15,
-            marginTop: 24,
-            marginBottom: 24,
-            gap: 14,
-          }}
-        >
-          <SectionTitle label="Downloads" />
+        {(almanacPending || brochurePending || almanac || brochure) && (
+          <View
+            style={{
+              paddingHorizontal: 15,
+              marginTop: 24,
+              marginBottom: 24,
+              gap: 14,
+            }}
+          >
+            <SectionTitle label="Downloads" />
 
-          <DownloadCard
-            title="Almanac 2026"
-            description="Our 2026 Almanac featuring programs, development trainings, and national & global outcomes for child-centric pedagogy."
-            image={require("@/assets/images/home/almanac_image.png")}
-            imageMode="contain"
-            url="https://expressionsindia.org/images/almanac_2026.pdf"
-            delay={0}
-          />
+            {almanacPending ? (
+              <DownloadCardSkeleton />
+            ) : almanac?.pdfUrl ? (
+              <DownloadCard
+                title={almanac.title}
+                description={almanac.description}
+                thumbnailUrl={almanac.thumbnailUrl}
+                url={almanac.pdfUrl}
+                delay={0}
+              />
+            ) : null}
 
-          <DownloadCard
-            title="Brochure"
-            description="An overview of our initiatives, events, and the impact we create across schools nationwide."
-            image={require("@/assets/images/home/brochure.png")}
-            imageMode="cover"
-            url="https://expressionsindia.org/images/home/brochure.pdf"
-            delay={80}
-          />
-        </View>
+            {brochurePending ? (
+              <DownloadCardSkeleton />
+            ) : brochure?.pdfUrl ? (
+              <DownloadCard
+                title={brochure.title}
+                description={brochure.description}
+                thumbnailUrl={brochure.thumbnailUrl}
+                url={brochure.pdfUrl}
+                delay={80}
+              />
+            ) : null}
+          </View>
+        )}
       </ScrollView>
     </SafeAreaView>
   );
@@ -171,15 +191,13 @@ function CarouselPlaceholder() {
 function DownloadCard({
   title,
   description,
-  image,
-  imageMode,
+  thumbnailUrl,
   url,
   delay,
 }: {
   title: string;
   description: string;
-  image: any;
-  imageMode: "contain" | "cover";
+  thumbnailUrl: string | null | undefined;
   url: string;
   delay: number;
 }) {
@@ -197,11 +215,24 @@ function DownloadCard({
           pressed && { opacity: 0.88, transform: [{ scale: 0.985 }] },
         ]}
       >
-        <Image
-          source={image}
-          style={{ width: "100%", height: 180 }}
-          resizeMode={imageMode}
-        />
+        {thumbnailUrl ? (
+          <Image
+            source={{ uri: thumbnailUrl }}
+            style={{ width: "100%", height: 180 }}
+            resizeMode="cover"
+          />
+        ) : (
+          <View
+            style={{
+              width: "100%",
+              height: 180,
+              backgroundColor: theme.backgroundColorDark,
+              borderRadius: 8,
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          />
+        )}
         <View
           style={{
             padding: 14,
@@ -248,5 +279,45 @@ function DownloadCard({
         </View>
       </Pressable>
     </Animated.View>
+  );
+}
+
+function DownloadCardSkeleton() {
+  return (
+    <View
+      style={{
+        backgroundColor: theme.backgroundColor,
+        borderRadius: 16,
+        padding: 10,
+        overflow: "hidden",
+      }}
+    >
+      <View
+        style={{
+          width: "100%",
+          height: 180,
+          backgroundColor: theme.backgroundColorDark,
+          borderRadius: 8,
+        }}
+      />
+      <View style={{ padding: 14, gap: 8 }}>
+        <View
+          style={{
+            height: 16,
+            width: "40%",
+            backgroundColor: theme.backgroundColorDark,
+            borderRadius: 4,
+          }}
+        />
+        <View
+          style={{
+            height: 12,
+            width: "80%",
+            backgroundColor: theme.backgroundColorDark,
+            borderRadius: 4,
+          }}
+        />
+      </View>
+    </View>
   );
 }

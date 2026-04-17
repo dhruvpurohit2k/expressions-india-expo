@@ -395,60 +395,85 @@ function UpcomingEventDetail({
                   >
                     Promo Videos
                   </Text>
-                  <View style={{ gap: 10 }}>
-                    {promoVideos.map((video) => (
+                  <Pressable
+                    onPress={() =>
+                      router.push({
+                        pathname: "/event/videos",
+                        params: {
+                          urls: JSON.stringify(promoVideos.map((v) => v.url)),
+                        },
+                      })
+                    }
+                    style={({ pressed }) => [
+                      {
+                        flexDirection: "row",
+                        alignItems: "center",
+                        backgroundColor: theme.sectionHeadingColor,
+                        paddingVertical: 12,
+                        paddingHorizontal: 16,
+                        borderRadius: 10,
+                        alignSelf: "flex-start",
+                      },
+                      pressed && { opacity: 0.85 },
+                    ]}
+                  >
+                    <Play size={18} color="white" fill="white" />
+                    <Text
+                      style={{
+                        color: "white",
+                        fontFamily: theme.fontBold,
+                        fontSize: 14,
+                        marginLeft: 8,
+                      }}
+                    >
+                      Watch Promo Videos ({promoVideos.length})
+                    </Text>
+                  </Pressable>
+                </View>
+              )}
+              {event.promotionalDocuments && event.promotionalDocuments.length > 0 && (
+                <View style={{ marginBottom: 20 }}>
+                  <Text
+                    style={{ fontSize: 20, color: "#777", marginBottom: 10 }}
+                  >
+                    Documents
+                  </Text>
+                  <View style={{ gap: 8 }}>
+                    {event.promotionalDocuments.map((doc, index) => (
                       <Pressable
-                        key={video.id}
-                        onPress={() => Linking.openURL(video.url)}
+                        key={doc.id}
+                        onPress={() => Linking.openURL(toAbsoluteUrl(doc.url)!)}
                         style={({ pressed }) => [
                           {
-                            borderRadius: 12,
-                            overflow: "hidden",
-                            elevation: 2,
-                            backgroundColor: "#000",
+                            flexDirection: "row",
+                            alignItems: "center",
+                            backgroundColor: "hsl(0, 0%, 97%)",
+                            padding: 14,
+                            borderRadius: 10,
                           },
-                          pressed && {
-                            opacity: 0.85,
-                            transform: [{ scale: 0.98 }],
-                          },
+                          pressed && { opacity: 0.8 },
                         ]}
                       >
-                        <View>
-                          <Animated.Image
-                            source={{
-                              uri: getYouTubeThumbnail(video.youtubeId),
-                            }}
-                            style={{ width: "100%", aspectRatio: 16 / 9 }}
-                            resizeMode="cover"
-                          />
-                          <View
-                            style={{
-                              position: "absolute",
-                              inset: 0,
-                              alignItems: "center",
-                              justifyContent: "center",
-                              backgroundColor: "rgba(0,0,0,0.3)",
-                            }}
-                          >
-                            <View
-                              style={{
-                                width: 56,
-                                height: 56,
-                                borderRadius: 28,
-                                backgroundColor: "rgba(255,255,255,0.9)",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                paddingLeft: 3,
-                              }}
-                            >
-                              <Play
-                                size={28}
-                                color={theme.sectionHeadingColor}
-                                fill={theme.sectionHeadingColor}
-                              />
-                            </View>
-                          </View>
-                        </View>
+                        <Download
+                          size={18}
+                          color={theme.sectionHeadingColor}
+                          strokeWidth={2}
+                        />
+                        <Text
+                          style={{
+                            flex: 1,
+                            fontSize: 14,
+                            color: theme.text,
+                            fontFamily: theme.fontBold,
+                            marginLeft: 10,
+                          }}
+                          numberOfLines={1}
+                        >
+                          {doc.name || `Document ${index + 1}`}
+                        </Text>
+                        <Text style={{ fontSize: 12, color: "#999" }}>
+                          {doc.fileType?.split("/").pop()?.toUpperCase() ?? "FILE"}
+                        </Text>
                       </Pressable>
                     ))}
                   </View>
@@ -502,6 +527,7 @@ function CompletedEventDetail({
   const documents = (event.documents ?? []).map((d) => ({
     id: d.id,
     url: toAbsoluteUrl(d.url)!,
+    name: d.name,
     fileType: d.fileType,
   }));
 
@@ -758,7 +784,7 @@ function CompletedEventDetail({
                     }}
                     numberOfLines={1}
                   >
-                    Document {index + 1}
+                    {doc.name || `Document ${index + 1}`}
                   </Text>
                   <Text style={{ fontSize: 12, color: "#999" }}>
                     {doc.fileType.split("/").pop()?.toUpperCase() ?? "FILE"}

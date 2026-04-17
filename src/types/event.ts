@@ -15,6 +15,7 @@ export type EventListItem = z.infer<typeof EventListItemSchema>;
 const MediaSchema = z.object({
   id: z.string(),
   url: z.string(),
+  name: z.string().optional().default(""),
   fileType: z.string().optional().default(""),
 });
 
@@ -39,6 +40,7 @@ export const EventSchema = z.object({
   status: z.enum(["upcoming", "completed", "cancelled"]).optional(),
   registrationUrl: z.string().nullable().optional(),
   promotionalMedia: z.array(MediaSchema).default([]),
+  promotionalDocuments: z.array(MediaSchema).default([]),
   promotionalVideoLinks: z.array(LinkSchema).default([]),
   medias: z.array(MediaSchema).default([]),
   documents: z.array(MediaSchema).default([]),

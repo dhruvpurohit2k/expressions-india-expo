@@ -43,6 +43,12 @@ export const queryKeys = {
     upcoming: () => ["homeImages", "upcoming"] as const,
     completed: () => ["homeImages", "completed"] as const,
   },
+  almanac: {
+    singleton: () => ["almanac", "singleton"] as const,
+  },
+  brochure: {
+    singleton: () => ["brochure", "singleton"] as const,
+  },
   audience: {
     detail: (name: string) => ["audience", name] as const,
     events: (name: string, params?: { limit?: number; offset?: number }) =>

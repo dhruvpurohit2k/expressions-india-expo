@@ -140,7 +140,7 @@ export default function App() {
           headerShown: false,
           title: "Account",
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="finger-print-outline" color={color} size={size} />
+            <Ionicons name="key-outline" color={color} size={size} />
           ),
         }}
       />
