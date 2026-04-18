@@ -15,7 +15,11 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import Animated, { FadeInDown, FadeInUp, SlideInRight } from "react-native-reanimated";
+import Animated, {
+  FadeInDown,
+  FadeInUp,
+  SlideInRight,
+} from "react-native-reanimated";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
@@ -23,15 +27,24 @@ export default function ArticleDetail() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const globalStyle = styleFactory();
   const isFocused = useIsFocused();
-  const { data: article, isLoading, error } = useArticle(id, { enabled: isFocused });
+  const {
+    data: article,
+    isLoading,
+    error,
+  } = useArticle(id, { enabled: isFocused });
 
   if (isLoading) {
     return (
       <SafeAreaView
-        style={[globalStyle.screen, { alignItems: "center", justifyContent: "center" }]}
+        style={[
+          globalStyle.screen,
+          { alignItems: "center", justifyContent: "center" },
+        ]}
       >
         <ActivityIndicator size="large" color={theme.red} />
-        <Text style={[globalStyle.text, { marginTop: 12 }]}>Loading article...</Text>
+        <Text style={[globalStyle.text, { marginTop: 12 }]}>
+          Loading article...
+        </Text>
       </SafeAreaView>
     );
   }
@@ -39,7 +52,10 @@ export default function ArticleDetail() {
   if (error || !article) {
     return (
       <SafeAreaView
-        style={[globalStyle.screen, { alignItems: "center", justifyContent: "center", padding: 20 }]}
+        style={[
+          globalStyle.screen,
+          { alignItems: "center", justifyContent: "center", padding: 20 },
+        ]}
       >
         <Text style={[globalStyle.sectionHeading, { textAlign: "center" }]}>
           {error ? "Could not load article" : "Article not found"}
@@ -78,7 +94,10 @@ export default function ArticleDetail() {
         </Pressable>
       </Animated.View>
 
-      <ScrollView contentContainerStyle={{ paddingBottom: 48 }} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        contentContainerStyle={{ paddingBottom: 48 }}
+        showsVerticalScrollIndicator={false}
+      >
         {/* Cover image */}
         {coverImage && (
           <Animated.View entering={SlideInRight.duration(500)}>
@@ -101,7 +120,7 @@ export default function ArticleDetail() {
             style={{
               alignSelf: "flex-start",
               backgroundColor: theme.red + "18",
-              borderRadius: 20,
+              borderRadius: 10,
               paddingHorizontal: 12,
               paddingVertical: 4,
               marginBottom: 12,
@@ -109,7 +128,7 @@ export default function ArticleDetail() {
           >
             <Text
               style={{
-                color: theme.red,
+                color: "white",
                 fontSize: 12,
                 fontFamily: theme.fontBold,
                 letterSpacing: 0.5,
@@ -179,7 +198,10 @@ export default function ArticleDetail() {
 
           {/* Extra images gallery */}
           {extraImages.length > 0 && (
-            <Animated.View entering={FadeInUp.duration(450).delay(400)} style={{ marginTop: 8 }}>
+            <Animated.View
+              entering={FadeInUp.duration(450).delay(400)}
+              style={{ marginTop: 8 }}
+            >
               <Text
                 style={{
                   fontSize: 13,

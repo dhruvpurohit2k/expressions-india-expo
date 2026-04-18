@@ -1,6 +1,5 @@
 import { Platform } from "react-native";
 import * as Google from "expo-auth-session/providers/google";
-import { makeRedirectUri } from "expo-auth-session";
 import * as WebBrowser from "expo-web-browser";
 
 import {
@@ -60,19 +59,13 @@ export function useGoogleSignIn() {
     iosClientId: process.env.EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID,
     androidClientId: process.env.EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID,
     webClientId: process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID,
-    redirectUri: makeRedirectUri({
-      // Force the Expo auth proxy so Google accepts an https redirect.
-      // @ts-expect-error useProxy still honored in Expo Go even if typed as deprecated
-      useProxy: true,
-    }),
   });
 
   async function signIn(): Promise<OIDCResult> {
     if (!isGoogleAvailable && Platform.OS !== "web") {
       throw new SignInUnsupported("Google");
     }
-    // @ts-expect-error useProxy still honored in Expo Go
-    const result = await promptAsync({ useProxy: true });
+    const result = await promptAsync();
     if (result.type === "cancel" || result.type === "dismiss") {
       throw new SignInCancelled();
     }

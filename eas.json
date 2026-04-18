@@ -1,0 +1,27 @@
+{
+  "cli": {
+    "version": ">= 18.7.0",
+    "appVersionSource": "remote"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal"
+    },
+    "preview": {
+      "distribution": "internal",
+      "env": {
+        "EXPO_PUBLIC_API_URL": "http://13.233.174.131/api",
+        "EXPO_PUBLIC_REFRESH_TIME": "300000",
+        "EXPO_PUBLIC_GOOGLE_EXPO_CLIENT_ID": "448336239210-eqi6nkcupsgjq78vqgpgqkg16lj17kbc.apps.googleusercontent.com",
+        "EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID": "448336239210-edqme7vmoavn1at29lqhpbvfc21pe70p.apps.googleusercontent.com"
+      }
+    },
+    "production": {
+      "autoIncrement": true
+    }
+  },
+  "submit": {
+    "production": {}
+  }
+}

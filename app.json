@@ -5,7 +5,10 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "expressionsindia",
+    "scheme": [
+      "expressionsindia",
+      "com.googleusercontent.apps.448336239210-edqme7vmoavn1at29lqhpbvfc21pe70p"
+    ],
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
@@ -18,22 +21,16 @@
         }
       }
     },
+    "androidStatusBar": {
+      "backgroundColor": "#000000",
+      "barStyle": "light-content"
+    },
     "android": {
       "package": "com.expressionsindia.app",
       "usesCleartextTraffic": true,
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
-        "foregroundImage": "./assets/images/android-icon-foreground.png",
-        "backgroundImage": "./assets/images/android-icon-background.png",
-        "monochromeImage": "./assets/images/android-icon-monochrome.png"
-      },
-      "androidStatusBar": {
-        "backgroundColor": "#000000",
-        "barStyle": "light-content"
-      },
-      "androidNavigationBar": {
-        "backgroundColor": "#000000",
-        "barStyle": "light-content"
+        "foregroundImage": "./assets/images/icon.png",
+        "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false
@@ -59,8 +56,13 @@
       "expo-secure-store"
     ],
     "experiments": {
-      "typedRoutes": true,
-      "reactCompiler": true
+      "typedRoutes": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "38dca5a1-07ab-4e2c-ab9a-59ad087d23d2"
+      }
     }
   }
 }

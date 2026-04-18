@@ -9,8 +9,8 @@ import * as NavigationBar from "expo-navigation-bar";
 import * as SystemUI from "expo-system-ui";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import { useEffect, useState, useCallback } from "react";
-import { AppState, Platform, View } from "react-native";
+import { useEffect, useState, useCallback, Component } from "react";
+import { AppState, Platform, View, Text, ScrollView } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { ImageProvider } from "@/src/context/imageContext";
 import {
@@ -22,6 +22,35 @@ import { styleFactory } from "@/src/styleFactory";
 import SplashScreen from "@/src/components/SplashScreen";
 import OnboardingScreen from "@/src/components/onboarding/OnboardingScreen";
 import { hasCompletedOnboarding } from "@/src/lib/storage";
+
+class ErrorBoundary extends Component<
+  { children: React.ReactNode },
+  { error: Error | null }
+> {
+  state = { error: null };
+  static getDerivedStateFromError(error: Error) {
+    return { error };
+  }
+  render() {
+    if (this.state.error) {
+      const err = this.state.error as Error;
+      return (
+        <ScrollView style={{ flex: 1, backgroundColor: "#fff", padding: 20 }}>
+          <Text style={{ color: "red", fontSize: 18, fontWeight: "bold", marginTop: 60 }}>
+            App Error
+          </Text>
+          <Text style={{ color: "#333", marginTop: 12, fontSize: 14 }}>
+            {err.message}
+          </Text>
+          <Text style={{ color: "#999", marginTop: 12, fontSize: 11 }}>
+            {err.stack}
+          </Text>
+        </ScrollView>
+      );
+    }
+    return this.props.children;
+  }
+}
 
 focusManager.setEventListener((handleFocus) => {
   const subscription = AppState.addEventListener("change", (state) => {
@@ -95,14 +124,17 @@ export default function RootLayout() {
 
   if (appState === "onboarding") {
     return (
-      <SafeAreaProvider>
-        <StatusBar backgroundColor="transparent" translucent style="dark" />
-        <OnboardingScreen onComplete={handleOnboardingComplete} />
-      </SafeAreaProvider>
+      <ErrorBoundary>
+        <SafeAreaProvider>
+          <StatusBar backgroundColor="transparent" translucent style="dark" />
+          <OnboardingScreen onComplete={handleOnboardingComplete} />
+        </SafeAreaProvider>
+      </ErrorBoundary>
     );
   }
 
   return (
+    <ErrorBoundary>
     <SafeAreaProvider>
       <StatusBar
         backgroundColor="transparent"
@@ -138,5 +170,6 @@ export default function RootLayout() {
         </QueryClientProvider>
       </ImageProvider>
     </SafeAreaProvider>
+    </ErrorBoundary>
   );
 }
