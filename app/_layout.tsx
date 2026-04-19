@@ -166,6 +166,7 @@ export default function RootLayout() {
             />
             <Stack.Screen name="course" options={{ headerShown: false }} />
             <Stack.Screen name="login" options={{ headerShown: false }} />
+            <Stack.Screen name="oauth2redirect" options={{ headerShown: false }} />
           </Stack>
         </QueryClientProvider>
       </ImageProvider>

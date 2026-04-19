@@ -252,7 +252,7 @@ function LoggedOutView() {
         </Text>
 
         <Pressable
-          onPress={() => router.push("/login")}
+          onPress={() => router.push("/login?from=account")}
           style={({ pressed }) => ({
             backgroundColor: theme.red,
             borderRadius: 12,

@@ -20,9 +20,10 @@ import { markOnboardingDone } from "@/src/lib/storage";
 import { theme } from "@/src/theme";
 
 export default function LoginScreen() {
-  const { redirectCourseId, redirectChapterId } = useLocalSearchParams<{
+  const { redirectCourseId, redirectChapterId, from } = useLocalSearchParams<{
     redirectCourseId?: string;
     redirectChapterId?: string;
+    from?: string;
   }>();
 
   const [loading, setLoading] = useState<"google" | "apple" | null>(null);
@@ -30,13 +31,22 @@ export default function LoginScreen() {
   const { signIn: signInWithGoogle } = useGoogleSignIn();
 
   function navigateAfterAuth() {
+    // Always dismiss the full login + oauth2redirect stack back to (tabs).
+    router.dismissAll();
+
     if (redirectCourseId && redirectChapterId) {
-      router.replace({
+      // Restore the full back stack: (tabs) → course → chapter
+      router.push({ pathname: "/course/[id]", params: { id: redirectCourseId } });
+      router.push({
         pathname: "/course/[id]/chapter/[chapterId]",
         params: { id: redirectCourseId, chapterId: redirectChapterId },
       });
+    } else if (from === "account") {
+      // Came from the account tab — dismissAll already landed there.
+      // useFocusEffect on the account screen will reload the user.
     } else {
-      router.back();
+      // First boot or unknown origin — send to home so they see content.
+      router.replace("/(tabs)/home");
     }
   }
 

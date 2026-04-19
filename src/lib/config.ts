@@ -1,5 +1,5 @@
 export const API_URL =
-  process.env.EXPO_PUBLIC_API_URL ?? "http://13.233.174.131/api";
+  process.env.EXPO_PUBLIC_API_URL ?? "https://13.206.10.230.nip.io/api";
 
 if (API_URL.includes("loca.lt")) {
   const _fetch = global.fetch;
