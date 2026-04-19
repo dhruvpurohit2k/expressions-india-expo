@@ -1,3 +1,4 @@
+import { API_URL } from "../lib/config";
 import { CourseChapterDetailSchema, CourseChapterDetail } from "../types/course";
 import { getToken } from "../lib/auth";
 import { tryRefresh } from "./refresh";
@@ -17,7 +18,7 @@ export async function fetchChapter(
   courseId: string,
   chapterId: string,
 ): Promise<CourseChapterDetail> {
-  const url = `${process.env.EXPO_PUBLIC_API_URL}/course/${courseId}/chapter/${chapterId}`;
+  const url = `${API_URL}/course/${courseId}/chapter/${chapterId}`;
 
   const makeRequest = async (token: string | null): Promise<Response> => {
     const headers: Record<string, string> = {};

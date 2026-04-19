@@ -1,7 +1,8 @@
+import { API_URL } from "../lib/config";
 import type { StoredUser } from "@/src/lib/auth";
 
 const BASE_URL =
-  process.env.EXPO_PUBLIC_API_URL?.replace(/\/api\/?$/, "") ?? "";
+  API_URL?.replace(/\/api\/?$/, "") ?? "";
 
 export type OIDCResult = StoredUser & {
   accessToken: string;

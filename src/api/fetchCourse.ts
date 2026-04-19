@@ -1,8 +1,9 @@
+import { API_URL } from "../lib/config";
 import { CourseDetailSchema, CourseDetail } from "../types/course";
 
 export async function fetchCourse(id: string): Promise<CourseDetail> {
   const response = await fetch(
-    `${process.env.EXPO_PUBLIC_API_URL}/course/${id}`,
+    `${API_URL}/course/${id}`,
   );
   const json = await response.json();
 

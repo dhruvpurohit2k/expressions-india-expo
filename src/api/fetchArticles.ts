@@ -1,3 +1,4 @@
+import { API_URL } from "../lib/config";
 import z from "zod";
 import { ArticleListItemSchema } from "../types/article";
 import { ApiMeta } from "../utils/api";
@@ -15,7 +16,7 @@ export async function fetchArticleList({
   offset?: number;
 }): Promise<ArticlesResponse> {
   const response = await fetch(
-    `${process.env.EXPO_PUBLIC_API_URL}/article?limit=${limit ?? 10}&offset=${offset ?? 0}`,
+    `${API_URL}/article?limit=${limit ?? 10}&offset=${offset ?? 0}`,
   );
   const json = await response.json();
 

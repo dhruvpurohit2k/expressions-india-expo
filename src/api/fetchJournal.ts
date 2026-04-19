@@ -1,8 +1,9 @@
+import { API_URL } from "../lib/config";
 import { JournalSchema, Journal } from "../types/journal";
 
 export async function fetchJournal(id: string): Promise<Journal> {
   const response = await fetch(
-    `${process.env.EXPO_PUBLIC_API_URL}/journal/${id}`,
+    `${API_URL}/journal/${id}`,
   );
   const json = await response.json();
 

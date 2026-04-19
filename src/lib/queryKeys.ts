@@ -28,9 +28,13 @@ export const queryKeys = {
   courses: {
     all: () => ["courses"] as const,
     list: (params?: object) => ["courses", "list", params] as const,
+    my: () => ["courses", "my"] as const,
     detail: (id: string) => ["courses", "detail", id] as const,
     chapter: (courseId: string, chapterId: string) =>
       ["courses", "detail", courseId, "chapter", chapterId] as const,
+  },
+  certApplications: {
+    all: () => ["cert-applications"] as const,
   },
   team: {
     all: () => ["team"] as const,

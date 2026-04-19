@@ -1,4 +1,5 @@
 import { usePastEventQuery } from "@/src/hooks/usePastEventQuery";
+import { useIsFocused } from "@react-navigation/native";
 import { styleFactory } from "@/src/styleFactory";
 import { theme } from "@/src/theme";
 import { ChevronLeft, ChevronRight } from "lucide-react-native";
@@ -32,11 +33,13 @@ function formatDateRange(startDate: Date, endDate: Date | null) {
 
 export default function AllPastEvents() {
   const [page, setPage] = useState(1);
+  const isFocused = useIsFocused();
   const globalStyle = styleFactory();
 
   const { data, isLoading, error } = usePastEventQuery({
     limit: LIMIT,
     offset: (page - 1) * LIMIT,
+    enabled: isFocused,
   });
 
   const events = data?.data ?? [];
@@ -44,7 +47,7 @@ export default function AllPastEvents() {
   const totalPages = data?.meta?.totalPages ?? Math.ceil(total / LIMIT);
 
   return (
-    <SafeAreaView style={globalStyle.screen}>
+    <SafeAreaView style={globalStyle.screen} edges={["top"]}>
       <Text style={[globalStyle.sectionHeading, { marginHorizontal: 15 }]}>
         Past Events
       </Text>

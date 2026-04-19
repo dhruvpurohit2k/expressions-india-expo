@@ -2,10 +2,12 @@ import { View, Text, ScrollView, ActivityIndicator } from "react-native";
 import { styleFactory } from "../styleFactory";
 import { theme } from "../theme";
 import { useTeamListQuery } from "../hooks/useTeamListQuery";
+import { useIsFocused } from "@react-navigation/native";
 
 export default function Team() {
   const globalStyle = styleFactory();
-  const { data: teams, isLoading, error } = useTeamListQuery();
+  const isFocused = useIsFocused();
+  const { data: teams, isLoading, error } = useTeamListQuery({ enabled: isFocused });
 
   const team = teams?.[0];
 

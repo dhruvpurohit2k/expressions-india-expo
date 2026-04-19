@@ -6,7 +6,6 @@ import { theme } from "@/src/theme";
 import { Ionicons } from "@expo/vector-icons";
 import { format as formatDate, parse } from "date-fns";
 import { Link, router, useLocalSearchParams } from "expo-router";
-import { handleRegistration } from "@/src/lib/handleRegistration";
 import {
   ChevronLeft,
   Download,
@@ -17,7 +16,7 @@ import {
 import { useState } from "react";
 import {
   ActivityIndicator,
-  Dimensions,
+  Alert,
   FlatList,
   Linking,
   NativeScrollEvent,
@@ -26,6 +25,7 @@ import {
   ScrollView,
   Text,
   View,
+  useWindowDimensions,
 } from "react-native";
 import Animated, {
   Extrapolation,
@@ -36,12 +36,10 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
 } from "react-native-reanimated";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import type { Event } from "@/src/types/event";
 
-const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 const CARD_PEEK = 60;
-const HERO_HEIGHT = SCREEN_HEIGHT - CARD_PEEK;
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL;
 const IMAGE_PREVIEW_COUNT = 3;
 
@@ -76,14 +74,17 @@ function UpcomingEventDetail({
   event: Event;
   globalStyle: ReturnType<typeof styleFactory>;
 }) {
+  const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = useWindowDimensions();
+  const HERO_HEIGHT = SCREEN_HEIGHT - CARD_PEEK;
+  const insets = useSafeAreaInsets();
   const scrollY = useSharedValue(0);
   const { setImage } = useImageContext();
   const [activeImageIndex, setActiveImageIndex] = useState(0);
 
   const promoImages = (event.promotionalMedia ?? [])
     .filter((m) => isImageType(m.fileType))
-    .map((m) => ({ id: m.id, url: toAbsoluteUrl(m.url)! }))
-    .filter((m) => m.url);
+    .map((m) => ({ id: m.id, url: toAbsoluteUrl(m.url) }))
+    .filter((m): m is { id: string; url: string } => m.url !== null);
 
   const promoVideos = (event.promotionalVideoLinks ?? [])
     .map((link) => {
@@ -134,7 +135,7 @@ function UpcomingEventDetail({
         style={({ pressed }) => [
           {
             position: "absolute",
-            top: 14,
+            top: insets.top + 14,
             left: 15,
             zIndex: 20,
             padding: 8,
@@ -312,7 +313,7 @@ function UpcomingEventDetail({
                 </Text>
               </View>
 
-              <Text style={{ fontSize: 20, color: "#777" }}>Perks</Text>
+              <Text style={{ fontSize: 20, color: "#777" }}>Details</Text>
               <View>
                 {event.perks &&
                   event.perks.map((value, index) => (
@@ -324,9 +325,9 @@ function UpcomingEventDetail({
                         }}
                       >
                         <Ionicons
-                          name="checkmark-circle"
+                          name="chevron-forward-circle-outline"
                           size={16}
-                          color="#070"
+                          color="#c00"
                         />
                         <Text>{value}</Text>
                       </View>
@@ -431,58 +432,73 @@ function UpcomingEventDetail({
                   </Pressable>
                 </View>
               )}
-              {event.promotionalDocuments && event.promotionalDocuments.length > 0 && (
-                <View style={{ marginBottom: 20 }}>
-                  <Text
-                    style={{ fontSize: 20, color: "#777", marginBottom: 10 }}
-                  >
-                    Documents
-                  </Text>
-                  <View style={{ gap: 8 }}>
-                    {event.promotionalDocuments.map((doc, index) => (
-                      <Pressable
-                        key={doc.id}
-                        onPress={() => Linking.openURL(toAbsoluteUrl(doc.url)!)}
-                        style={({ pressed }) => [
-                          {
-                            flexDirection: "row",
-                            alignItems: "center",
-                            backgroundColor: "hsl(0, 0%, 97%)",
-                            padding: 14,
-                            borderRadius: 10,
-                          },
-                          pressed && { opacity: 0.8 },
-                        ]}
-                      >
-                        <Download
-                          size={18}
-                          color={theme.sectionHeadingColor}
-                          strokeWidth={2}
-                        />
-                        <Text
-                          style={{
-                            flex: 1,
-                            fontSize: 14,
-                            color: theme.text,
-                            fontFamily: theme.fontBold,
-                            marginLeft: 10,
+              {event.promotionalDocuments &&
+                event.promotionalDocuments.length > 0 && (
+                  <View style={{ marginBottom: 20 }}>
+                    <Text
+                      style={{ fontSize: 20, color: "#777", marginBottom: 10 }}
+                    >
+                      Documents
+                    </Text>
+                    <View style={{ gap: 8 }}>
+                      {event.promotionalDocuments.map((doc, index) => (
+                        <Pressable
+                          key={doc.id}
+                          onPress={async () => {
+                            const url = toAbsoluteUrl(doc.url);
+                            if (!url) return;
+                            try {
+                              await Linking.openURL(url);
+                            } catch {
+                              Alert.alert("Error", "Could not open document.");
+                            }
                           }}
-                          numberOfLines={1}
+                          style={({ pressed }) => [
+                            {
+                              flexDirection: "row",
+                              alignItems: "center",
+                              backgroundColor: "hsl(0, 0%, 97%)",
+                              padding: 14,
+                              borderRadius: 10,
+                            },
+                            pressed && { opacity: 0.8 },
+                          ]}
                         >
-                          {doc.name || `Document ${index + 1}`}
-                        </Text>
-                        <Text style={{ fontSize: 12, color: "#999" }}>
-                          {doc.fileType?.split("/").pop()?.toUpperCase() ?? "FILE"}
-                        </Text>
-                      </Pressable>
-                    ))}
+                          <Download
+                            size={18}
+                            color={theme.sectionHeadingColor}
+                            strokeWidth={2}
+                          />
+                          <Text
+                            style={{
+                              flex: 1,
+                              fontSize: 14,
+                              color: theme.text,
+                              fontFamily: theme.fontBold,
+                              marginLeft: 10,
+                            }}
+                            numberOfLines={1}
+                          >
+                            {doc.name || `Document ${index + 1}`}
+                          </Text>
+                          <Text style={{ fontSize: 12, color: "#999" }}>
+                            {doc.fileType?.split("/").pop()?.toUpperCase() ??
+                              "FILE"}
+                          </Text>
+                        </Pressable>
+                      ))}
+                    </View>
                   </View>
-                </View>
-              )}
+                )}
               <Pressable
-                onPress={() =>
-                  handleRegistration(event.registrationUrl, event.id)
-                }
+                onPress={async () => {
+                  if (!event.registrationUrl) return;
+                  try {
+                    await Linking.openURL(event.registrationUrl);
+                  } catch {
+                    Alert.alert("Error", "Could not open registration link.");
+                  }
+                }}
                 disabled={!event.registrationUrl}
                 style={({ pressed }) => [
                   {
@@ -517,19 +533,17 @@ function CompletedEventDetail({
   event: Event;
   globalStyle: ReturnType<typeof styleFactory>;
 }) {
+  const insets = useSafeAreaInsets();
   const { setImage } = useImageContext();
 
   const mediaImages = (event.medias ?? [])
     .filter((m) => isImageType(m.fileType))
-    .map((m) => ({ id: m.id, url: toAbsoluteUrl(m.url)! }))
-    .filter((m) => m.url);
+    .map((m) => ({ id: m.id, url: toAbsoluteUrl(m.url) }))
+    .filter((m): m is { id: string; url: string } => m.url !== null);
 
-  const documents = (event.documents ?? []).map((d) => ({
-    id: d.id,
-    url: toAbsoluteUrl(d.url)!,
-    name: d.name,
-    fileType: d.fileType,
-  }));
+  const documents = (event.documents ?? [])
+    .map((d) => ({ id: d.id, url: toAbsoluteUrl(d.url), name: d.name, fileType: d.fileType }))
+    .filter((d): d is { id: string; url: string; name: string; fileType: string } => d.url !== null);
 
   const videoLinks = (event.videoLinks ?? [])
     .map((link) => {
@@ -549,7 +563,8 @@ function CompletedEventDetail({
           flexDirection: "row",
           alignItems: "center",
           paddingHorizontal: 15,
-          paddingVertical: 10,
+          paddingTop: insets.top + 10,
+          paddingBottom: 10,
         }}
       >
         <Pressable
@@ -757,7 +772,13 @@ function CompletedEventDetail({
               {documents.map((doc, index) => (
                 <Pressable
                   key={doc.id}
-                  onPress={() => Linking.openURL(doc.url)}
+                  onPress={async () => {
+                    try {
+                      await Linking.openURL(doc.url);
+                    } catch {
+                      Alert.alert("Error", "Could not open document.");
+                    }
+                  }}
                   style={({ pressed }) => [
                     {
                       flexDirection: "row",
@@ -787,7 +808,7 @@ function CompletedEventDetail({
                     {doc.name || `Document ${index + 1}`}
                   </Text>
                   <Text style={{ fontSize: 12, color: "#999" }}>
-                    {doc.fileType.split("/").pop()?.toUpperCase() ?? "FILE"}
+                    {(doc.fileType || "").split("/").pop()?.toUpperCase() || "FILE"}
                   </Text>
                 </Pressable>
               ))}
@@ -906,12 +927,12 @@ export default function EventDetail() {
   }
 
   return (
-    <SafeAreaView style={globalStyle.screen}>
+    <View style={{ flex: 1, backgroundColor: theme.backgroundColorLight }}>
       {event.status === "completed" ? (
         <CompletedEventDetail event={event} globalStyle={globalStyle} />
       ) : (
         <UpcomingEventDetail event={event} globalStyle={globalStyle} />
       )}
-    </SafeAreaView>
+    </View>
   );
 }

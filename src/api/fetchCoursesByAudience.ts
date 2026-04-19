@@ -1,3 +1,4 @@
+import { API_URL } from "../lib/config";
 import z from "zod";
 import { CourseListItemSchema } from "../types/course";
 import type { ApiMeta } from "../utils/api";
@@ -17,7 +18,7 @@ export async function fetchCoursesByAudience({
   offset?: number;
 }): Promise<CoursesByAudienceResponse> {
   const response = await fetch(
-    `${process.env.EXPO_PUBLIC_API_URL}/course/audience/${audience}?limit=${limit ?? 10}&offset=${offset ?? 0}`,
+    `${API_URL}/course/audience/${audience}?limit=${limit ?? 10}&offset=${offset ?? 0}`,
   );
   const json = await response.json();
   if (!json.success) throw new Error(json.error?.message ?? "Request failed");

@@ -1,9 +1,10 @@
+import { API_URL } from "../lib/config";
 import { ArticleDetailSchema } from "../types/article";
 import type { ArticleDetail } from "../types/article";
 
 export async function fetchArticle(id: string): Promise<ArticleDetail> {
   const response = await fetch(
-    `${process.env.EXPO_PUBLIC_API_URL}/article/${id}`,
+    `${API_URL}/article/${id}`,
   );
   const json = await response.json();
 

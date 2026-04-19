@@ -1,8 +1,9 @@
+import { API_URL } from "../lib/config";
 import z from "zod";
 import { LatestFeedItemSchema } from "../types/latestFeed";
 
 export async function fetchLatestFeed(): Promise<z.infer<typeof LatestFeedItemSchema>[]> {
-  const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/latest-activity`);
+  const response = await fetch(`${API_URL}/latest-activity`);
   const json = await response.json();
 
   if (!json.success) {

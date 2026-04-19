@@ -1,6 +1,7 @@
 import { styleFactory } from "@/src/styleFactory";
 import { theme } from "@/src/theme";
 import {
+  Alert,
   Text,
   View,
   ScrollView,
@@ -34,10 +35,12 @@ export default function Home() {
   const { data: almanac, isPending: almanacPending } = useQuery({
     queryKey: queryKeys.almanac.singleton(),
     queryFn: fetchAlmanac,
+    enabled: isFocused,
   });
   const { data: brochure, isPending: brochurePending } = useQuery({
     queryKey: queryKeys.brochure.singleton(),
     queryFn: fetchBrochure,
+    enabled: isFocused,
   });
 
   return (
@@ -204,7 +207,13 @@ function DownloadCard({
   return (
     <Animated.View entering={FadeInDown.duration(450).delay(200 + delay)}>
       <Pressable
-        onPress={() => Linking.openURL(url)}
+        onPress={async () => {
+          try {
+            await Linking.openURL(url);
+          } catch {
+            Alert.alert("Error", "Could not open the link.");
+          }
+        }}
         style={({ pressed }) => [
           {
             backgroundColor: theme.backgroundColor,

@@ -6,11 +6,11 @@ import { Link } from "expo-router";
 import React from "react";
 import {
   Pressable,
-  Dimensions,
   Image,
   Text,
   View,
   ScrollView,
+  useWindowDimensions,
 } from "react-native";
 import Animated, {
   useAnimatedScrollHandler,
@@ -18,9 +18,15 @@ import Animated, {
 } from "react-native-reanimated";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { usePastEventQuery } from "@/src/hooks/usePastEventQuery";
+import { useIsFocused } from "@react-navigation/native";
 
 export default function PastEvents() {
-  const { data: pastEventResponse, isLoading, error } = usePastEventQuery({});
+  const isFocused = useIsFocused();
+  const {
+    data: pastEventResponse,
+    isLoading,
+    error,
+  } = usePastEventQuery({ enabled: isFocused });
 
   if (isLoading) {
     return (
@@ -51,7 +57,7 @@ export default function PastEvents() {
       style={{ backgroundColor: theme.backgroundColorLight, flex: 1 }}
     >
       <ScrollView style={{ flex: 1 }}>
-        {events.map((event, i) => (
+        {events.map((event, _) => (
           <Event key={event.id} event={event} />
         ))}
       </ScrollView>
@@ -59,11 +65,15 @@ export default function PastEvents() {
   );
 }
 
-function Event({ event }: { event: { id: string; name: string; images?: string } }) {
+function Event({
+  event,
+}: {
+  event: { id: string; title: string; images?: string };
+}) {
   const scrollX = useSharedValue<number>(0);
   const { setImage } = useImageContext();
   const globalStyle = styleFactory();
-  const screenWidth = Dimensions.get("window").width;
+  const { width: screenWidth } = useWindowDimensions();
 
   const scrollHandler = useAnimatedScrollHandler((scrollEvent) => {
     scrollX.value = scrollEvent.contentOffset.x;
@@ -90,7 +100,7 @@ function Event({ event }: { event: { id: string; name: string; images?: string }
         alignItems: "center",
       }}
     >
-      <Text style={globalStyle.text}>{event.name}</Text>
+      <Text style={globalStyle.text}>{event.title}</Text>
       <Animated.ScrollView
         horizontal={true}
         pagingEnabled={true}
@@ -116,7 +126,7 @@ function Event({ event }: { event: { id: string; name: string; images?: string }
             <Link href="/modal" asChild>
               <Pressable onPress={() => setImage(image)}>
                 <Image
-                  source={image}
+                  source={{ uri: image }}
                   style={{
                     width: screenWidth - 70,
                     height: 350,

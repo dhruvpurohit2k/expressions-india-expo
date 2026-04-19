@@ -1,6 +1,7 @@
+import { API_URL } from "../lib/config";
 export async function fetchCompletedCarouselImages(): Promise<string[]> {
   const response = await fetch(
-    `${process.env.EXPO_PUBLIC_API_URL}/home/completed-images`,
+    `${API_URL}/home/completed-images`,
   );
   const json = await response.json();
 

@@ -1,8 +1,9 @@
+import { API_URL } from "../lib/config";
 import { PodcastSchema, Podcast } from "../types/podcast";
 
 export async function fetchPodcast(id: string): Promise<Podcast> {
   const response = await fetch(
-    `${process.env.EXPO_PUBLIC_API_URL}/podcast/${id}`,
+    `${API_URL}/podcast/${id}`,
   );
   const json = await response.json();
 

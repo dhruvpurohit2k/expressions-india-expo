@@ -1,3 +1,4 @@
+import { API_URL } from "../lib/config";
 import { View, Text, ScrollView, Pressable, Alert } from "react-native";
 import { styleFactory } from "../styleFactory";
 import { format as formatDateTime } from "date-fns";
@@ -11,6 +12,7 @@ import { theme } from "../theme";
 import { useState } from "react";
 import { WorkshopListSchema } from "../types";
 import { useQuery } from "@tanstack/react-query";
+import { useIsFocused } from "@react-navigation/native";
 import { Link, router } from "expo-router";
 import Animated, {
   Easing,
@@ -20,12 +22,12 @@ import Animated, {
 } from "react-native-reanimated";
 export default function WorkShops() {
   const globalStyle = styleFactory();
+  const isFocused = useIsFocused();
   const [openedWorkShopType, setOpenedWorkShopType] = useState<number>(-1);
-  const { data: workshops, isLoading, error } = useWorkshopsQuery();
+  const { data: workshops, isLoading, error } = useWorkshopsQuery(isFocused);
   if (isLoading) return <Text>Loading...</Text>;
   if (error) return <Text>Error: {error.message}</Text>;
   if (!workshops) return null;
-  console.log(workshops.data);
   return (
     <ScrollView>
       <Text style={globalStyle.sectionHeading}>WORKSHOPS</Text>
@@ -160,9 +162,8 @@ export default function WorkShops() {
 
 async function fetchWorkshops() {
   try {
-    const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/workshop`);
+    const response = await fetch(`${API_URL}/workshop`);
     const data = await response.json();
-    console.log(data);
     return WorkshopListSchema.parse(data);
   } catch (error) {
     console.error(error);
@@ -170,10 +171,11 @@ async function fetchWorkshops() {
   }
 }
 
-const useWorkshopsQuery = () => {
+const useWorkshopsQuery = (enabled = true) => {
   return useQuery({
     queryKey: ["workshops"],
     queryFn: fetchWorkshops,
     retry: 3,
+    enabled,
   });
 };

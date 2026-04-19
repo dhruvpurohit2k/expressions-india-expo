@@ -1,7 +1,8 @@
+import { API_URL } from "../lib/config";
 import { getRefreshToken, storeAuth, clearAuth, StoredUser } from "@/src/lib/auth";
 
 const BASE_URL =
-  process.env.EXPO_PUBLIC_API_URL?.replace(/\/api\/?$/, "") ?? "";
+  API_URL?.replace(/\/api\/?$/, "") ?? "";
 
 type RefreshResult = StoredUser & { accessToken: string; refreshToken: string };
 
@@ -40,7 +41,10 @@ export async function tryRefresh(): Promise<string | null> {
         isAdmin: data.isAdmin,
       });
       return data.accessToken;
-    } catch {
+    } catch (e) {
+      // Network error (offline, server unreachable) — keep stored tokens so the
+      // user is not logged out on a transient failure.
+      if (e instanceof TypeError) return null;
       await clearAuth();
       return null;
     }

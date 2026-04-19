@@ -1,6 +1,7 @@
 import { useCallback, useState } from "react";
 import {
   ActivityIndicator,
+  Alert,
   FlatList,
   Pressable,
   ScrollView,
@@ -15,19 +16,24 @@ import Pagination from "@/src/components/Pagination";
 import { styleFactory } from "@/src/styleFactory";
 import { theme } from "@/src/theme";
 import { useCourseListQuery } from "@/src/hooks/useCourseListQuery";
+import { useMyCourses } from "@/src/hooks/useMyCourses";
+import { useCertificateApplications } from "@/src/hooks/useCertificateApplications";
+import type { CertApplicationPublic } from "@/src/api/fetchCertificateApplications";
+import * as Linking from "expo-linking";
 import { useIsFocused } from "@react-navigation/native";
 import { CourseCard } from "@/src/components/course/CourseCard";
 import { AUDIENCE_LABELS } from "@/src/types/audience";
 import type { CourseListItem } from "@/src/types/course";
 import type { ListRenderItem } from "react-native";
 
-type Tab = "browse" | "applied";
+type Tab = "browse" | "enrolled" | "certification";
 type SortField = "createdAt" | "updatedAt";
 type SortDir = "asc" | "desc";
 
 const TABS: { key: Tab; label: string }[] = [
   { key: "browse", label: "Browse" },
-  { key: "applied", label: "Applied" },
+  { key: "enrolled", label: "Enrolled" },
+  { key: "certification", label: "Certification" },
 ];
 
 const AUDIENCES = Object.entries(AUDIENCE_LABELS) as [string, string][];
@@ -36,26 +42,41 @@ const PAGE_SIZE = 12;
 export default function CourseIndex() {
   const globalStyle = styleFactory();
   const [currentTab, setCurrentTab] = useState<Tab>("browse");
+  const isFocused = useIsFocused();
+  const {
+    data: myCourses,
+    isLoading: myLoading,
+    error: myError,
+  } = useMyCourses({ enabled: isFocused && currentTab === "enrolled" });
+  const {
+    data: certApps,
+    isLoading: certLoading,
+    error: certError,
+  } = useCertificateApplications(
+    { enabled: isFocused && currentTab === "certification" },
+  );
   const [search, setSearch] = useState("");
-  const [selectedAudiences, setSelectedAudiences] = useState<Set<string>>(new Set());
+  const [selectedAudiences, setSelectedAudiences] = useState<Set<string>>(
+    new Set(),
+  );
   const [sortField, setSortField] = useState<SortField>("createdAt");
   const [sortDir, setSortDir] = useState<SortDir>("desc");
   const [page, setPage] = useState(1);
-
-  const isFocused = useIsFocused();
 
   const { data, isLoading, error } = useCourseListQuery({
     enabled: isFocused,
     limit: PAGE_SIZE,
     offset: (page - 1) * PAGE_SIZE,
     search: search.trim() || undefined,
-    audiences: selectedAudiences.size > 0 ? [...selectedAudiences].join(",") : undefined,
+    audiences:
+      selectedAudiences.size > 0 ? [...selectedAudiences].join(",") : undefined,
     sortField,
     sortOrder: sortDir,
   });
 
   const courses = data?.data ?? [];
-  const totalPages = data?.meta?.totalPages ?? Math.ceil((data?.meta?.total ?? 0) / PAGE_SIZE);
+  const totalPages =
+    data?.meta?.totalPages ?? Math.ceil((data?.meta?.total ?? 0) / PAGE_SIZE);
 
   const toggleAudience = useCallback((key: string) => {
     setSelectedAudiences((prev) => {
@@ -83,7 +104,9 @@ export default function CourseIndex() {
       {currentTab === "browse" && (
         <>
           {/* Search bar */}
-          <View style={{ paddingHorizontal: 12, paddingTop: 10, paddingBottom: 6 }}>
+          <View
+            style={{ paddingHorizontal: 12, paddingTop: 10, paddingBottom: 6 }}
+          >
             <View
               style={{
                 flexDirection: "row",
@@ -115,7 +138,13 @@ export default function CourseIndex() {
                 }}
               />
               {search.length > 0 && (
-                <Pressable onPress={() => { setSearch(""); setPage(1); }} hitSlop={8}>
+                <Pressable
+                  onPress={() => {
+                    setSearch("");
+                    setPage(1);
+                  }}
+                  hitSlop={8}
+                >
                   <X size={14} color="#aaa" strokeWidth={2.5} />
                 </Pressable>
               )}
@@ -123,7 +152,13 @@ export default function CourseIndex() {
           </View>
 
           {/* Audience filter chips + sort controls */}
-          <View style={{ flexDirection: "row", alignItems: "center", paddingBottom: 8 }}>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              paddingBottom: 8,
+            }}
+          >
             <ScrollView
               horizontal
               showsHorizontalScrollIndicator={false}
@@ -179,7 +214,9 @@ export default function CourseIndex() {
             >
               <Pressable
                 onPress={() => {
-                  setSortField((f) => (f === "createdAt" ? "updatedAt" : "createdAt"));
+                  setSortField((f) =>
+                    f === "createdAt" ? "updatedAt" : "createdAt",
+                  );
                   setPage(1);
                 }}
                 style={({ pressed }) => [
@@ -196,7 +233,13 @@ export default function CourseIndex() {
                   pressed && { opacity: 0.7 },
                 ]}
               >
-                <Text style={{ fontSize: 11, fontFamily: theme.fontBold, color: theme.text }}>
+                <Text
+                  style={{
+                    fontSize: 11,
+                    fontFamily: theme.fontBold,
+                    color: theme.text,
+                  }}
+                >
                   {sortField === "createdAt" ? "Created" : "Updated"}
                 </Text>
               </Pressable>
@@ -238,7 +281,13 @@ export default function CourseIndex() {
           )}
 
           {isLoading ? (
-            <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+            <View
+              style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
               <ActivityIndicator size="large" color={theme.red} />
             </View>
           ) : (
@@ -255,7 +304,12 @@ export default function CourseIndex() {
               columnWrapperStyle={{ gap: 10, paddingHorizontal: 5 }}
               renderItem={renderCourse}
               ListEmptyComponent={
-                <Text style={[globalStyle.text, { textAlign: "center", marginTop: 40 }]}>
+                <Text
+                  style={[
+                    globalStyle.text,
+                    { textAlign: "center", marginTop: 40 },
+                  ]}
+                >
                   No courses match your filters.
                 </Text>
               }
@@ -268,11 +322,293 @@ export default function CourseIndex() {
         </>
       )}
 
-      {currentTab === "applied" && (
-        <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-          <Text style={[globalStyle.text, { color: theme.red }]}>Coming soon</Text>
+      {currentTab === "enrolled" &&
+        (myLoading ? (
+          <View
+            style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+          >
+            <ActivityIndicator size="large" color={theme.red} />
+          </View>
+        ) : myError ? (
+          <View
+            style={{
+              flex: 1,
+              justifyContent: "center",
+              alignItems: "center",
+              paddingHorizontal: 24,
+            }}
+          >
+            <Text
+              style={[
+                globalStyle.text,
+                { textAlign: "center", color: theme.red },
+              ]}
+            >
+              Sign in to see your enrolled courses.
+            </Text>
+          </View>
+        ) : !myCourses?.length ? (
+          <View
+            style={{
+              flex: 1,
+              justifyContent: "center",
+              alignItems: "center",
+              paddingHorizontal: 24,
+            }}
+          >
+            <Text style={[globalStyle.text, { textAlign: "center" }]}>
+              You are not enrolled in any courses yet.
+            </Text>
+          </View>
+        ) : (
+          <FlatList
+            data={myCourses}
+            keyExtractor={(item) => item.id}
+            numColumns={2}
+            contentContainerStyle={{
+              paddingHorizontal: 10,
+              gap: 10,
+              paddingBottom: 12,
+              marginTop: 4,
+            }}
+            columnWrapperStyle={{ gap: 10, paddingHorizontal: 5 }}
+            renderItem={renderCourse}
+          />
+        ))}
+      {currentTab === "certification" &&
+        (certLoading ? (
+          <View
+            style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+          >
+            <ActivityIndicator size="large" color={theme.red} />
+          </View>
+        ) : certError ? (
+          <View
+            style={{
+              flex: 1,
+              justifyContent: "center",
+              alignItems: "center",
+              paddingHorizontal: 24,
+            }}
+          >
+            <Text style={[globalStyle.text, { textAlign: "center", color: theme.red }]}>
+              Could not load certificate applications. Please try again.
+            </Text>
+          </View>
+        ) : !certApps?.length ? (
+          <View
+            style={{
+              flex: 1,
+              justifyContent: "center",
+              alignItems: "center",
+              paddingHorizontal: 24,
+            }}
+          >
+            <Text style={[globalStyle.text, { textAlign: "center" }]}>
+              No certificate applications available at the moment.
+            </Text>
+          </View>
+        ) : (
+          <ScrollView
+            contentContainerStyle={{
+              padding: 16,
+              gap: 14,
+              flex: 1,
+              justifyContent: "center",
+              // alignItems: "center",
+            }}
+          >
+            {certApps.map((item) => (
+              <CertApplicationCard key={item.id} item={item} />
+            ))}
+          </ScrollView>
+        ))}
+    </SafeAreaView>
+  );
+}
+
+function certStatus(
+  openFrom?: Date | null,
+  openUntil?: Date | null,
+): "upcoming" | "open" | "closed" {
+  const now = new Date();
+  if (openFrom && now < openFrom) return "upcoming";
+  if (openUntil && now > openUntil) return "closed";
+  return "open";
+}
+
+const STATUS_STYLE = {
+  upcoming: {
+    bg: "rgba(234,179,8,0.12)",
+    color: "rgb(161,98,7)",
+    label: "Upcoming",
+  },
+  open: { bg: "rgba(34,197,94,0.12)", color: "rgb(22,163,74)", label: "Open" },
+  closed: {
+    bg: "rgba(0,0,0,0.07)",
+    color: "rgb(100,100,100)",
+    label: "Closed",
+  },
+};
+
+function CertApplicationCard({ item }: { item: CertApplicationPublic }) {
+  const dateStr = (d?: Date | null) =>
+    d
+      ? d.toLocaleDateString("en-IN", {
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+      })
+      : null;
+
+  const openFrom = dateStr(item.openFrom);
+  const openUntil = dateStr(item.openUntil);
+  const status = certStatus(item.openFrom, item.openUntil);
+  const s = STATUS_STYLE[status];
+
+  return (
+    <View
+      style={{
+        backgroundColor: "white",
+        borderRadius: 14,
+        // overflow: "hidden",
+        padding: 16,
+        gap: 12,
+        justifyContent: "center",
+        borderWidth: 1,
+        borderColor: "rgba(0,0,0,0.1)",
+        // shadowColor: "#000",
+        // shadowOpacity: 0.01,
+        // shadowRadius: 8,
+        // elevation: 1,
+        alignItems: "center",
+      }}
+    >
+      {/* Title + status badge */}
+      <Text
+        style={{
+          fontFamily: theme.fontBold,
+          fontSize: 17,
+          color: theme.sectionHeadingColor,
+        }}
+      >
+        Apply For Certification Below
+      </Text>
+      <View
+        style={{
+          paddingHorizontal: 12,
+          paddingVertical: 4,
+          borderRadius: 20,
+          backgroundColor: s.bg,
+        }}
+      >
+        <Text
+          style={{ fontSize: 12, fontFamily: theme.fontBold, color: s.color }}
+        >
+          {s.label}
+        </Text>
+      </View>
+
+      {/* Dates */}
+      {(openFrom || openUntil) && (
+        <View
+          style={{ flexDirection: "row", gap: 24, justifyContent: "center" }}
+        >
+          {openFrom && (
+            <View style={{ alignItems: "center" }}>
+              <Text
+                style={{
+                  fontSize: 10,
+                  color: "#999",
+                  fontFamily: theme.font,
+                  marginBottom: 2,
+                }}
+              >
+                Opens
+              </Text>
+              <Text
+                style={{
+                  fontSize: 13,
+                  fontFamily: theme.font,
+                  color: theme.text,
+                }}
+              >
+                {openFrom}
+              </Text>
+            </View>
+          )}
+          {openUntil && (
+            <View style={{ alignItems: "center" }}>
+              <Text
+                style={{
+                  fontSize: 10,
+                  color: "#999",
+                  fontFamily: theme.font,
+                  marginBottom: 2,
+                }}
+              >
+                Closes
+              </Text>
+              <Text
+                style={{
+                  fontSize: 13,
+                  fontFamily: theme.font,
+                  color: theme.text,
+                }}
+              >
+                {openUntil}
+              </Text>
+            </View>
+          )}
         </View>
       )}
-    </SafeAreaView>
+
+      {/* Action */}
+      {status === "open" && item.formUrl ? (
+        <Pressable
+          onPress={async () => {
+            try {
+              await Linking.openURL(item.formUrl!);
+            } catch {
+              Alert.alert("Error", "Could not open the application form.");
+            }
+          }}
+          style={({ pressed }) => [
+            {
+              backgroundColor: theme.red,
+              borderRadius: 10,
+              paddingVertical: 11,
+              paddingHorizontal: 32,
+              alignItems: "center",
+              alignSelf: "stretch",
+            },
+            pressed && { opacity: 0.82 },
+          ]}
+        >
+          <Text
+            style={{ color: "white", fontFamily: theme.fontBold, fontSize: 14 }}
+          >
+            Apply Now
+          </Text>
+        </Pressable>
+      ) : (
+        <View
+          style={{
+            backgroundColor: "rgba(0,0,0,0.05)",
+            borderRadius: 10,
+            paddingVertical: 11,
+            alignItems: "center",
+            alignSelf: "stretch",
+          }}
+        >
+          <Text style={{ color: "#888", fontFamily: theme.font, fontSize: 13 }}>
+            {item.message ||
+              (status === "upcoming"
+                ? "Applications not yet open."
+                : "Applications are closed.")}
+          </Text>
+        </View>
+      )}
+    </View>
   );
 }

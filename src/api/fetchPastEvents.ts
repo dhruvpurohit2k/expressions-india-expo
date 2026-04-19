@@ -1,3 +1,4 @@
+import { API_URL } from "../lib/config";
 import z from "zod";
 import { EventListItemSchema } from "../types/event";
 import { ApiMeta } from "../utils/api";
@@ -15,7 +16,7 @@ export async function fetchPastEventList({
   offset?: number;
 }): Promise<PastEventsResponse> {
   const response = await fetch(
-    `${process.env.EXPO_PUBLIC_API_URL}/event/past?limit=${limit ?? 10}&offset=${offset ?? 0}`,
+    `${API_URL}/event/past?limit=${limit ?? 10}&offset=${offset ?? 0}`,
   );
   const json = await response.json();
 

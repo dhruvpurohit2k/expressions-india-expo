@@ -1,8 +1,9 @@
+import { API_URL } from "../lib/config";
 import z from "zod";
 import { EventListItemSchema } from "../types/event";
 
 export async function fetchLatestEvents(): Promise<z.infer<typeof EventListItemSchema>[]> {
-  const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/event`);
+  const response = await fetch(`${API_URL}/event`);
   const json = await response.json();
 
   if (!json.success) {

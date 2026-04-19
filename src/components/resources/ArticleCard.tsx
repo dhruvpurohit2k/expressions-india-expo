@@ -82,7 +82,7 @@ export const ArticleCard = memo(function ArticleCard({
                     <Text
                       style={{
                         fontSize: 10,
-                        color: theme.red,
+                        color: "white",
                         fontFamily: theme.fontBold,
                       }}
                     >

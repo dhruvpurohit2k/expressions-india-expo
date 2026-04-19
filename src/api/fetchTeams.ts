@@ -1,8 +1,9 @@
+import { API_URL } from "../lib/config";
 import { z } from "zod";
 import { TeamSchema } from "../types/team";
 
 export async function fetchTeams(): Promise<z.infer<typeof TeamSchema>[]> {
-  const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/team`);
+  const response = await fetch(`${API_URL}/team`);
   const json = await response.json();
 
   if (!json.success) {

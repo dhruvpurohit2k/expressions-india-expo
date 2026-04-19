@@ -1,3 +1,4 @@
+import { API_URL } from "../lib/config";
 import { z } from "zod";
 
 const RegistrationSchema = z.object({
@@ -13,7 +14,7 @@ export async function submitRegistration(
   data: RegistrationData
 ): Promise<void> {
   const response = await fetch(
-    `${process.env.EXPO_PUBLIC_API_URL}/enquiry`,
+    `${API_URL}/enquiry`,
     {
       method: "POST",
       headers: {
