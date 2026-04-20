@@ -10,7 +10,7 @@ import * as SystemUI from "expo-system-ui";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useState, useCallback, Component } from "react";
-import { AppState, Platform, View, Text, ScrollView } from "react-native";
+import { AppState, Image, Platform, View, Text, ScrollView } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { ImageProvider } from "@/src/context/imageContext";
 import {
@@ -90,7 +90,7 @@ export default function RootLayout() {
   });
 
   useEffect(() => {
-    SystemUI.setBackgroundColorAsync(theme.backgroundColor);
+    SystemUI.setBackgroundColorAsync("#ffffff");
     if (Platform.OS === "android") {
       NavigationBar.setBackgroundColorAsync(theme.sectionHeadingColor);
       NavigationBar.setButtonStyleAsync("light");
@@ -115,10 +115,17 @@ export default function RootLayout() {
     return <SplashScreen onFinish={handleSplashFinish} />;
   }
 
-  // Brief gap while reading SecureStore — blank screen prevents flash
+  // Brief gap while reading SecureStore — mirrors the native splash screen
+  // so there's no visible transition before the animated splash starts.
   if (appState === "checking") {
     return (
-      <View style={{ flex: 1, backgroundColor: theme.backgroundColor }} />
+      <View style={{ flex: 1, backgroundColor: "#ffffff", alignItems: "center", justifyContent: "center" }}>
+        <Image
+          source={require("../assets/images/splash-icon.png")}
+          style={{ width: 200, height: 200 }}
+          resizeMode="contain"
+        />
+      </View>
     );
   }
 
