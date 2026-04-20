@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "expressions-india",
-    "slug": "expressions-india",
+    "name": "MindSmart",
+    "slug": "mindsmart",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -14,7 +14,7 @@
     "ios": {
       "supportsTablet": true,
       "usesAppleSignIn": true,
-      "bundleIdentifier": "com.expressionsindia.app",
+      "bundleIdentifier": "com.expressionsindia.mindsmart",
       "infoPlist": {
         "NSAppTransportSecurity": {
           "NSAllowsArbitraryLoads": true
@@ -26,7 +26,7 @@
       "barStyle": "light-content"
     },
     "android": {
-      "package": "com.expressionsindia.app",
+      "package": "com.expressionsindia.mindsmart",
       "usesCleartextTraffic": true,
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/icon.png",
