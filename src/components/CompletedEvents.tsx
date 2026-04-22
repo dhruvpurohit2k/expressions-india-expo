@@ -49,7 +49,9 @@ export default function CompletedEvents() {
         </View>
       )}
       {isLoading ? (
-        <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <View
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        >
           <ActivityIndicator size="large" color={theme.red} />
         </View>
       ) : (
@@ -67,7 +69,9 @@ export default function CompletedEvents() {
           renderItem={({ item, index }) => (
             <Animated.View
               style={{ flex: 1 }}
-              entering={SlideInDown.duration(500).delay(Math.min(index, 7) * 60)}
+              entering={SlideInDown.duration(500).delay(
+                Math.min(index, 7) * 60,
+              )}
             >
               <Link href={`/event/${item.id}`} asChild>
                 <Pressable>
@@ -76,15 +80,20 @@ export default function CompletedEvents() {
                       style={[
                         {
                           backgroundColor: "hsl(0, 0%, 100%)",
-                          borderRadius: 12,
-                          elevation: 1,
+                          borderRadius: 5,
+                          // elevation: 1,
+                          borderWidth: 1,
+                          borderColor: "hsl(0 0% 95%)",
                           shadowColor: "#000",
                           shadowOffset: { width: 0, height: 2 },
                           shadowOpacity: 0.08,
                           shadowRadius: 6,
                           overflow: "hidden",
                         },
-                        pressed && { opacity: 0.88, transform: [{ scale: 0.985 }] },
+                        pressed && {
+                          opacity: 0.88,
+                          transform: [{ scale: 0.985 }],
+                        },
                       ]}
                     >
                       {item.thumbnailUrl ? (
@@ -103,7 +112,15 @@ export default function CompletedEvents() {
                             justifyContent: "center",
                           }}
                         >
-                          <Text style={{ color: "white", fontSize: 36, opacity: 0.6 }}>🌸</Text>
+                          <Text
+                            style={{
+                              color: "white",
+                              fontSize: 36,
+                              opacity: 0.6,
+                            }}
+                          >
+                            🌸
+                          </Text>
                         </View>
                       )}
                       <View style={{ padding: 8, gap: 6 }}>
@@ -111,7 +128,7 @@ export default function CompletedEvents() {
                           numberOfLines={2}
                           ellipsizeMode="tail"
                           style={{
-                            fontSize: 12,
+                            fontSize: 15,
                             fontFamily: theme.fontBold,
                             color: theme.text,
                             lineHeight: 17,
@@ -121,7 +138,7 @@ export default function CompletedEvents() {
                         </Text>
                         <View
                           style={{
-                            backgroundColor: "hsla(4, 84%, 42%, 0.1)",
+                            // backgroundColor: "hsla(4, 84%, 42%, 0.1)",
                             paddingHorizontal: 6,
                             paddingVertical: 3,
                             borderRadius: 5,
@@ -130,9 +147,9 @@ export default function CompletedEvents() {
                         >
                           <Text
                             style={{
-                              fontSize: 10,
+                              fontSize: 11,
                               fontFamily: theme.fontBold,
-                              color: theme.sectionHeadingColor,
+                              color: theme.red,
                             }}
                           >
                             {formatDateRange(item.startDate, item.endDate)}

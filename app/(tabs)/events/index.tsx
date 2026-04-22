@@ -28,50 +28,6 @@ export default function Program() {
         currentTab={activeTab}
         currentTabSetter={setActiveTab}
       />
-      {/*<Animated.Text
-        entering={FadeInDown.duration(350)}
-        style={[globalStyle.sectionHeading, { marginHorizontal: 15 }]}
-      >
-        Events
-      </Animated.Text>
-
-      <Animated.View
-        entering={FadeInDown.duration(350).delay(70)}
-        style={{
-          flexDirection: "row",
-          marginHorizontal: 15,
-          marginVertical: 10,
-          borderRadius: 10,
-          overflow: "hidden",
-          borderWidth: 1,
-          borderColor: theme.red,
-        }}
-      >
-        {TABS.map((tab) => (
-          <Pressable
-            key={tab.key}
-            onPress={() => setActiveTab(tab.key)}
-            style={{
-              flex: 1,
-              paddingVertical: 10,
-              alignItems: "center",
-              backgroundColor:
-                activeTab === tab.key ? theme.red : "transparent",
-            }}
-          >
-            <Text
-              style={{
-                color: activeTab === tab.key ? "white" : theme.red,
-                fontFamily: theme.fontBold,
-                fontSize: 14,
-              }}
-            >
-              {tab.label}
-            </Text>
-          </Pressable>
-        ))}
-      </Animated.View>*/}
-
       {activeTab === "upcoming" ? <UpcomingEvents /> : <CompletedEvents />}
     </SafeAreaView>
   );

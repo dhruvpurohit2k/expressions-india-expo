@@ -132,7 +132,7 @@ export default function Carousel({ images }: { images: string[] }) {
         }}
         renderItem={renderItem}
       />
-      <View style={{ marginTop: 10 }}>
+      <View style={{ marginTop: 0 }}>
         <AnimatedDots
           scrollX={normalizedScrollX}
           count={count}
@@ -191,21 +191,21 @@ function CarouselItem({
     >
       <View
         style={{
-          width: "95%",
+          width: "100%",
           height: "100%",
-          borderRadius: 10,
+          // borderRadius: 10,
           overflow: "hidden",
           backgroundColor: theme.backgroundColorLight,
           shadowColor: "#000",
           shadowOffset: { width: 0, height: 6 },
           shadowOpacity: 0.25,
           shadowRadius: 8,
-          elevation: 8,
+          // elevation: 8,
         }}
       >
         <Image
           source={typeof item === "string" ? { uri: item } : (item as any)}
-          style={{ width: "100%", height: "100%", borderRadius: 10 }}
+          style={{ width: "100%", height: "100%", borderRadius: 5 }}
           resizeMode="cover"
         />
       </View>

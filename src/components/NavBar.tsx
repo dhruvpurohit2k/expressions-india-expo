@@ -33,9 +33,11 @@ export function NavBar({
       <Animated.Text
         entering={slideInFromTop}
         style={{
-          marginHorizontal: "auto",
+          marginHorizontal: 20,
+          // marginHorizontal: "auto",
           marginVertical: 10,
-          fontSize: 32,
+          fontSize: 38,
+          // fontFamily: theme.fontBold,
           color: "rgb(225,0,0)",
         }}
       >
@@ -49,9 +51,10 @@ export function NavBar({
           marginHorizontal: 15,
           marginVertical: 10,
           alignItems: "center",
-          borderRadius: 10,
+          // borderRadius: 10,
           padding: 5,
-          backgroundColor: "rgb(255,245,245)",
+          // backgroundColor: "rgb(255,245,245)",
+          // backgroundColor: "hsl(0 0% 97%)",
         }}
       >
         {tabs.map((tab) => (
@@ -98,9 +101,11 @@ function NavBarTab({
             alignItems: "center",
             justifyContent: "center",
             // alignText: "center",
-            borderRadius: 8,
+            borderRadius: 5,
             // height: "100%",
             backgroundColor: isActive ? theme.red : "transparent",
+            borderWidth: 1,
+            borderColor: isActive ? theme.red : "hsl(0 0% 97%)",
             elevation: isActive ? 5 : 0,
           },
           animatedStyle,
@@ -108,7 +113,7 @@ function NavBarTab({
       >
         <Text
           style={{
-            color: isActive ? "white" : theme.red,
+            color: isActive ? "white" : "rgb(225, 150,150)",
             fontFamily: theme.fontBold,
             textAlign: "center",
             textAlignVertical: "center",

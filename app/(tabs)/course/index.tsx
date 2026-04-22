@@ -52,9 +52,9 @@ export default function CourseIndex() {
     data: certApps,
     isLoading: certLoading,
     error: certError,
-  } = useCertificateApplications(
-    { enabled: isFocused && currentTab === "certification" },
-  );
+  } = useCertificateApplications({
+    enabled: isFocused && currentTab === "certification",
+  });
   const [search, setSearch] = useState("");
   const [selectedAudiences, setSelectedAudiences] = useState<Set<string>>(
     new Set(),
@@ -391,7 +391,12 @@ export default function CourseIndex() {
               paddingHorizontal: 24,
             }}
           >
-            <Text style={[globalStyle.text, { textAlign: "center", color: theme.red }]}>
+            <Text
+              style={[
+                globalStyle.text,
+                { textAlign: "center", color: theme.red },
+              ]}
+            >
               Could not load certificate applications. Please try again.
             </Text>
           </View>
@@ -455,10 +460,10 @@ function CertApplicationCard({ item }: { item: CertApplicationPublic }) {
   const dateStr = (d?: Date | null) =>
     d
       ? d.toLocaleDateString("en-IN", {
-        day: "numeric",
-        month: "short",
-        year: "numeric",
-      })
+          day: "numeric",
+          month: "short",
+          year: "numeric",
+        })
       : null;
 
   const openFrom = dateStr(item.openFrom);
@@ -470,13 +475,13 @@ function CertApplicationCard({ item }: { item: CertApplicationPublic }) {
     <View
       style={{
         backgroundColor: "white",
-        borderRadius: 14,
+        borderRadius: 5,
         // overflow: "hidden",
         padding: 16,
         gap: 12,
         justifyContent: "center",
-        borderWidth: 1,
-        borderColor: "rgba(0,0,0,0.1)",
+        // borderWidth: 1,
+        // borderColor: "hsl(0 0% 95%)",
         // shadowColor: "#000",
         // shadowOpacity: 0.01,
         // shadowRadius: 8,
@@ -576,7 +581,7 @@ function CertApplicationCard({ item }: { item: CertApplicationPublic }) {
           style={({ pressed }) => [
             {
               backgroundColor: theme.red,
-              borderRadius: 10,
+              borderRadius: 5,
               paddingVertical: 11,
               paddingHorizontal: 32,
               alignItems: "center",

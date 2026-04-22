@@ -50,10 +50,11 @@ export default function Home() {
         <Animated.View entering={FadeInDown.duration(400)}>
           <Text
             style={{
-              fontSize: 30,
+              fontSize: 38,
+              fontWeight: "bold",
               color: "rgb(225,0,0)",
               textAlign: "center",
-              marginVertical: 10,
+              marginVertical: 20,
             }}
           >
             Expressions India
@@ -61,10 +62,10 @@ export default function Home() {
           <Text
             style={{
               fontFamily: theme.font,
-              fontSize: 13,
+              fontSize: 15,
               textAlign: "center",
               color: "hsl(0,0%,55%)",
-              marginTop: 2,
+              marginBottom: 30,
             }}
           >
             National Life Skills & School Wellness Program
@@ -155,15 +156,16 @@ function SectionTitle({ label }: { label: string }) {
     >
       <View
         style={{
-          width: 4,
+          width: 2,
           height: 22,
           backgroundColor: lightRed,
           borderRadius: 2,
         }}
       />
+
       <Text
         style={{
-          fontSize: 20,
+          fontSize: 18,
           fontFamily: theme.fontBold,
           color: lightRed,
         }}

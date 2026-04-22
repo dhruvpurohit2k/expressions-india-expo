@@ -4,7 +4,15 @@ import { useIsFocused } from "@react-navigation/native";
 import { styleFactory } from "@/src/styleFactory";
 import { theme } from "@/src/theme";
 import { Ionicons } from "@expo/vector-icons";
-import { format as formatDate, parse } from "date-fns";
+import { format as formatDate, parse, isValid } from "date-fns";
+
+function parseTime(time: string): Date | null {
+  const withSeconds = parse(time, "HH:mm:ss", new Date());
+  if (isValid(withSeconds)) return withSeconds;
+  const withoutSeconds = parse(time, "HH:mm", new Date());
+  if (isValid(withoutSeconds)) return withoutSeconds;
+  return null;
+}
 import { Link, router, useLocalSearchParams } from "expo-router";
 import {
   ChevronLeft,
@@ -349,13 +357,9 @@ function UpcomingEventDetail({
                 </Text>
                 <Text>
                   {event.startTime &&
-                    formatDate(
-                      parse(event.startTime, "HH:mm:ss", new Date()),
-                      "hh:mm a",
-                    )}
-                  {event.endTime
-                    ? ` - ${formatDate(parse(event.endTime, "HH:mm:ss", new Date()), "hh:mm a")}`
-                    : ""}
+                    (() => { const t = parseTime(event.startTime!); return t ? formatDate(t, "hh:mm a") : ""; })()}
+                  {event.endTime &&
+                    (() => { const t = parseTime(event.endTime); return t ? ` - ${formatDate(t, "hh:mm a")}` : ""; })()}
                 </Text>
               </View>
 
@@ -639,17 +643,17 @@ function CompletedEventDetail({
                 ? ` – ${formatDate(event.endDate, "do MMM, yyyy")}`
                 : ""}
             </Text>
-            {event.startTime && (
-              <Text style={{ fontSize: 13, color: "#777", marginTop: 2 }}>
-                {formatDate(
-                  parse(event.startTime, "HH:mm:ss", new Date()),
-                  "hh:mm a",
-                )}
-                {event.endTime
-                  ? ` – ${formatDate(parse(event.endTime, "HH:mm:ss", new Date()), "hh:mm a")}`
-                  : ""}
-              </Text>
-            )}
+            {event.startTime && (() => {
+              const start = parseTime(event.startTime!);
+              const end = event.endTime ? parseTime(event.endTime) : null;
+              if (!start) return null;
+              return (
+                <Text style={{ fontSize: 13, color: "#777", marginTop: 2 }}>
+                  {formatDate(start, "hh:mm a")}
+                  {end ? ` – ${formatDate(end, "hh:mm a")}` : ""}
+                </Text>
+              );
+            })()}
           </View>
           <View>
             <Text

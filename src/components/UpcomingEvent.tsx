@@ -49,7 +49,9 @@ export default function UpcomingEvents() {
         </View>
       )}
       {isLoading ? (
-        <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <View
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        >
           <ActivityIndicator size="large" color={theme.red} />
         </View>
       ) : (
@@ -67,7 +69,9 @@ export default function UpcomingEvents() {
           renderItem={({ item, index }) => (
             <Animated.View
               style={{ flex: 1 }}
-              entering={SlideInDown.duration(500).delay(Math.min(index, 7) * 60)}
+              entering={SlideInDown.duration(500).delay(
+                Math.min(index, 7) * 60,
+              )}
             >
               <Link href={`/event/${item.id}`} asChild>
                 <Pressable>
@@ -84,7 +88,10 @@ export default function UpcomingEvents() {
                           shadowRadius: 6,
                           overflow: "hidden",
                         },
-                        pressed && { opacity: 0.88, transform: [{ scale: 0.985 }] },
+                        pressed && {
+                          opacity: 0.88,
+                          transform: [{ scale: 0.985 }],
+                        },
                       ]}
                     >
                       {item.thumbnailUrl ? (
@@ -103,7 +110,15 @@ export default function UpcomingEvents() {
                             justifyContent: "center",
                           }}
                         >
-                          <Text style={{ color: "white", fontSize: 36, opacity: 0.6 }}>🌸</Text>
+                          <Text
+                            style={{
+                              color: "white",
+                              fontSize: 36,
+                              opacity: 0.6,
+                            }}
+                          >
+                            🌸
+                          </Text>
                         </View>
                       )}
                       <View style={{ padding: 8, gap: 6 }}>

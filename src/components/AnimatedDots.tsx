@@ -24,11 +24,17 @@ function AnimatedDot({
       index * width,
       (index + 1) * width,
     ];
-    const scale = interpolate(scrollX.value, inputRange, [1, 1.5, 1], "clamp");
+    const scale = interpolate(
+      scrollX.value,
+      inputRange,
+      [0.5, 1, 0.5],
+      "clamp",
+    );
     const backgroundColor = interpolateColor(scrollX.value, inputRange, [
-      "hsl(4 84.2% 81.9%)",
-      theme.sectionHeadingColor,
-      "hsl(4 84.2% 81.9%)",
+      "hsl(4 84.2% 91.9%)",
+      // theme.sectionHeadingColor,
+      "hsl(4, 84.2%, 51.9%)",
+      "hsl(4 84.2% 91.9%)",
     ]);
     return {
       transform: [{ scale }],
@@ -54,7 +60,12 @@ export default function AnimatedDots({
   return (
     <View style={globalStyle.swipeDotIndicatorContainer}>
       {Array.from({ length: count }, (_, i) => i).map((index) => (
-        <AnimatedDot key={index} index={index} width={screenWidth} scrollX={scrollX} />
+        <AnimatedDot
+          key={index}
+          index={index}
+          width={screenWidth}
+          scrollX={scrollX}
+        />
       ))}
     </View>
   );

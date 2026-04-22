@@ -74,11 +74,12 @@ export default function RecentFeed() {
           alignItems: "center",
           gap: 8,
           marginBottom: 14,
+          // marginHorizontal: 10,
         }}
       >
         <View
           style={{
-            width: 4,
+            width: 2,
             height: 22,
             backgroundColor: lightRed,
             borderRadius: 2,
@@ -86,7 +87,7 @@ export default function RecentFeed() {
         />
         <Text
           style={{
-            fontSize: 20,
+            fontSize: 18,
             fontFamily: theme.fontBold,
             color: lightRed,
           }}
@@ -112,16 +113,31 @@ export default function RecentFeed() {
           No recent additions.
         </Text>
       ) : (
-        <View style={{ gap: 8 }}>
+        <View
+          style={{
+            gap: 8,
+            backgroundColor: "hsl(0 0% 97%)",
+            borderRadius: 5,
+          }}
+        >
           {data.map((item, i) => (
             <Animated.View
               key={item.id}
               entering={FadeInDown.duration(400).delay(i * 70)}
+              style={[
+                {
+                  borderBottomWidth: 1,
+                  borderTopWidth: 1,
+                  borderBottomColor: "hsl(0 0% 90%)",
+                  borderTopColor: "hsl(0 0% 90%)",
+                  padding: 1,
+                },
+              ]}
             >
               <Pressable
                 onPress={() => navigateTo(item)}
                 style={({ pressed }) => ({
-                  backgroundColor: theme.backgroundColor,
+                  // backgroundColor: theme.backgroundColor,
                   borderRadius: 12,
                   padding: 14,
                   flexDirection: "row",
@@ -134,7 +150,7 @@ export default function RecentFeed() {
                   style={{
                     width: 36,
                     height: 36,
-                    borderRadius: 10,
+                    borderRadius: 5,
                     backgroundColor: lightRed,
                     alignItems: "center",
                     justifyContent: "center",

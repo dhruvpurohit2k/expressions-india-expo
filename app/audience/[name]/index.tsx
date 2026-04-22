@@ -3,7 +3,13 @@ import { AUDIENCE_LABELS } from "@/src/types/audience";
 import { styleFactory } from "@/src/styleFactory";
 import { theme } from "@/src/theme";
 import { router, useLocalSearchParams, Link } from "expo-router";
-import { Zap, Newspaper, Headphones, Award, ChevronLeft } from "lucide-react-native";
+import {
+  Newspaper,
+  Headphones,
+  Award,
+  ChevronLeft,
+  Calendar,
+} from "lucide-react-native";
 import { useIsFocused } from "@react-navigation/native";
 import {
   ActivityIndicator,
@@ -24,7 +30,7 @@ const SECTION_CARDS = [
     key: "events",
     label: "Events",
     description: "Upcoming events curated for you",
-    icon: Zap,
+    icon: Calendar,
     color: "#ef4444",
     bg: "#fee2e2",
   },
@@ -58,7 +64,9 @@ export default function AudiencePage() {
   const { name } = useLocalSearchParams<{ name: string }>();
   const globalStyle = styleFactory();
   const isFocused = useIsFocused();
-  const { data: audience, isLoading } = useAudience(name, { enabled: isFocused });
+  const { data: audience, isLoading } = useAudience(name, {
+    enabled: isFocused,
+  });
 
   const label = AUDIENCE_LABELS[name] ?? name;
 
