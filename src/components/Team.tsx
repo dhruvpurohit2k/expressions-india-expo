@@ -47,15 +47,17 @@ export default function Team() {
           {team.members.length > 0 && (
             <View
               style={[
-                globalStyle.container,
+                // globalStyle.container,
                 {
                   backgroundColor: theme.backgroundColorLight,
-                  elevation: 2,
-                  borderRadius: 10,
+                  // elevation: 2,
+                  // borderRadius: 10,
                   gap: 0,
-                  marginTop: 16,
-                  marginBottom: 20,
-                  padding: 0,
+                  marginTop: 10,
+                  marginBottom: 10,
+                  paddingVertical: 10,
+                  borderBottomWidth: 1,
+                  borderBottomColor: "hsl(0 0% 90%)",
                   overflow: "hidden",
                 },
               ]}
@@ -65,8 +67,8 @@ export default function Team() {
                   key={member.id}
                   style={{
                     flexDirection: "row",
-                    gap: 10,
-                    padding: 14,
+                    gap: 15,
+                    padding: 5,
                     borderBottomWidth: index < team.members.length - 1 ? 1 : 0,
                     borderBottomColor: "#22222222",
                   }}

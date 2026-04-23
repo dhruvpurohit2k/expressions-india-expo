@@ -218,9 +218,11 @@ function DownloadCard({
         }}
         style={({ pressed }) => [
           {
-            backgroundColor: theme.backgroundColor,
-            borderRadius: 16,
+            backgroundColor: "hsl(0 0% 97%)",
+            borderRadius: 5,
             padding: 10,
+            borderWidth: 1,
+            borderColor: "hsl(0 0% 93%)",
             overflow: "hidden",
           },
           pressed && { opacity: 0.88, transform: [{ scale: 0.985 }] },
@@ -279,10 +281,11 @@ function DownloadCard({
             style={{
               width: 36,
               height: 36,
-              borderRadius: 10,
-              backgroundColor: "white",
-              alignItems: "center",
-              justifyContent: "center",
+              // borderRadius: 10,
+              backgroundColor: "transparent",
+              alignItems: "flex-end",
+              alignSelf: "flex-end",
+              justifyContent: "flex-end",
               flexShrink: 0,
             }}
           >

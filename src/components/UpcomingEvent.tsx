@@ -74,12 +74,14 @@ export default function UpcomingEvents() {
                       style={[
                         {
                           backgroundColor: "hsl(0, 0%, 100%)",
-                          borderRadius: 12,
-                          elevation: 1,
-                          shadowColor: "#000",
-                          shadowOffset: { width: 0, height: 2 },
-                          shadowOpacity: 0.08,
-                          shadowRadius: 6,
+                          borderRadius: 5,
+                          borderWidth: 1,
+                          borderColor: "hsl(0 0% 93%)",
+                          // elevation: 1,
+                          // shadowColor: "#000",
+                          // shadowOffset: { width: 0, height: 2 },
+                          // shadowOpacity: 0.08,
+                          // shadowRadius: 6,
                           overflow: "hidden",
                         },
                         pressed && {

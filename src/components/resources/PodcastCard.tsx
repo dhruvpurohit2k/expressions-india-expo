@@ -35,14 +35,16 @@ export const PodcastCard = memo(function PodcastCard({
             <View
               style={[
                 {
-                  backgroundColor: "hsl(0, 0%, 100%)",
-                  borderRadius: 12,
-                  elevation: 1,
+                  backgroundColor: "hsl(0 0% 100%)",
+                  borderWidth: 1,
+                  borderColor: "hsl(0 0% 93%)",
+                  borderRadius: 5,
+                  // elevation: 1,
                   overflow: "hidden",
-                  shadowColor: "#000",
-                  shadowOffset: { width: 0, height: 1 },
-                  shadowOpacity: 0.06,
-                  shadowRadius: 4,
+                  // shadowColor: "#000",
+                  // shadowOffset: { width: 0, height: 1 },
+                  // shadowOpacity: 0.06,
+                  // shadowRadius: 4,
                 },
                 pressed && { opacity: 0.85, transform: [{ scale: 0.98 }] },
               ]}

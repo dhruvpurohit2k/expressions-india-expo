@@ -76,7 +76,7 @@ export default function Director() {
           />
         </View>
       </View>
-      <Text style={[globalStyle.text, { marginTop: 30 }]}>
+      <Text style={[globalStyle.text, { marginTop: 30, fontSize: 14 }]}>
         Dr. Jitendra Nagpal (MD DNB) is Program Director of Expressions India -
         The National Life Skills, Values, Community and School Wellness Program.
         The Expressions India programme has over 6500 Child and Adolescent
@@ -87,12 +87,22 @@ export default function Director() {
         enrichment. He has been conducted a large number of corporate workshops
         on Work Life Balance.
       </Text>
-      <Text style={[globalStyle.text, { marginTop: 10 }]}>
+      <Text style={[globalStyle.text, { marginTop: 10, fontSize: 14 }]}>
         Also, He is{" "}
-        <Text style={[globalStyle.text, { fontFamily: theme.fontBold }]}>
+        <Text
+          style={[
+            globalStyle.text,
+            { fontFamily: theme.fontBold, fontSize: 14 },
+          ]}
+        >
           Sr. Consultant Psychiatrist{" "}
         </Text>
-        <Text style={[globalStyle.text, { fontFamily: theme.fontBold }]}>
+        <Text
+          style={[
+            globalStyle.text,
+            { fontFamily: theme.fontBold, fontSize: 14 },
+          ]}
+        >
           Sr. Consultant Psychiatrist and Head of the Instt. of Mental Health
           and Life Skills Promotion and Institute of Child Development and
           Adolescent Health at Moolchand Medcity, New Delhi.
