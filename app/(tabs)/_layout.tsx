@@ -58,7 +58,12 @@ export default function App() {
           height: 60 + insets.bottom,
           paddingBottom: insets.bottom,
           borderTopWidth: 0,
-          elevation: 0,
+          // Floating shadow — single source for the whole bottom panel
+          elevation: 16,
+          shadowColor: "#000",
+          shadowOffset: { width: 0, height: -4 },
+          shadowOpacity: 0.08,
+          shadowRadius: 12,
         },
         tabBarLabelStyle: {
           fontSize: 10,

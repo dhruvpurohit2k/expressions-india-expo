@@ -5,7 +5,7 @@ export const EventListItemSchema = z.object({
   title: z.string(),
   isOnline: z.boolean(),
   isPaid: z.boolean(),
-  startDate: z.coerce.date(),
+  startDate: z.coerce.date().nullable(),
   endDate: z.coerce.date().nullable(),
   thumbnailUrl: z.string().nullable().optional(),
 });
@@ -29,7 +29,7 @@ export const EventSchema = z.object({
   title: z.string(),
   description: z.string().nullable().optional(),
   perks: z.array(z.string()).nullable().optional(),
-  startDate: z.coerce.date(),
+  startDate: z.coerce.date().nullable(),
   endDate: z.coerce.date().nullable().optional(),
   startTime: z.string().nullable().optional(),
   endTime: z.string().nullable().optional(),

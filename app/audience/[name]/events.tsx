@@ -136,7 +136,7 @@ export default function AudienceEvents() {
                         </Text>
                         <View style={{ flexDirection: "row", gap: 8, alignItems: "center" }}>
                           <Text style={{ fontSize: 11, color: "hsl(0,0%,55%)", fontFamily: theme.font }}>
-                            {format(item.startDate, "do MMM yyyy")}
+                            {item.startDate ? format(item.startDate, "do MMM yyyy") : "Date TBA"}
                           </Text>
                           {item.isOnline && (
                             <View style={{ backgroundColor: "#eff6ff", borderRadius: 20, paddingHorizontal: 7, paddingVertical: 2 }}>

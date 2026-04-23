@@ -5,6 +5,7 @@ import { theme } from "@/src/theme";
 import { format } from "date-fns";
 import { router, useLocalSearchParams } from "expo-router";
 import { ChevronLeft } from "lucide-react-native";
+import { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   Dimensions,
@@ -22,6 +23,7 @@ import Animated, {
 } from "react-native-reanimated";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
+const MAX_COVER_HEIGHT = SCREEN_WIDTH * 1.4;
 
 export default function ArticleDetail() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -32,6 +34,14 @@ export default function ArticleDetail() {
     isLoading,
     error,
   } = useArticle(id, { enabled: isFocused });
+
+  const [coverAspect, setCoverAspect] = useState<number | null>(null);
+
+  useEffect(() => {
+    const url = article?.medias[0]?.url;
+    if (!url) return;
+    Image.getSize(url, (w, h) => setCoverAspect(w / h), () => {});
+  }, [article?.medias[0]?.url]);
 
   if (isLoading) {
     return (
@@ -105,33 +115,35 @@ export default function ArticleDetail() {
               source={{ uri: coverImage.url }}
               style={{
                 width: SCREEN_WIDTH,
-                height: SCREEN_WIDTH * 0.6,
-                resizeMode: "cover",
+                height: coverAspect
+                  ? Math.min(SCREEN_WIDTH / coverAspect, MAX_COVER_HEIGHT)
+                  : SCREEN_WIDTH * 0.6,
+                resizeMode: "contain",
                 backgroundColor: theme.backgroundColorDark,
               }}
             />
           </Animated.View>
         )}
 
-        <View style={{ paddingHorizontal: 18, paddingTop: 20 }}>
+        <View style={{ paddingHorizontal: 20, paddingTop: 22 }}>
           {/* Category chip */}
           <Animated.View
             entering={FadeInDown.duration(400).delay(100)}
             style={{
               alignSelf: "flex-start",
-              backgroundColor: theme.red + "18",
-              borderRadius: 10,
+              backgroundColor: "rgba(200,0,0,0.09)",
+              borderRadius: 20,
               paddingHorizontal: 12,
-              paddingVertical: 4,
-              marginBottom: 12,
+              paddingVertical: 5,
+              marginBottom: 14,
             }}
           >
             <Text
               style={{
-                color: "white",
-                fontSize: 12,
+                color: theme.red,
+                fontSize: 11,
                 fontFamily: theme.fontBold,
-                letterSpacing: 0.5,
+                letterSpacing: 0.8,
                 textTransform: "uppercase",
               }}
             >
@@ -146,8 +158,8 @@ export default function ArticleDetail() {
               fontSize: 26,
               fontFamily: theme.fontBold,
               color: theme.sectionHeadingColor,
-              lineHeight: 34,
-              marginBottom: 8,
+              lineHeight: 36,
+              marginBottom: 10,
             }}
           >
             {article.title}
@@ -157,10 +169,11 @@ export default function ArticleDetail() {
           <Animated.Text
             entering={FadeInDown.duration(400).delay(220)}
             style={{
-              fontSize: 12,
-              color: "hsl(0,0%,55%)",
+              fontSize: 13,
+              color: "hsl(0,0%,58%)",
               fontFamily: theme.font,
-              marginBottom: 24,
+              letterSpacing: 0.2,
+              marginBottom: 26,
             }}
           >
             {format(article.createdAt, "do MMMM yyyy")}
@@ -170,11 +183,11 @@ export default function ArticleDetail() {
           <Animated.View
             entering={FadeInDown.duration(400).delay(280)}
             style={{
-              height: 2,
-              width: 40,
+              height: 3,
+              width: 52,
               backgroundColor: theme.red,
               borderRadius: 2,
-              marginBottom: 24,
+              marginBottom: 26,
             }}
           />
 
@@ -182,13 +195,13 @@ export default function ArticleDetail() {
           {paragraphs.map((para, i) => (
             <Animated.Text
               key={i}
-              entering={FadeInUp.duration(450).delay(300 + i * 60)}
+              entering={FadeInUp.duration(450).delay(300 + Math.min(i, 5) * 60)}
               style={{
-                fontSize: 15,
-                color: theme.text,
-                fontFamily: theme.font,
-                lineHeight: 26,
-                marginBottom: 18,
+                fontSize: i === 0 ? 17 : 15,
+                color: i === 0 ? "hsl(0,0%,25%)" : theme.text,
+                fontFamily: i === 0 ? theme.fontBold : theme.font,
+                lineHeight: i === 0 ? 28 : 26,
+                marginBottom: 20,
                 textAlign: "justify",
               }}
             >
@@ -204,10 +217,10 @@ export default function ArticleDetail() {
             >
               <Text
                 style={{
-                  fontSize: 13,
+                  fontSize: 11,
                   fontFamily: theme.fontBold,
-                  color: "hsl(0,0%,45%)",
-                  letterSpacing: 0.8,
+                  color: theme.red,
+                  letterSpacing: 0.9,
                   textTransform: "uppercase",
                   marginBottom: 12,
                 }}

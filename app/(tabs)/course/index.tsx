@@ -9,7 +9,6 @@ import {
   TextInput,
   View,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { Search, X, ArrowUp, ArrowDown } from "lucide-react-native";
 import { NavBar } from "@/src/components/NavBar";
 import Pagination from "@/src/components/Pagination";
@@ -93,7 +92,7 @@ export default function CourseIndex() {
   );
 
   return (
-    <SafeAreaView style={globalStyle.screen} edges={["top"]}>
+    <View style={globalStyle.screen}>
       <NavBar
         title="Courses"
         tabs={TABS}
@@ -273,7 +272,7 @@ export default function CourseIndex() {
           </View>
 
           {error && (
-            <View style={{ paddingHorizontal: 15 }}>
+            <View style={{ paddingHorizontal: 15, paddingTop: 8 }}>
               <Text style={{ color: theme.red }}>
                 Could not load courses. Please try again.
               </Text>
@@ -299,7 +298,7 @@ export default function CourseIndex() {
                 paddingHorizontal: 10,
                 gap: 10,
                 paddingBottom: 12,
-                marginTop: 4,
+                paddingTop: 8,
               }}
               columnWrapperStyle={{ gap: 10, paddingHorizontal: 5 }}
               renderItem={renderCourse}
@@ -307,7 +306,7 @@ export default function CourseIndex() {
                 <Text
                   style={[
                     globalStyle.text,
-                    { textAlign: "center", marginTop: 40 },
+                    { textAlign: "center", marginTop: 60 },
                   ]}
                 >
                   No courses match your filters.
@@ -369,7 +368,7 @@ export default function CourseIndex() {
               paddingHorizontal: 10,
               gap: 10,
               paddingBottom: 12,
-              marginTop: 4,
+              paddingTop: 16,
             }}
             columnWrapperStyle={{ gap: 10, paddingHorizontal: 5 }}
             renderItem={renderCourse}
@@ -428,7 +427,7 @@ export default function CourseIndex() {
             ))}
           </ScrollView>
         ))}
-    </SafeAreaView>
+    </View>
   );
 }
 

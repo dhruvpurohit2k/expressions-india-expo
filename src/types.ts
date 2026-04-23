@@ -21,7 +21,7 @@ import { z } from "zod";
 export const UpcomingEventSchema = z.object({
   id: z.uuid(),
   title: z.string(),
-  startDate: z.coerce.date(),
+  startDate: z.coerce.date().nullable(),
   endDate: z.coerce.date().nullable(),
   registrationLink: z.url().nullable(),
   mediaLink: z.array(z.url()),
@@ -60,7 +60,7 @@ export type Event = z.infer<typeof EventSchema>;
 export const WorkshopListItemSchema = z.object({
   id: z.string(),
   title: z.string(),
-  startDate: z.coerce.date(),
+  startDate: z.coerce.date().nullable(),
   endDate: z.coerce.date().nullable().optional(),
 });
 export const WorkshopListSchema = z.object({

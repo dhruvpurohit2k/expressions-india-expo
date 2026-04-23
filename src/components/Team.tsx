@@ -7,13 +7,17 @@ import { useIsFocused } from "@react-navigation/native";
 export default function Team() {
   const globalStyle = styleFactory();
   const isFocused = useIsFocused();
-  const { data: teams, isLoading, error } = useTeamListQuery({ enabled: isFocused });
+  const {
+    data: teams,
+    isLoading,
+    error,
+  } = useTeamListQuery({ enabled: isFocused });
 
   const team = teams?.[0];
 
   return (
     <ScrollView style={[globalStyle.screen, { paddingHorizontal: 20 }]}>
-      <Text style={[globalStyle.sectionHeading]}>Our Team</Text>
+      {/*<Text style={[globalStyle.sectionHeading]}>Our Team</Text>*/}
 
       {isLoading && (
         <ActivityIndicator

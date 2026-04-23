@@ -18,18 +18,14 @@ export default function Pagination({
       style={{
         flexDirection: "row",
         alignItems: "center",
-        // backgroundColor: "rgb(255,240,240)",
         justifyContent: "space-between",
         paddingHorizontal: 15,
-        paddingVertical: 5,
-        // borderTopWidth: 1,
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: -10 },
-        shadowOpacity: 1,
-        shadowRadius: 8,
-        elevation: 12,
+        paddingVertical: 10,
         backgroundColor: theme.backgroundColorLight,
-        // borderTopColor: theme.backgroundColorDark,
+        // No shadow — the tab bar below casts the single shared shadow
+        // so pagination + tab bar read as one continuous floating panel.
+        borderTopWidth: 1,
+        borderTopColor: "rgba(0,0,0,0.06)",
       }}
     >
       <Pressable

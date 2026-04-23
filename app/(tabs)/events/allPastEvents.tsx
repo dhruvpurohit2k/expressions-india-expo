@@ -26,7 +26,8 @@ function formatDate(date: Date) {
   return `${date.getDate()} ${MONTHS[date.getMonth()]} ${date.getFullYear()}`;
 }
 
-function formatDateRange(startDate: Date, endDate: Date | null) {
+function formatDateRange(startDate: Date | null, endDate: Date | null) {
+  if (!startDate) return "Date TBA";
   if (!endDate) return formatDate(startDate);
   return `${formatDate(startDate)} – ${formatDate(endDate)}`;
 }

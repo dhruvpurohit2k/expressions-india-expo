@@ -2,7 +2,6 @@ import { styleFactory } from "@/src/styleFactory";
 import { theme } from "@/src/theme";
 import { useState } from "react";
 import { Pressable, Text, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import UpcomingEvents from "@/src/components/UpcomingEvent";
 import CompletedEvents from "@/src/components/CompletedEvents";
 import Animated, { FadeInDown } from "react-native-reanimated";
@@ -18,10 +17,7 @@ export default function Program() {
   const [activeTab, setActiveTab] = useState<Tab>("upcoming");
 
   return (
-    <SafeAreaView
-      style={{ backgroundColor: theme.backgroundColorLight, flex: 1 }}
-      edges={["top"]}
-    >
+    <View style={{ backgroundColor: theme.backgroundColorLight, flex: 1 }}>
       <NavBar
         title="Events"
         tabs={TABS}
@@ -29,6 +25,6 @@ export default function Program() {
         currentTabSetter={setActiveTab}
       />
       {activeTab === "upcoming" ? <UpcomingEvents /> : <CompletedEvents />}
-    </SafeAreaView>
+    </View>
   );
 }

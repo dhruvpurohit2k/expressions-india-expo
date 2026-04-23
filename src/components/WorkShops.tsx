@@ -131,9 +131,11 @@ export default function WorkShops() {
                                 },
                               ]}
                             >
-                              {formatDateTime(workshop.startDate, "do MMM yy")}
+                              {workshop.startDate
+                                ? formatDateTime(workshop.startDate, "do MMM yy")
+                                : "Date TBA"}
                             </Text>
-                            {workshop.endDate && (
+                            {workshop.startDate && workshop.endDate && (
                               <Text
                                 style={[
                                   {

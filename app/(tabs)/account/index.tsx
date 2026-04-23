@@ -51,7 +51,7 @@ export default function AccountScreen() {
 
   return (
     <SafeAreaView
-      style={{ flex: 1, backgroundColor: theme.backgroundColor }}
+      style={{ flex: 1, backgroundColor: theme.backgroundColorLight }}
       edges={["top"]}
     >
       {user ? (
@@ -73,7 +73,14 @@ function LoggedInView({
   onLogout: () => void;
 }) {
   return (
-    <View style={{ flex: 1, paddingHorizontal: 20, paddingTop: 12 }}>
+    <View
+      style={{
+        flex: 1,
+        paddingHorizontal: 20,
+        paddingTop: 12,
+        backgroundColor: theme.backgroundColorLight,
+      }}
+    >
       <Text
         style={{
           fontFamily: theme.fontBold,
@@ -206,7 +213,13 @@ function InfoRow({
 function LoggedOutView() {
   return (
     <View
-      style={{ flex: 1, alignItems: "center", justifyContent: "center", paddingHorizontal: 32 }}
+      style={{
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "center",
+        paddingHorizontal: 32,
+        backgroundColor: theme.backgroundColorLight,
+      }}
     >
       <Animated.View
         entering={FadeInDown.duration(400)}
@@ -217,13 +230,14 @@ function LoggedOutView() {
             width: 72,
             height: 72,
             borderRadius: 36,
-            backgroundColor: "hsl(4, 65%, 95%)",
+            // backgroundColor: "transparent",
+            backgroundColor: "hsl(4, 65%, 98%)",
             alignItems: "center",
             justifyContent: "center",
             marginBottom: 20,
           }}
         >
-          <Ionicons name="person-outline" size={32} color={theme.red} />
+          <Ionicons name="person" size={32} color={theme.red} />
         </View>
 
         <Text
@@ -271,7 +285,6 @@ function LoggedOutView() {
             Sign In
           </Text>
         </Pressable>
-
       </Animated.View>
     </View>
   );

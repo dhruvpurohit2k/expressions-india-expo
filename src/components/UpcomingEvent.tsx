@@ -18,7 +18,8 @@ import Pagination from "./Pagination";
 
 const LIMIT = 6;
 
-function formatDateRange(startDate: Date, endDate: Date | null) {
+function formatDateRange(startDate: Date | null, endDate: Date | null) {
+  if (!startDate) return "Date TBA";
   const start = format(startDate, "do MMM - yy");
   if (!endDate) return start;
   return `${start} – ${format(endDate, "do MMM - yy")}`;
@@ -29,7 +30,7 @@ export default function UpcomingEvents() {
   const globalStyle = styleFactory();
   const isFocused = useIsFocused();
 
-  const { data, isLoading, error } = useUpcomingEventQuery({
+  const { data, isLoading } = useUpcomingEventQuery({
     limit: LIMIT,
     offset: (page - 1) * LIMIT,
     enabled: isFocused,
@@ -41,13 +42,6 @@ export default function UpcomingEvents() {
 
   return (
     <>
-      {error && (
-        <View style={{ paddingHorizontal: 15 }}>
-          <Text style={{ color: theme.red }}>
-            Could not load events. Please try again.
-          </Text>
-        </View>
-      )}
       {isLoading ? (
         <View
           style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
@@ -62,7 +56,7 @@ export default function UpcomingEvents() {
           contentContainerStyle={{
             paddingHorizontal: 10,
             paddingBottom: 12,
-            marginTop: 16,
+            paddingTop: 16,
             gap: 10,
           }}
           columnWrapperStyle={{ gap: 10, paddingHorizontal: 5 }}
@@ -163,7 +157,7 @@ export default function UpcomingEvents() {
           ListEmptyComponent={
             <Animated.Text
               entering={FadeInUp.duration(400).delay(200)}
-              style={[globalStyle.text, { textAlign: "center", marginTop: 40 }]}
+              style={[globalStyle.text, { textAlign: "center", marginTop: 60 }]}
             >
               No upcoming events.
             </Animated.Text>

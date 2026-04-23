@@ -1,7 +1,6 @@
 import { useCallback, useState } from "react";
 import { useIsFocused } from "@react-navigation/native";
 import { ActivityIndicator, FlatList, Text, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { styleFactory } from "@/src/styleFactory";
 import { theme } from "@/src/theme";
 import { usePodcastQuery } from "@/src/hooks/usePodcastQuery";
@@ -96,7 +95,7 @@ export default function Resources() {
   );
 
   return (
-    <SafeAreaView style={globalStyle.screen} edges={["top"]}>
+    <View style={globalStyle.screen}>
       <NavBar
         title="Resources"
         tabs={TABS}
@@ -107,7 +106,7 @@ export default function Resources() {
       {activeTab === "podcasts" && (
         <>
           {podcastError && (
-            <View style={{ paddingHorizontal: 15 }}>
+            <View style={{ paddingHorizontal: 15, paddingTop: 16 }}>
               <Text style={{ color: theme.red }}>
                 Could not load podcasts. Please try again.
               </Text>
@@ -132,7 +131,7 @@ export default function Resources() {
                 paddingHorizontal: 10,
                 gap: 10,
                 paddingBottom: 12,
-                marginTop: 8,
+                paddingTop: 16,
               }}
               columnWrapperStyle={{ gap: 10, paddingHorizontal: 5 }}
               renderItem={renderPodcast}
@@ -140,7 +139,7 @@ export default function Resources() {
                 <Text
                   style={[
                     globalStyle.text,
-                    { textAlign: "center", marginTop: 40 },
+                    { textAlign: "center", marginTop: 60 },
                   ]}
                 >
                   No podcasts available.
@@ -161,7 +160,7 @@ export default function Resources() {
       {activeTab === "journals" && (
         <>
           {journalError && (
-            <View style={{ paddingHorizontal: 15 }}>
+            <View style={{ paddingHorizontal: 15, paddingTop: 16 }}>
               <Text style={{ color: theme.red }}>
                 Could not load journals. Please try again.
               </Text>
@@ -182,7 +181,7 @@ export default function Resources() {
               data={journals}
               keyExtractor={(item) => item.id}
               contentContainerStyle={{
-                marginTop: 10,
+                paddingTop: 16,
                 paddingHorizontal: 15,
                 gap: 10,
                 paddingBottom: 12,
@@ -192,7 +191,7 @@ export default function Resources() {
                 <Text
                   style={[
                     globalStyle.text,
-                    { textAlign: "center", marginTop: 40 },
+                    { textAlign: "center", marginTop: 60 },
                   ]}
                 >
                   No journals available.
@@ -213,7 +212,7 @@ export default function Resources() {
       {activeTab === "articles" && (
         <>
           {articleError && (
-            <View style={{ paddingHorizontal: 15 }}>
+            <View style={{ paddingHorizontal: 15, paddingTop: 16 }}>
               <Text style={{ color: theme.red }}>
                 Could not load articles. Please try again.
               </Text>
@@ -238,7 +237,7 @@ export default function Resources() {
                 paddingHorizontal: 10,
                 gap: 10,
                 paddingBottom: 12,
-                marginTop: 8,
+                paddingTop: 16,
               }}
               columnWrapperStyle={{ gap: 10, paddingHorizontal: 5 }}
               renderItem={renderArticle}
@@ -246,7 +245,7 @@ export default function Resources() {
                 <Text
                   style={[
                     globalStyle.text,
-                    { textAlign: "center", marginTop: 40 },
+                    { textAlign: "center", marginTop: 60 },
                   ]}
                 >
                   No articles available.
@@ -263,6 +262,6 @@ export default function Resources() {
           )}
         </>
       )}
-    </SafeAreaView>
+    </View>
   );
 }

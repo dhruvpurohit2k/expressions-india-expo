@@ -18,7 +18,7 @@ export default function Director() {
           // { backgroundColor: theme.backgroundColorLight, elevation: 5 },
         ]}
       >*/}
-      <Text style={[globalStyle.sectionHeading]}>DIRECTOR</Text>
+      {/*<Text style={[globalStyle.sectionHeading]}>DIRECTOR</Text>*/}
       <View
         style={{
           flexDirection: "row",

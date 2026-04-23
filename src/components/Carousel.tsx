@@ -206,7 +206,7 @@ function CarouselItem({
         <Image
           source={typeof item === "string" ? { uri: item } : (item as any)}
           style={{ width: "100%", height: "100%", borderRadius: 5 }}
-          resizeMode="cover"
+          resizeMode="contain"
         />
       </View>
     </Animated.View>

@@ -4,7 +4,6 @@ import Team from "@/src/components/Team";
 import { NavBar } from "@/src/components/NavBar";
 import { styleFactory } from "@/src/styleFactory";
 import { useState } from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { Text, View, ScrollView, Pressable } from "react-native";
 import { theme } from "@/src/theme";
 import * as Linking from "expo-linking";
@@ -17,7 +16,7 @@ type Tab = "aboutUs" | "meetDir" | "team" | "contact";
 
 const TABS: { key: Tab; label: string }[] = [
   { key: "aboutUs", label: "About Us" },
-  { key: "meetDir", label: "Meet the Director" },
+  { key: "meetDir", label: "Director" },
   { key: "team", label: "Team" },
   { key: "contact", label: "Contact Us" },
 ];
@@ -27,7 +26,7 @@ export default function About() {
   const [activeTab, setActiveTab] = useState<Tab>("aboutUs");
 
   return (
-    <SafeAreaView style={[globalStyle.screen]} edges={["top"]}>
+    <View style={[globalStyle.screen]}>
       <NavBar
         title="About"
         tabs={TABS}
@@ -38,7 +37,7 @@ export default function About() {
       {activeTab === "meetDir" && <Director />}
       {activeTab === "team" && <Team />}
       {activeTab === "contact" && <ContactScreen />}
-    </SafeAreaView>
+    </View>
   );
 }
 
@@ -59,9 +58,9 @@ function SectionCard({
       style={{
         backgroundColor: theme.backgroundColorLight,
         borderRadius: 16,
-        padding: 18,
+        padding: 10,
         marginBottom: 12,
-        elevation: 2,
+        // elevation: 2,
       }}
     >
       {children}
@@ -184,7 +183,7 @@ function ContactScreen() {
       showsVerticalScrollIndicator={false}
       contentContainerStyle={{ padding: 16, paddingBottom: 32 }}
     >
-      <Animated.Text
+      {/*<Animated.Text
         entering={FadeInDown.duration(400)}
         style={{
           fontSize: 30,
@@ -195,7 +194,7 @@ function ContactScreen() {
         }}
       >
         Contact Us
-      </Animated.Text>
+      </Animated.Text>*/}
 
       {/* Organisation */}
       <SectionCard delay={50}>

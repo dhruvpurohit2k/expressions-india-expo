@@ -16,11 +16,11 @@ import { router } from "expo-router";
 const lightRed = "hsl(4, 65%, 50%)";
 
 const TYPE_ICON: Record<LatestFeedItem["type"], React.ReactNode> = {
-  event: <CalendarDays size={18} color="white" strokeWidth={2} />,
-  podcast: <Headphones size={18} color="white" strokeWidth={2} />,
-  article: <FileText size={18} color="white" strokeWidth={2} />,
-  journal: <BookOpen size={18} color="white" strokeWidth={2} />,
-  course: <GraduationCap size={18} color="white" strokeWidth={2} />,
+  event: <CalendarDays size={18} color={theme.red} strokeWidth={2} />,
+  podcast: <Headphones size={18} color={theme.red} strokeWidth={2} />,
+  article: <FileText size={18} color={theme.red} strokeWidth={2} />,
+  journal: <BookOpen size={18} color={theme.red} strokeWidth={2} />,
+  course: <GraduationCap size={18} color={theme.red} strokeWidth={2} />,
 };
 
 const TYPE_LABEL: Record<LatestFeedItem["type"], string> = {
@@ -116,7 +116,7 @@ export default function RecentFeed() {
         <View
           style={{
             gap: 8,
-            backgroundColor: "hsl(0 0% 97%)",
+            backgroundColor: "hsl(0 0% 100%)",
             borderRadius: 5,
           }}
         >
@@ -127,10 +127,11 @@ export default function RecentFeed() {
               style={[
                 {
                   borderBottomWidth: 1,
-                  borderTopWidth: 1,
+                  // borderTopWidth: 1,
                   borderBottomColor: "hsl(0 0% 90%)",
-                  borderTopColor: "hsl(0 0% 90%)",
-                  padding: 1,
+                  // borderTopColor: "hsl(0 0% 90%)",
+                  // backgroundColor: "hsl(0 0% 97%)",
+                  // padding: 1,
                 },
               ]}
             >
@@ -139,7 +140,7 @@ export default function RecentFeed() {
                 style={({ pressed }) => ({
                   // backgroundColor: theme.backgroundColor,
                   borderRadius: 12,
-                  padding: 14,
+                  padding: 10,
                   flexDirection: "row",
                   alignItems: "center",
                   gap: 12,
@@ -150,8 +151,8 @@ export default function RecentFeed() {
                   style={{
                     width: 36,
                     height: 36,
-                    borderRadius: 5,
-                    backgroundColor: lightRed,
+                    borderRadius: 100,
+                    backgroundColor: "transparent",
                     alignItems: "center",
                     justifyContent: "center",
                     flexShrink: 0,

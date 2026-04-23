@@ -1,4 +1,4 @@
-import { Pressable } from "react-native";
+import { Pressable, Text } from "react-native";
 import Animated, {
   Easing,
   Keyframe,
@@ -6,14 +6,14 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useEffect } from "react";
+import { theme } from "../theme";
 
 const slideInFromTop = new Keyframe({
   0: { opacity: 0, transform: [{ translateY: -24 }] },
   100: { opacity: 1, transform: [{ translateY: 0 }] },
 }).duration(320);
-import { useEffect } from "react";
-import { theme } from "../theme";
-import { Text } from "react-native";
 
 type NavBarProps = {
   title: string;
@@ -28,16 +28,28 @@ export function NavBar({
   currentTab,
   currentTabSetter,
 }: NavBarProps) {
+  const insets = useSafeAreaInsets();
   return (
-    <>
+    <Animated.View
+      entering={slideInFromTop}
+      style={{
+        backgroundColor: theme.backgroundColorLight,
+        paddingHorizontal: 15,
+        paddingTop: insets.top + 10,
+        paddingBottom: 10,
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 3 },
+        shadowOpacity: 0.04,
+        shadowRadius: 8,
+        elevation: 3,
+      }}
+    >
       <Animated.Text
         entering={slideInFromTop}
         style={{
-          marginHorizontal: 20,
-          // marginHorizontal: "auto",
-          marginVertical: 10,
+          marginHorizontal: 5,
+          marginBottom: 10,
           fontSize: 38,
-          // fontFamily: theme.fontBold,
           color: "rgb(225,0,0)",
         }}
       >
@@ -48,13 +60,8 @@ export function NavBar({
         entering={slideInFromTop.delay(70)}
         style={{
           flexDirection: "row",
-          marginHorizontal: 15,
-          marginVertical: 10,
           alignItems: "center",
-          // borderRadius: 10,
           padding: 5,
-          // backgroundColor: "rgb(255,245,245)",
-          // backgroundColor: "hsl(0 0% 97%)",
         }}
       >
         {tabs.map((tab) => (
@@ -66,7 +73,7 @@ export function NavBar({
           />
         ))}
       </Animated.View>
-    </>
+    </Animated.View>
   );
 }
 
@@ -106,7 +113,7 @@ function NavBarTab({
             backgroundColor: isActive ? theme.red : "transparent",
             borderWidth: 1,
             borderColor: isActive ? theme.red : "hsl(0 0% 97%)",
-            elevation: isActive ? 5 : 0,
+            // elevation: isActive ? 5 : 0,
           },
           animatedStyle,
         ]}

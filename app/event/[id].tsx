@@ -49,6 +49,22 @@ import type { Event } from "@/src/types/event";
 
 const CARD_PEEK = 60;
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL;
+
+const upcomingLabel = {
+  fontSize: 11,
+  fontFamily: theme.fontBold,
+  color: theme.red,
+  textTransform: "uppercase" as const,
+  letterSpacing: 0.8,
+  marginBottom: 6,
+} as const;
+
+const upcomingValue = {
+  fontSize: 15,
+  fontFamily: theme.font,
+  color: theme.text,
+  lineHeight: 22,
+} as const;
 const IMAGE_PREVIEW_COUNT = 3;
 
 function toAbsoluteUrl(url?: string | null) {
@@ -307,99 +323,89 @@ function UpcomingEventDetail({
             </View>
 
             {/* Content */}
-            <View style={{ paddingTop: 10 }}>
-              <View>
-                <Text
-                  style={{
-                    fontSize: 18,
-                    textAlign: "justify",
-                    color: "#777",
-                    marginVertical: 20,
-                  }}
-                >
-                  {event.description ?? "No description available."}
-                </Text>
-              </View>
+            <View style={{ paddingTop: 20 }}>
+              {/* Description */}
+              <Text
+                style={{
+                  fontSize: 15,
+                  fontFamily: theme.font,
+                  color: "hsl(0,0%,38%)",
+                  lineHeight: 25,
+                  textAlign: "justify",
+                  marginBottom: 28,
+                }}
+              >
+                {event.description ?? "No description available."}
+              </Text>
 
-              <Text style={{ fontSize: 20, color: "#777" }}>Details</Text>
-              <View>
-                {event.perks &&
-                  event.perks.map((value, index) => (
-                    <View key={index}>
+              {/* Perks */}
+              {event.perks && event.perks.length > 0 && (
+                <View style={{ marginBottom: 28 }}>
+                  <Text style={upcomingLabel}>What's Included</Text>
+                  <View style={{ gap: 10 }}>
+                    {event.perks.map((value, index) => (
                       <View
-                        style={{
-                          flexDirection: "row",
-                          alignItems: "flex-start",
-                        }}
+                        key={index}
+                        style={{ flexDirection: "row", alignItems: "flex-start", gap: 10 }}
                       >
                         <Ionicons
-                          name="chevron-forward-circle-outline"
-                          size={16}
-                          color="#c00"
+                          name="checkmark-circle"
+                          size={17}
+                          color={theme.red}
+                          style={{ marginTop: 2 }}
                         />
-                        <Text>{value}</Text>
+                        <Text style={[upcomingValue, { flex: 1 }]}>{value}</Text>
                       </View>
-                    </View>
-                  ))}
-              </View>
+                    ))}
+                  </View>
+                </View>
+              )}
 
-              <View style={{ marginVertical: 20 }}>
-                <Text
-                  style={{ fontSize: 20, color: "#777", marginVertical: 5 }}
-                >
-                  Date & Time
-                </Text>
-                <Text>
-                  {formatDate(event.startDate, "do MMM, yy")}
-                  {event.endDate
-                    ? ` - ${formatDate(event.endDate, "do MMM, yy")}`
+              {/* Date & Time */}
+              <View style={{ marginBottom: 24 }}>
+                <Text style={upcomingLabel}>Date & Time</Text>
+                <Text style={upcomingValue}>
+                  {event.startDate ? formatDate(event.startDate, "do MMM, yy") : "Date TBA"}
+                  {event.startDate && event.endDate
+                    ? ` – ${formatDate(event.endDate, "do MMM, yy")}`
                     : ""}
                 </Text>
-                <Text>
-                  {event.startTime &&
-                    (() => { const t = parseTime(event.startTime!); return t ? formatDate(t, "hh:mm a") : ""; })()}
-                  {event.endTime &&
-                    (() => { const t = parseTime(event.endTime); return t ? ` - ${formatDate(t, "hh:mm a")}` : ""; })()}
-                </Text>
+                {(() => {
+                  const start = event.startTime ? parseTime(event.startTime) : null;
+                  const end = event.endTime ? parseTime(event.endTime) : null;
+                  if (!start) return null;
+                  return (
+                    <Text style={[upcomingValue, { marginTop: 2, color: "hsl(0,0%,55%)" }]}>
+                      {formatDate(start, "hh:mm a")}
+                      {end ? ` – ${formatDate(end, "hh:mm a")}` : ""}
+                    </Text>
+                  );
+                })()}
               </View>
 
-              <View>
-                <Text
-                  style={{ fontSize: 20, color: "#777", marginVertical: 5 }}
-                >
-                  Venue
-                </Text>
-                <Text>
+              {/* Venue */}
+              <View style={{ marginBottom: 24 }}>
+                <Text style={upcomingLabel}>Venue</Text>
+                <Text style={upcomingValue}>
                   {event.location ?? "Location will be announced soon."}
                 </Text>
               </View>
 
-              <View>
-                <Text
-                  style={{ fontSize: 20, color: "#777", marginVertical: 5 }}
-                >
-                  Fee
-                </Text>
-                <Text>
-                  {event.isPaid ? (
-                    <View
-                      style={{ flexDirection: "row", alignItems: "center" }}
-                    >
-                      <IndianRupee size={12} />
-                      <Text style={{ fontSize: 14 }}>{event.price ?? 0}</Text>
-                    </View>
-                  ) : (
-                    "Free"
-                  )}
-                </Text>
+              {/* Fee */}
+              <View style={{ marginBottom: 28 }}>
+                <Text style={upcomingLabel}>Fee</Text>
+                {event.isPaid ? (
+                  <View style={{ flexDirection: "row", alignItems: "center", gap: 2 }}>
+                    <IndianRupee size={14} color={theme.text} />
+                    <Text style={upcomingValue}>{event.price ?? 0}</Text>
+                  </View>
+                ) : (
+                  <Text style={[upcomingValue, { color: "hsl(130,50%,38%)" }]}>Free</Text>
+                )}
               </View>
               {promoVideos.length > 0 && (
-                <View style={{ marginBottom: 20 }}>
-                  <Text
-                    style={{ fontSize: 20, color: "#777", marginBottom: 10 }}
-                  >
-                    Promo Videos
-                  </Text>
+                <View style={{ marginBottom: 24 }}>
+                  <Text style={upcomingLabel}>Promo Videos</Text>
                   <Pressable
                     onPress={() =>
                       router.push({
@@ -438,12 +444,8 @@ function UpcomingEventDetail({
               )}
               {event.promotionalDocuments &&
                 event.promotionalDocuments.length > 0 && (
-                  <View style={{ marginBottom: 20 }}>
-                    <Text
-                      style={{ fontSize: 20, color: "#777", marginBottom: 10 }}
-                    >
-                      Documents
-                    </Text>
+                  <View style={{ marginBottom: 24 }}>
+                    <Text style={upcomingLabel}>Documents</Text>
                     <View style={{ gap: 8 }}>
                       {event.promotionalDocuments.map((doc, index) => (
                         <Pressable
@@ -638,8 +640,8 @@ function CompletedEventDetail({
               When
             </Text>
             <Text style={{ fontSize: 15, color: theme.text }}>
-              {formatDate(event.startDate, "do MMM, yyyy")}
-              {event.endDate
+              {event.startDate ? formatDate(event.startDate, "do MMM, yyyy") : "Date TBA"}
+              {event.startDate && event.endDate
                 ? ` – ${formatDate(event.endDate, "do MMM, yyyy")}`
                 : ""}
             </Text>
