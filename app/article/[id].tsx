@@ -40,7 +40,11 @@ export default function ArticleDetail() {
   useEffect(() => {
     const url = article?.medias[0]?.url;
     if (!url) return;
-    Image.getSize(url, (w, h) => setCoverAspect(w / h), () => {});
+    Image.getSize(
+      url,
+      (w, h) => setCoverAspect(w / h),
+      () => { },
+    );
   }, [article?.medias[0]?.url]);
 
   if (isLoading) {
@@ -183,7 +187,7 @@ export default function ArticleDetail() {
           <Animated.View
             entering={FadeInDown.duration(400).delay(280)}
             style={{
-              height: 3,
+              height: 2,
               width: 52,
               backgroundColor: theme.red,
               borderRadius: 2,
@@ -197,9 +201,9 @@ export default function ArticleDetail() {
               key={i}
               entering={FadeInUp.duration(450).delay(300 + Math.min(i, 5) * 60)}
               style={{
-                fontSize: i === 0 ? 17 : 15,
+                fontSize: i === 0 ? 15 : 15,
                 color: i === 0 ? "hsl(0,0%,25%)" : theme.text,
-                fontFamily: i === 0 ? theme.fontBold : theme.font,
+                fontFamily: i === 0 ? theme.font : theme.font,
                 lineHeight: i === 0 ? 28 : 26,
                 marginBottom: 20,
                 textAlign: "justify",
