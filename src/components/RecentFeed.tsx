@@ -113,34 +113,27 @@ export default function RecentFeed() {
           No recent additions.
         </Text>
       ) : (
-        <View
-          style={{
-            gap: 8,
-            backgroundColor: "hsl(0 0% 100%)",
-            borderRadius: 5,
-          }}
-        >
+        <View style={{ gap: 8 }}>
           {data.map((item, i) => (
             <Animated.View
               key={item.id}
               entering={FadeInDown.duration(400).delay(i * 70)}
-              style={[
-                {
-                  borderBottomWidth: 1,
-                  // borderTopWidth: 1,
-                  borderBottomColor: "hsl(0 0% 90%)",
-                  // borderTopColor: "hsl(0 0% 90%)",
-                  // backgroundColor: "hsl(0 0% 97%)",
-                  // padding: 1,
-                },
-              ]}
+              style={{
+                backgroundColor: "white",
+                borderRadius: 10,
+                shadowColor: "#000",
+                shadowOffset: { width: 0, height: 1 },
+                shadowOpacity: 0.06,
+                shadowRadius: 4,
+                elevation: 2,
+              }}
             >
               <Pressable
                 onPress={() => navigateTo(item)}
                 style={({ pressed }) => ({
-                  // backgroundColor: theme.backgroundColor,
-                  borderRadius: 12,
-                  padding: 10,
+                  borderRadius: 10,
+                  paddingVertical: 10,
+                  paddingHorizontal: 10,
                   flexDirection: "row",
                   alignItems: "center",
                   gap: 12,
@@ -149,10 +142,10 @@ export default function RecentFeed() {
               >
                 <View
                   style={{
-                    width: 36,
-                    height: 36,
-                    borderRadius: 100,
-                    backgroundColor: "transparent",
+                    width: 38,
+                    height: 38,
+                    borderRadius: 10,
+                    backgroundColor: "rgba(200,0,0,0.08)",
                     alignItems: "center",
                     justifyContent: "center",
                     flexShrink: 0,
@@ -161,41 +154,58 @@ export default function RecentFeed() {
                   {TYPE_ICON[item.type]}
                 </View>
 
-                <View style={{ flex: 1 }}>
+                <View style={{ flex: 1, gap: 4 }}>
                   <Text
                     style={{
-                      fontFamily: theme.font,
-                      fontSize: 14,
+                      fontFamily: theme.text,
+                      fontSize: 15,
                       color: theme.text,
-                      lineHeight: 20,
+                      lineHeight: 21,
                     }}
+                    numberOfLines={2}
                   >
                     {item.title}
                   </Text>
-                  <Text
+                  <View
                     style={{
-                      fontFamily: theme.font,
-                      fontSize: 11,
-                      color: "hsl(0,0%,55%)",
-                      marginTop: 2,
+                      flexDirection: "row",
+                      alignItems: "center",
+                      gap: 6,
                     }}
                   >
-                    {TYPE_LABEL[item.type]}
-                  </Text>
+                    <View
+                      style={{
+                        backgroundColor: "rgba(200,0,0,0.09)",
+                        borderRadius: 20,
+                        paddingHorizontal: 8,
+                        paddingVertical: 2,
+                      }}
+                    >
+                      <Text
+                        style={{
+                          fontFamily: theme.fontBold,
+                          fontSize: 10,
+                          color: theme.red,
+                          textTransform: "uppercase",
+                          letterSpacing: 0.5,
+                        }}
+                      >
+                        {TYPE_LABEL[item.type]}
+                      </Text>
+                    </View>
+                    {formatDate(item.start) && (
+                      <Text
+                        style={{
+                          fontSize: 11,
+                          fontFamily: theme.font,
+                          color: "hsl(0,0%,58%)",
+                        }}
+                      >
+                        {formatDate(item.start)}
+                      </Text>
+                    )}
+                  </View>
                 </View>
-
-                {formatDate(item.start) && (
-                  <Text
-                    style={{
-                      fontSize: 11,
-                      fontFamily: theme.fontBold,
-                      color: theme.red,
-                      flexShrink: 0,
-                    }}
-                  >
-                    {formatDate(item.start)}
-                  </Text>
-                )}
               </Pressable>
             </Animated.View>
           ))}

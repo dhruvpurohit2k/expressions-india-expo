@@ -33,15 +33,15 @@ export function NavBar({
     <Animated.View
       entering={slideInFromTop}
       style={{
-        backgroundColor: theme.backgroundColorLight,
+        backgroundColor: theme.red,
         paddingHorizontal: 15,
         paddingTop: insets.top + 10,
         paddingBottom: 10,
         shadowColor: "#000",
-        shadowOffset: { width: 0, height: 3 },
-        shadowOpacity: 0.04,
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.22,
         shadowRadius: 8,
-        elevation: 3,
+        elevation: 6,
       }}
     >
       <Animated.Text
@@ -50,7 +50,8 @@ export function NavBar({
           marginHorizontal: 5,
           marginBottom: 10,
           fontSize: 38,
-          color: "rgb(225,0,0)",
+          color: "white",
+          fontFamily: theme.fontBold,
         }}
       >
         {title}
@@ -110,9 +111,9 @@ function NavBarTab({
             // alignText: "center",
             borderRadius: 5,
             // height: "100%",
-            backgroundColor: isActive ? theme.red : "transparent",
+            backgroundColor: isActive ? "white" : "transparent",
             borderWidth: 1,
-            borderColor: isActive ? theme.red : "hsl(0 0% 97%)",
+            borderColor: isActive ? "white" : "rgba(255,255,255,0.35)",
             // elevation: isActive ? 5 : 0,
           },
           animatedStyle,
@@ -120,7 +121,7 @@ function NavBarTab({
       >
         <Text
           style={{
-            color: isActive ? "white" : "rgb(225, 150,150)",
+            color: isActive ? theme.red : "rgba(255,255,255,0.8)",
             fontFamily: theme.fontBold,
             textAlign: "center",
             textAlignVertical: "center",

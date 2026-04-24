@@ -90,7 +90,7 @@ export default function RootLayout() {
   });
 
   useEffect(() => {
-    SystemUI.setBackgroundColorAsync("#ffffff");
+    SystemUI.setBackgroundColorAsync(theme.red);
     if (Platform.OS === "android") {
       NavigationBar.setBackgroundColorAsync(theme.sectionHeadingColor);
       NavigationBar.setButtonStyleAsync("light");
@@ -144,9 +144,9 @@ export default function RootLayout() {
     <ErrorBoundary>
     <SafeAreaProvider>
       <StatusBar
-        backgroundColor="transparent"
+        backgroundColor={theme.red}
         translucent={true}
-        style="dark"
+        style="light"
       />
       <ImageProvider>
         <QueryClientProvider client={queryClient}>

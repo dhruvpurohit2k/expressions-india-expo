@@ -10,7 +10,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 import * as Linking from "expo-linking";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import RecentFeed from "@/src/components/RecentFeed";
 import Carousel from "@/src/components/Carousel";
 import Animated, { FadeInDown } from "react-native-reanimated";
@@ -27,6 +27,7 @@ const lightRed = "hsl(4, 65%, 50%)";
 
 export default function Home() {
   const globalStyle = styleFactory();
+  const insets = useSafeAreaInsets();
   const isFocused = useIsFocused();
   const { data: upcomingImages = [], isPending: upcomingPending } =
     useUpcomingCarouselImages({ enabled: isFocused });
@@ -44,17 +45,25 @@ export default function Home() {
   });
 
   return (
-    <SafeAreaView style={[globalStyle.screen]} edges={["top", "left", "right"]}>
+    <SafeAreaView style={[globalStyle.screen]} edges={["left", "right"]}>
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* Header */}
-        <Animated.View entering={FadeInDown.duration(400)}>
+        <Animated.View
+          entering={FadeInDown.duration(400)}
+          style={{
+            backgroundColor: theme.red,
+            paddingTop: insets.top + 18,
+            paddingBottom: 24,
+            paddingHorizontal: 16,
+          }}
+        >
           <Text
             style={{
               fontSize: 38,
-              fontWeight: "bold",
-              color: "rgb(225,0,0)",
+              fontFamily: theme.fontBold,
+              color: "white",
               textAlign: "center",
-              marginVertical: 20,
+              marginBottom: 8,
             }}
           >
             Expressions India
@@ -64,8 +73,7 @@ export default function Home() {
               fontFamily: theme.font,
               fontSize: 15,
               textAlign: "center",
-              color: "hsl(0,0%,55%)",
-              marginBottom: 30,
+              color: "rgba(255,255,255,0.82)",
             }}
           >
             National Life Skills & School Wellness Program

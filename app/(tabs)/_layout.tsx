@@ -6,20 +6,20 @@ import { Pressable } from "react-native";
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
-  withSpring,
+  withTiming,
 } from "react-native-reanimated";
 import { useEffect } from "react";
 
 function PillTabButton(props: any) {
   const focused = props.accessibilityState?.selected ?? false;
-  const scale = useSharedValue(focused ? 1 : 0);
+  const opacity = useSharedValue(focused ? 1 : 0);
 
   useEffect(() => {
-    scale.value = withSpring(focused ? 1 : 0, { damping: 14, stiffness: 180 });
+    opacity.value = withTiming(focused ? 1 : 0, { duration: 180 });
   }, [focused]);
 
   const pillStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: scale.value }],
+    opacity: opacity.value,
   }));
 
   return (
@@ -35,11 +35,11 @@ function PillTabButton(props: any) {
           {
             position: "absolute",
             top: 5,
-            height: 46,
+            bottom: 5,
             left: 4,
             right: 4,
             borderRadius: 16,
-            backgroundColor: "hsla(4, 74.2%, 51.9%, 0.15)",
+            backgroundColor: theme.red,
           },
           pillStyle,
         ]}
@@ -58,6 +58,7 @@ export default function App() {
           height: 60 + insets.bottom,
           paddingBottom: insets.bottom,
           borderTopWidth: 0,
+          borderRadius: 20,
           // Floating shadow — single source for the whole bottom panel
           elevation: 16,
           shadowColor: "#000",
@@ -68,9 +69,10 @@ export default function App() {
         tabBarLabelStyle: {
           fontSize: 10,
         },
-        tabBarActiveBackgroundColor: theme.backgroundColorLight,
+        tabBarActiveBackgroundColor: theme.red,
         tabBarInactiveBackgroundColor: theme.backgroundColorLight,
-        tabBarActiveTintColor: theme.red,
+        tabBarActiveTintColor: "white",
+        tabBarInactiveTintColor: "hsl(0,0%,55%)",
         tabBarButton: (props) => <PillTabButton {...props} />,
       }}
     >
