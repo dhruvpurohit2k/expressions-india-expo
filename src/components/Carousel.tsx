@@ -15,7 +15,7 @@ export default function Carousel({ images }: { images: string[] }) {
   const scrollX = useSharedValue(0);
   const screenWidth = Dimensions.get("window").width;
 
-  const ITEM_WIDTH = screenWidth * 0.95;
+  const ITEM_WIDTH = screenWidth * 1;
   const SPACING = (screenWidth - ITEM_WIDTH) / 2;
 
   const count = images?.length || 0;
@@ -102,7 +102,7 @@ export default function Carousel({ images }: { images: string[] }) {
   };
 
   return (
-    <View style={{ height: 320, paddingVertical: 10 }}>
+    <View style={{ height: 320, paddingVertical: 0 }}>
       <Animated.FlatList
         ref={flatListRef}
         data={extendedImages}
@@ -194,12 +194,12 @@ function CarouselItem({
           width: "100%",
           height: "100%",
           // borderRadius: 10,
-          overflow: "hidden",
+          // overflow: "hidden",
           backgroundColor: theme.backgroundColorLight,
-          shadowColor: "#000",
-          shadowOffset: { width: 0, height: 6 },
-          shadowOpacity: 0.25,
-          shadowRadius: 8,
+          // shadowColor: "#000",
+          // shadowOffset: { width: 0, height: 6 },
+          // shadowOpacity: 0.25,
+          // shadowRadius: 8,
           // elevation: 8,
         }}
       >
