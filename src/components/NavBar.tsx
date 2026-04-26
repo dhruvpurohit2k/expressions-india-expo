@@ -87,17 +87,22 @@ function NavBarTab({
   isActive: boolean;
   onPress: () => void;
 }) {
-  const scale = useSharedValue(isActive ? 1 : 0.9);
+  const scale = useSharedValue(isActive ? 1 : 0.94);
+  const pillOpacity = useSharedValue(isActive ? 1 : 0);
 
   useEffect(() => {
-    scale.value = withTiming(isActive ? 1 : 0.9, {
-      duration: 180,
+    scale.value = withTiming(isActive ? 1 : 0.94, {
+      duration: 200,
       easing: Easing.out(Easing.cubic),
     });
+    pillOpacity.value = withTiming(isActive ? 1 : 0, { duration: 200 });
   }, [isActive]);
 
-  const animatedStyle = useAnimatedStyle(() => ({
+  const scaleStyle = useAnimatedStyle(() => ({
     transform: [{ scale: scale.value }],
+  }));
+  const pillStyle = useAnimatedStyle(() => ({
+    opacity: pillOpacity.value,
   }));
 
   return (
@@ -105,27 +110,33 @@ function NavBarTab({
       <Animated.View
         style={[
           {
-            paddingVertical: 10,
+            paddingVertical: 9,
             alignItems: "center",
             justifyContent: "center",
-            // alignText: "center",
-            borderRadius: 5,
-            // height: "100%",
-            backgroundColor: isActive ? "white" : "transparent",
-            borderWidth: 1,
-            borderColor: isActive ? "white" : "rgba(255,255,255,0.35)",
-            // elevation: isActive ? 5 : 0,
           },
-          animatedStyle,
+          scaleStyle,
         ]}
       >
+        <Animated.View
+          style={[
+            {
+              position: "absolute",
+              top: 0,
+              bottom: 0,
+              left: 5,
+              right: 5,
+              borderRadius: 20,
+              backgroundColor: "white",
+            },
+            pillStyle,
+          ]}
+        />
         <Text
           style={{
-            color: isActive ? theme.red : "rgba(255,255,255,0.8)",
+            color: isActive ? theme.red : "rgba(255,255,255,0.72)",
             fontFamily: theme.fontBold,
             textAlign: "center",
-            textAlignVertical: "center",
-            fontSize: 14,
+            fontSize: 13,
           }}
         >
           {tab.label}

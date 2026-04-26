@@ -2,7 +2,7 @@ import { theme } from "@/src/theme";
 import { Link } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { View, Text, Pressable } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import { styleFactory } from "@/src/styleFactory";
 
@@ -71,7 +71,7 @@ function BentoCard({
   return (
     <Animated.View
       entering={FadeInDown.duration(500).delay(delay)}
-      style={{ width: "47%", height: 110 }}
+      style={{ width: "47%", height: 160 }}
     >
       <Link href={`/audience/${option.code}`} asChild>
         <Pressable style={{ flex: 1 }}>
@@ -90,9 +90,9 @@ function BentoCard({
             >
               <View
                 style={{
-                  width: iconSize + 16,
-                  height: iconSize + 16,
-                  borderRadius: (iconSize + 16) / 2,
+                  width: iconSize + 22,
+                  height: iconSize + 22,
+                  borderRadius: (iconSize + 22) / 2,
                   backgroundColor: "rgba(255,255,255,0.7)",
                   alignItems: "center",
                   justifyContent: "center",
@@ -107,9 +107,9 @@ function BentoCard({
               <Text
                 style={{
                   fontFamily: theme.fontBold,
-                  fontSize: 13,
+                  fontSize: 14,
                   color: "hsl(0,0%,20%)",
-                  lineHeight: 18,
+                  lineHeight: 20,
                 }}
               >
                 {option.text}
@@ -124,30 +124,42 @@ function BentoCard({
 
 export default function ForYou() {
   const globalStyle = styleFactory();
+  const insets = useSafeAreaInsets();
 
   return (
-    <SafeAreaView style={[globalStyle.screen]}>
-      <Text
+    <SafeAreaView style={[globalStyle.screen]} edges={["left", "right"]}>
+      <View
         style={{
-          marginHorizontal: 18,
-          marginVertical: 74,
-          fontSize: 32,
-          fontFamily: theme.fontBold,
-          color: "hsl(0,0%,60%)",
-          textAlign: "center",
+          backgroundColor: theme.red,
+          paddingTop: insets.top + 18,
+          paddingBottom: 22,
+          paddingHorizontal: 20,
+          shadowColor: "#000",
+          shadowOffset: { width: 0, height: 4 },
+          shadowOpacity: 0.22,
+          shadowRadius: 8,
+          elevation: 6,
+          marginBottom: 28,
         }}
       >
-        Who are you?
-      </Text>
+        <Text
+          style={{
+            fontSize: 38,
+            fontFamily: theme.fontBold,
+            color: "white",
+          }}
+        >
+          Who are you?
+        </Text>
+      </View>
 
       <View
         style={{
           flex: 1,
           flexDirection: "row",
           flexWrap: "wrap",
-          // marginVertical: "auto",
-          // justifyContent: "center",
-          // alignContent: "center",
+          justifyContent: "center",
+          alignContent: "center",
           paddingHorizontal: 14,
           gap: 10,
         }}
@@ -156,7 +168,7 @@ export default function ForYou() {
           <BentoCard
             key={option.code}
             option={option}
-            iconSize={28}
+            iconSize={42}
             delay={index * 80}
           />
         ))}

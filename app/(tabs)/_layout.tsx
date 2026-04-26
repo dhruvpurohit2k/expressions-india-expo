@@ -27,7 +27,7 @@ function PillTabButton(props: any) {
       {...props}
       style={[
         props.style,
-        { flex: 1, alignItems: "center", justifyContent: "center" },
+        { flex: 1, alignItems: "center", justifyContent: "center", borderTopLeftRadius: 12, borderTopRightRadius: 12, overflow: "hidden" },
       ]}
     >
       <Animated.View
@@ -38,7 +38,8 @@ function PillTabButton(props: any) {
             bottom: 5,
             left: 4,
             right: 4,
-            borderRadius: 16,
+            borderTopLeftRadius: 12,
+            borderTopRightRadius: 12,
             backgroundColor: theme.red,
           },
           pillStyle,

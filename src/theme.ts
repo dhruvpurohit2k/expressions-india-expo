@@ -13,6 +13,6 @@ export const theme = {
   TITLEFONT: "GloriaHallelujah_400Regular",
   sectionHeadingSize: 28,
   fontSize: 16,
-  sectionHeadingColor: "hsl(4, 84.2%, 41.9%)",
-  red: "hsl(4, 74.2%, 45.9%)",
+  sectionHeadingColor: "hsl(4, 80%, 48%)",
+  red: "hsl(4, 72%, 52%)",
 };

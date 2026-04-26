@@ -8,7 +8,7 @@ import Animated, {
   SharedValue,
 } from "react-native-reanimated";
 import AnimatedDots from "./AnimatedDots";
-import { useEffect, useRef, useMemo } from "react";
+import { useEffect, useRef, useMemo, useState } from "react";
 import { theme } from "../theme";
 
 export default function Carousel({ images }: { images: string[] }) {
@@ -102,7 +102,16 @@ export default function Carousel({ images }: { images: string[] }) {
   };
 
   return (
-    <View style={{ height: 320, paddingVertical: 0 }}>
+    <View>
+      <View
+        style={{
+          height: 3,
+          marginHorizontal: 40,
+          borderRadius: 2,
+          backgroundColor: "hsl(4, 70%, 78%)",
+        }}
+      />
+      <View style={{ height: 320 }}>
       <Animated.FlatList
         ref={flatListRef}
         data={extendedImages}
@@ -132,7 +141,16 @@ export default function Carousel({ images }: { images: string[] }) {
         }}
         renderItem={renderItem}
       />
-      <View style={{ marginTop: 0 }}>
+      </View>
+      <View
+        style={{
+          height: 3,
+          marginHorizontal: 40,
+          borderRadius: 2,
+          backgroundColor: "hsl(4, 70%, 78%)",
+        }}
+      />
+      <View style={{ marginTop: 6 }}>
         <AnimatedDots
           scrollX={normalizedScrollX}
           count={count}
@@ -203,12 +221,30 @@ function CarouselItem({
           // elevation: 8,
         }}
       >
-        <Image
-          source={typeof item === "string" ? { uri: item } : (item as any)}
-          style={{ width: "100%", height: "100%", borderRadius: 5 }}
-          resizeMode="contain"
-        />
+        <CarouselImage item={item} />
       </View>
     </Animated.View>
+  );
+}
+
+function CarouselImage({ item }: { item: string }) {
+  const source = typeof item === "string" ? { uri: item } : (item as any);
+  const [isLandscape, setIsLandscape] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    if (typeof item !== "string") return;
+    Image.getSize(
+      item,
+      (w, h) => setIsLandscape(w >= h),
+      () => setIsLandscape(false),
+    );
+  }, [item]);
+
+  return (
+    <Image
+      source={source}
+      style={{ width: "100%", height: "100%" }}
+      resizeMode={isLandscape ? "cover" : "contain"}
+    />
   );
 }

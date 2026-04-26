@@ -23,7 +23,7 @@ import { fetchAlmanac } from "@/src/api/fetchAlmanac";
 import { fetchBrochure } from "@/src/api/fetchBrochure";
 import { queryKeys } from "@/src/lib/queryKeys";
 
-const lightRed = "hsl(4, 65%, 50%)";
+const lightRed = "hsl(4, 65%, 56%)";
 
 export default function Home() {
   const globalStyle = styleFactory();
@@ -156,7 +156,7 @@ function SectionTitle({ label }: { label: string }) {
       style={{
         flexDirection: "row",
         alignItems: "center",
-        gap: 8,
+        gap: 10,
         paddingHorizontal: 15,
         marginTop: 24,
         marginBottom: 4,
@@ -164,22 +164,30 @@ function SectionTitle({ label }: { label: string }) {
     >
       <View
         style={{
-          width: 2,
-          height: 22,
+          width: 3,
+          height: 20,
           backgroundColor: lightRed,
           borderRadius: 2,
         }}
       />
-
       <Text
         style={{
-          fontSize: 18,
+          fontSize: 16,
           fontFamily: theme.fontBold,
           color: lightRed,
+          letterSpacing: 0.3,
         }}
       >
         {label}
       </Text>
+      <View
+        style={{
+          flex: 1,
+          height: 1,
+          backgroundColor: lightRed,
+          opacity: 0.22,
+        }}
+      />
     </View>
   );
 }

@@ -13,22 +13,49 @@ import { useIsFocused } from "@react-navigation/native";
 import { LatestFeedItem } from "../types/latestFeed";
 import { router } from "expo-router";
 
-const lightRed = "hsl(4, 65%, 50%)";
+const lightRed = "hsl(4, 65%, 56%)";
 
-const TYPE_ICON: Record<LatestFeedItem["type"], React.ReactNode> = {
-  event: <CalendarDays size={18} color={theme.red} strokeWidth={2} />,
-  podcast: <Headphones size={18} color={theme.red} strokeWidth={2} />,
-  article: <FileText size={18} color={theme.red} strokeWidth={2} />,
-  journal: <BookOpen size={18} color={theme.red} strokeWidth={2} />,
-  course: <GraduationCap size={18} color={theme.red} strokeWidth={2} />,
-};
+type IconComponent = typeof CalendarDays;
 
-const TYPE_LABEL: Record<LatestFeedItem["type"], string> = {
-  event: "Event",
-  podcast: "Podcast",
-  article: "Article",
-  journal: "Journal",
-  course: "Course",
+const TYPE_META: Record<
+  LatestFeedItem["type"],
+  { label: string; color: string; tint: string; cardTint: string; Icon: IconComponent }
+> = {
+  event: {
+    label: "Event",
+    color: "rgb(220,38,38)",
+    tint: "rgba(220,38,38,0.10)",
+    cardTint: "rgba(220,38,38,0.04)",
+    Icon: CalendarDays,
+  },
+  podcast: {
+    label: "Podcast",
+    color: "rgb(124,58,237)",
+    tint: "rgba(124,58,237,0.10)",
+    cardTint: "rgba(124,58,237,0.04)",
+    Icon: Headphones,
+  },
+  article: {
+    label: "Article",
+    color: "rgb(37,99,235)",
+    tint: "rgba(37,99,235,0.10)",
+    cardTint: "rgba(37,99,235,0.04)",
+    Icon: FileText,
+  },
+  journal: {
+    label: "Journal",
+    color: "rgb(22,163,74)",
+    tint: "rgba(22,163,74,0.10)",
+    cardTint: "rgba(22,163,74,0.04)",
+    Icon: BookOpen,
+  },
+  course: {
+    label: "Course",
+    color: "rgb(217,119,6)",
+    tint: "rgba(217,119,6,0.10)",
+    cardTint: "rgba(217,119,6,0.04)",
+    Icon: GraduationCap,
+  },
 };
 
 function navigateTo(item: LatestFeedItem) {
@@ -72,28 +99,36 @@ export default function RecentFeed() {
         style={{
           flexDirection: "row",
           alignItems: "center",
-          gap: 8,
+          gap: 10,
           marginBottom: 14,
-          // marginHorizontal: 10,
         }}
       >
         <View
           style={{
-            width: 2,
-            height: 22,
+            width: 3,
+            height: 20,
             backgroundColor: lightRed,
             borderRadius: 2,
           }}
         />
         <Text
           style={{
-            fontSize: 18,
+            fontSize: 16,
             fontFamily: theme.fontBold,
             color: lightRed,
+            letterSpacing: 0.3,
           }}
         >
           Recent Additions
         </Text>
+        <View
+          style={{
+            flex: 1,
+            height: 1,
+            backgroundColor: lightRed,
+            opacity: 0.22,
+          }}
+        />
       </View>
 
       {isPending ? (
@@ -114,18 +149,16 @@ export default function RecentFeed() {
         </Text>
       ) : (
         <View style={{ gap: 8 }}>
-          {data.map((item, i) => (
+          {data.map((item, i) => {
+            const meta = TYPE_META[item.type];
+            const Icon = meta.Icon;
+            return (
             <Animated.View
               key={item.id}
               entering={FadeInDown.duration(400).delay(i * 70)}
               style={{
-                backgroundColor: "white",
+                backgroundColor: meta.cardTint,
                 borderRadius: 10,
-                shadowColor: "#000",
-                shadowOffset: { width: 0, height: 1 },
-                shadowOpacity: 0.06,
-                shadowRadius: 4,
-                elevation: 2,
               }}
             >
               <Pressable
@@ -145,13 +178,13 @@ export default function RecentFeed() {
                     width: 38,
                     height: 38,
                     borderRadius: 10,
-                    backgroundColor: "rgba(200,0,0,0.08)",
+                    backgroundColor: meta.tint,
                     alignItems: "center",
                     justifyContent: "center",
                     flexShrink: 0,
                   }}
                 >
-                  {TYPE_ICON[item.type]}
+                  <Icon size={18} color={meta.color} strokeWidth={2} />
                 </View>
 
                 <View style={{ flex: 1, gap: 4 }}>
@@ -175,7 +208,7 @@ export default function RecentFeed() {
                   >
                     <View
                       style={{
-                        backgroundColor: "rgba(200,0,0,0.09)",
+                        backgroundColor: meta.tint,
                         borderRadius: 20,
                         paddingHorizontal: 8,
                         paddingVertical: 2,
@@ -185,12 +218,12 @@ export default function RecentFeed() {
                         style={{
                           fontFamily: theme.fontBold,
                           fontSize: 10,
-                          color: theme.red,
+                          color: meta.color,
                           textTransform: "uppercase",
                           letterSpacing: 0.5,
                         }}
                       >
-                        {TYPE_LABEL[item.type]}
+                        {meta.label}
                       </Text>
                     </View>
                     {formatDate(item.start) && (
@@ -208,7 +241,8 @@ export default function RecentFeed() {
                 </View>
               </Pressable>
             </Animated.View>
-          ))}
+            );
+          })}
         </View>
       )}
     </View>

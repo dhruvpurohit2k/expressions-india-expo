@@ -11,7 +11,7 @@ import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useState, useCallback, Component } from "react";
 import { AppState, Image, Platform, View, Text, ScrollView } from "react-native";
-import { SafeAreaProvider } from "react-native-safe-area-context";
+import { SafeAreaProvider, useSafeAreaInsets } from "react-native-safe-area-context";
 import { ImageProvider } from "@/src/context/imageContext";
 import {
   focusManager,
@@ -22,6 +22,24 @@ import { styleFactory } from "@/src/styleFactory";
 import SplashScreen from "@/src/components/SplashScreen";
 import OnboardingScreen from "@/src/components/onboarding/OnboardingScreen";
 import { hasCompletedOnboarding } from "@/src/lib/storage";
+
+function BottomSystemBar() {
+  const insets = useSafeAreaInsets();
+  if (insets.bottom === 0) return null;
+  return (
+    <View
+      pointerEvents="none"
+      style={{
+        position: "absolute",
+        left: 0,
+        right: 0,
+        bottom: 0,
+        height: insets.bottom,
+        backgroundColor: theme.red,
+      }}
+    />
+  );
+}
 
 class ErrorBoundary extends Component<
   { children: React.ReactNode },
@@ -92,7 +110,7 @@ export default function RootLayout() {
   useEffect(() => {
     SystemUI.setBackgroundColorAsync(theme.red);
     if (Platform.OS === "android") {
-      NavigationBar.setBackgroundColorAsync(theme.sectionHeadingColor);
+      NavigationBar.setBackgroundColorAsync(theme.red);
       NavigationBar.setButtonStyleAsync("light");
     }
   }, []);
@@ -150,31 +168,34 @@ export default function RootLayout() {
       />
       <ImageProvider>
         <QueryClientProvider client={queryClient}>
-          <Stack>
-            <Stack.Screen name="index" options={{ headerShown: false }} />
-            <Stack.Screen
-              name="(tabs)"
-              options={{
-                headerShown: false,
-              }}
-            />
-            <Stack.Screen name="modal" options={{ headerShown: false }} />
-            <Stack.Screen name="event" options={{ headerShown: false }} />
-            <Stack.Screen name="podcast" options={{ headerShown: false }} />
-            <Stack.Screen name="journal" options={{ headerShown: false }} />
-            <Stack.Screen name="article" options={{ headerShown: false }} />
-            <Stack.Screen
-              name="audience/[name]"
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="registration"
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen name="course" options={{ headerShown: false }} />
-            <Stack.Screen name="login" options={{ headerShown: false }} />
-            <Stack.Screen name="oauth2redirect" options={{ headerShown: false }} />
-          </Stack>
+          <View style={{ flex: 1 }}>
+            <Stack>
+              <Stack.Screen name="index" options={{ headerShown: false }} />
+              <Stack.Screen
+                name="(tabs)"
+                options={{
+                  headerShown: false,
+                }}
+              />
+              <Stack.Screen name="modal" options={{ headerShown: false }} />
+              <Stack.Screen name="event" options={{ headerShown: false }} />
+              <Stack.Screen name="podcast" options={{ headerShown: false }} />
+              <Stack.Screen name="journal" options={{ headerShown: false }} />
+              <Stack.Screen name="article" options={{ headerShown: false }} />
+              <Stack.Screen
+                name="audience/[name]"
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="registration"
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen name="course" options={{ headerShown: false }} />
+              <Stack.Screen name="login" options={{ headerShown: false }} />
+              <Stack.Screen name="oauth2redirect" options={{ headerShown: false }} />
+            </Stack>
+            <BottomSystemBar />
+          </View>
         </QueryClientProvider>
       </ImageProvider>
     </SafeAreaProvider>
