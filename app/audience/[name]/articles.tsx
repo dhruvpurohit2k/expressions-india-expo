@@ -90,28 +90,30 @@ export default function AudienceArticles() {
           renderItem={({ item, index }) => (
             <Animated.View entering={SlideInDown.duration(450).delay(Math.min(index, 8) * 70)}>
               <Link href={`/article/${item.id}`} asChild>
-                <Pressable
-                  style={({ pressed }) => [
-                    {
-                      backgroundColor: theme.backgroundColorLight,
-                      borderRadius: 10,
-                      overflow: "hidden",
-                      elevation: 1,
-                      flexDirection: "row",
-                    },
-                    pressed && { opacity: 0.85, transform: [{ scale: 0.99 }] },
-                  ]}
-                >
+                <Pressable>
+                  {({ pressed }) => (
+                  <View
+                    style={[
+                      {
+                        backgroundColor: theme.backgroundColorLight,
+                        borderRadius: 10,
+                        overflow: "hidden",
+                        elevation: 1,
+                        flexDirection: "row",
+                      },
+                      pressed && { opacity: 0.85, transform: [{ scale: 0.99 }] },
+                    ]}
+                  >
                   {item.thumbnailUrl ? (
                     <Image
                       source={{ uri: item.thumbnailUrl }}
-                      style={{ width: 88, height: 88, resizeMode: "cover" }}
+                      style={{ width: 120, height: 120, resizeMode: "cover" }}
                     />
                   ) : (
                     <View
                       style={{
-                        width: 88,
-                        height: 88,
+                        width: 120,
+                        height: 120,
                         backgroundColor: theme.backgroundColorDark,
                         alignItems: "center",
                         justifyContent: "center",
@@ -133,14 +135,16 @@ export default function AudienceArticles() {
                       {item.title}
                     </Text>
                     <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
-                      <View style={{ backgroundColor: theme.red + "18", borderRadius: 20, paddingHorizontal: 8, paddingVertical: 2 }}>
-                        <Text style={{ fontSize: 10, color: theme.red, fontFamily: theme.fontBold }}>{item.category}</Text>
+                      <View style={{ backgroundColor: theme.red, borderRadius: 20, paddingHorizontal: 8, paddingVertical: 2 }}>
+                        <Text style={{ fontSize: 10, color: "white", fontFamily: theme.fontBold }}>{item.category}</Text>
                       </View>
                       <Text style={{ fontSize: 10, color: "hsl(0,0%,55%)", fontFamily: theme.font }}>
-                        {format(item.createdAt, "do MMM yyyy")}
+                        {format(item.publishedAt, "do MMM yyyy")}
                       </Text>
                     </View>
                   </View>
+                  </View>
+                  )}
                 </Pressable>
               </Link>
             </Animated.View>
