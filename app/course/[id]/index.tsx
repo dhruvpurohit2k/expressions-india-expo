@@ -6,7 +6,10 @@ import {
   Text,
   View,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
 import { ChevronLeft, Lock, Unlock, ShoppingCart } from "lucide-react-native";
 import WebView from "react-native-webview";
 import { useCourseQuery } from "@/src/hooks/useCourseQuery";
@@ -37,7 +40,12 @@ export default function CourseOverview() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const globalStyle = styleFactory();
   const isFocused = useIsFocused();
-  const { data: course, isLoading, error } = useCourseQuery(id, { enabled: isFocused });
+  const insets = useSafeAreaInsets();
+  const {
+    data: course,
+    isLoading,
+    error,
+  } = useCourseQuery(id, { enabled: isFocused });
 
   if (isLoading) {
     return (
@@ -285,7 +293,8 @@ export default function CourseOverview() {
           flexDirection: "row",
           gap: 10,
           paddingHorizontal: 15,
-          paddingVertical: 12,
+          paddingTop: 12,
+          paddingBottom: 12 + insets.bottom,
           borderTopWidth: 1,
           borderTopColor: "rgba(0,0,0,0.07)",
           backgroundColor: "white",
@@ -312,7 +321,7 @@ export default function CourseOverview() {
           <Text
             style={{ color: "white", fontFamily: theme.fontBold, fontSize: 15 }}
           >
-            Start Demo
+            Start
           </Text>
         </Pressable>
 
@@ -332,8 +341,16 @@ export default function CourseOverview() {
               borderWidth: 1.5,
               borderColor: theme.red,
             },
-            pressed && !course.registrationUrl && { opacity: 0.85, transform: [{ scale: 0.98 }] },
-            pressed && course.registrationUrl && { opacity: 0.85, transform: [{ scale: 0.98 }] },
+            pressed &&
+            !course.registrationUrl && {
+              opacity: 0.85,
+              transform: [{ scale: 0.98 }],
+            },
+            pressed &&
+            course.registrationUrl && {
+              opacity: 0.85,
+              transform: [{ scale: 0.98 }],
+            },
             !course.registrationUrl && { opacity: 0.5 },
           ]}
         >

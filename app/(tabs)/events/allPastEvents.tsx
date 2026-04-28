@@ -14,6 +14,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Link } from "expo-router";
+import { safeDate } from "@/src/lib/date";
 
 const LIMIT = 10;
 
@@ -26,7 +27,9 @@ function formatDate(date: Date) {
   return `${date.getDate()} ${MONTHS[date.getMonth()]} ${date.getFullYear()}`;
 }
 
-function formatDateRange(startDate: Date | null, endDate: Date | null) {
+function formatDateRange(startRaw: Date | null, endRaw: Date | null) {
+  const startDate = safeDate(startRaw);
+  const endDate = safeDate(endRaw);
   if (!startDate) return "Date TBA";
   if (!endDate) return formatDate(startDate);
   return `${formatDate(startDate)} – ${formatDate(endDate)}`;

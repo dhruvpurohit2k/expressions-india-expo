@@ -169,7 +169,12 @@ export default function RootLayout() {
       <ImageProvider>
         <QueryClientProvider client={queryClient}>
           <View style={{ flex: 1 }}>
-            <Stack>
+            <Stack
+              screenOptions={{
+                gestureEnabled: true,
+                fullScreenGestureEnabled: true,
+              }}
+            >
               <Stack.Screen name="index" options={{ headerShown: false }} />
               <Stack.Screen
                 name="(tabs)"

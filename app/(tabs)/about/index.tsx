@@ -17,7 +17,7 @@ type Tab = "aboutUs" | "meetDir" | "team" | "contact";
 const TABS: { key: Tab; label: string }[] = [
   { key: "aboutUs", label: "About Us" },
   { key: "meetDir", label: "Director" },
-  { key: "team", label: "Team" },
+  // { key: "team", label: "Team" },
   { key: "contact", label: "Contact Us" },
 ];
 
@@ -35,7 +35,7 @@ export default function About() {
       />
       {activeTab === "aboutUs" && <AboutUs />}
       {activeTab === "meetDir" && <Director />}
-      {activeTab === "team" && <Team />}
+      {/* {activeTab === "team" && <Team />} */}
       {activeTab === "contact" && <ContactScreen />}
     </View>
   );

@@ -29,7 +29,7 @@ function getEmbedHtml(url: string): string {
   return `<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"><style>*{margin:0;padding:0}html,body{width:100%;height:100%;background:#000;overflow:hidden}video{width:100%;height:100%}</style></head><body><video src="${url}" controls playsinline></video></body></html>`;
 }
 
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import {
   Menu,
   X,
@@ -51,6 +51,7 @@ export default function ChapterView() {
   const { id, chapterId } = useLocalSearchParams<{ id: string; chapterId: string }>();
   const globalStyle = styleFactory();
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const insets = useSafeAreaInsets();
 
   const isFocused = useIsFocused();
   const { data: course, isLoading: courseLoading, error: courseError } = useCourseQuery(id, { enabled: isFocused });
@@ -452,7 +453,8 @@ export default function ChapterView() {
           flexDirection: "row",
           gap: 10,
           paddingHorizontal: 15,
-          paddingVertical: 12,
+          paddingTop: 12,
+          paddingBottom: 12 + insets.bottom,
           borderTopWidth: 1,
           borderTopColor: "rgba(0,0,0,0.07)",
           backgroundColor: "white",

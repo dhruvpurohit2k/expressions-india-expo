@@ -11,14 +11,6 @@ export default function Director() {
         { paddingHorizontal: 20, backgroundColor: theme.backgroundColorLight },
       ]}
     >
-      {/*<View
-        style={[
-          // globalStyle.container,
-          { marginHorizontal: 0 },
-          // { backgroundColor: theme.backgroundColorLight, elevation: 5 },
-        ]}
-      >*/}
-      {/*<Text style={[globalStyle.sectionHeading]}>DIRECTOR</Text>*/}
       <View
         style={{
           flexDirection: "row",
@@ -28,6 +20,7 @@ export default function Director() {
           borderRadius: 10,
           // paddingHorizontal: 10,
           // marginHorizontal: 20,
+          marginVertical: 15,
           gap: 10,
         }}
       >

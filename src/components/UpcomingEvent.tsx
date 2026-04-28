@@ -15,10 +15,13 @@ import { Link } from "expo-router";
 import { format } from "date-fns";
 import Animated, { FadeInUp, SlideInDown } from "react-native-reanimated";
 import Pagination from "./Pagination";
+import { safeDate } from "../lib/date";
 
 const LIMIT = 6;
 
-function formatDateRange(startDate: Date | null, endDate: Date | null) {
+function formatDateRange(startRaw: Date | null, endRaw: Date | null) {
+  const startDate = safeDate(startRaw);
+  const endDate = safeDate(endRaw);
   if (!startDate) return "Date TBA";
   const start = format(startDate, "do MMM - yy");
   if (!endDate) return start;

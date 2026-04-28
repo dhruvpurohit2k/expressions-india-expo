@@ -1,4 +1,5 @@
 import { useEventsByAudience } from "@/src/hooks/useEventsByAudience";
+import { safeDate } from "@/src/lib/date";
 import { AUDIENCE_LABELS } from "@/src/types/audience";
 import { styleFactory } from "@/src/styleFactory";
 import { theme } from "@/src/theme";
@@ -136,7 +137,7 @@ export default function AudienceEvents() {
                         </Text>
                         <View style={{ flexDirection: "row", gap: 8, alignItems: "center" }}>
                           <Text style={{ fontSize: 11, color: "hsl(0,0%,55%)", fontFamily: theme.font }}>
-                            {item.startDate ? format(item.startDate, "do MMM yyyy") : "Date TBA"}
+                            {(() => { const sd = safeDate(item.startDate); return sd ? format(sd, "do MMM yyyy") : "Date TBA"; })()}
                           </Text>
                           {item.isOnline && (
                             <View style={{ backgroundColor: "#eff6ff", borderRadius: 20, paddingHorizontal: 7, paddingVertical: 2 }}>

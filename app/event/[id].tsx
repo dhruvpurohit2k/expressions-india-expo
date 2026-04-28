@@ -1,4 +1,5 @@
 import { useImageContext } from "@/src/context/imageContext";
+import { safeDate } from "@/src/lib/date";
 import { useEvent } from "@/src/hooks/useEvent";
 import { useIsFocused } from "@react-navigation/native";
 import { styleFactory } from "@/src/styleFactory";
@@ -365,10 +366,14 @@ function UpcomingEventDetail({
               <View style={{ marginBottom: 24 }}>
                 <Text style={upcomingLabel}>Date & Time</Text>
                 <Text style={upcomingValue}>
-                  {event.startDate ? formatDate(event.startDate, "do MMM, yy") : "Date TBA"}
-                  {event.startDate && event.endDate
-                    ? ` – ${formatDate(event.endDate, "do MMM, yy")}`
-                    : ""}
+                  {(() => {
+                    const sd = safeDate(event.startDate);
+                    const ed = safeDate(event.endDate);
+                    if (!sd) return "Date TBA";
+                    return ed
+                      ? `${formatDate(sd, "do MMM, yy")} – ${formatDate(ed, "do MMM, yy")}`
+                      : formatDate(sd, "do MMM, yy");
+                  })()}
                 </Text>
                 {(() => {
                   const start = event.startTime ? parseTime(event.startTime) : null;
@@ -640,10 +645,14 @@ function CompletedEventDetail({
               When
             </Text>
             <Text style={{ fontSize: 15, color: theme.text }}>
-              {event.startDate ? formatDate(event.startDate, "do MMM, yyyy") : "Date TBA"}
-              {event.startDate && event.endDate
-                ? ` – ${formatDate(event.endDate, "do MMM, yyyy")}`
-                : ""}
+              {(() => {
+                const sd = safeDate(event.startDate);
+                const ed = safeDate(event.endDate);
+                if (!sd) return "Date TBA";
+                return ed
+                  ? `${formatDate(sd, "do MMM, yyyy")} – ${formatDate(ed, "do MMM, yyyy")}`
+                  : formatDate(sd, "do MMM, yyyy");
+              })()}
             </Text>
             {event.startTime && (() => {
               const start = parseTime(event.startTime!);

@@ -2,7 +2,10 @@ import { theme } from "@/src/theme";
 import { Link } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { View, Text, Pressable } from "react-native";
-import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import { styleFactory } from "@/src/styleFactory";
 
@@ -31,28 +34,28 @@ const options: Option[] = [
   },
   {
     icon: "people-outline",
-    text: "Parent",
+    text: "Parents And Family",
     code: "parent",
     bg: "#e8f8f0",
     iconColor: "#16a34a",
   },
   {
     icon: "chatbubbles-outline",
-    text: "Counselor",
+    text: "Counselor\n(School and University)",
     code: "counselor",
     bg: "#f0ebff",
     iconColor: "#7c3aed",
   },
   {
     icon: "business-outline",
-    text: "Head of School",
+    text: "Head of Institute",
     code: "head_of_department",
     bg: "#fef3e2",
     iconColor: "#d97706",
   },
   {
     icon: "briefcase-outline",
-    text: "Mental Health Professional",
+    text: "Mental Health Professional & Others",
     code: "mental_health_professional",
     bg: "#e6f7f7",
     iconColor: "#0d9488",
