@@ -1,7 +1,7 @@
 import { API_URL } from "../lib/config";
 import z from "zod";
 import { EventListItemSchema } from "../types/event";
-import { ApiMeta } from "../utils/api";
+import { ApiMeta, safeJson } from "../utils/api";
 
 export type UpcomingEventsResponse = {
   data: z.infer<typeof EventListItemSchema>[] | null;
@@ -18,7 +18,7 @@ export async function fetchUpcomingEventList({
   const response = await fetch(
     `${API_URL}/event/upcoming?limit=${limit ?? 10}&offset=${offset ?? 0}`,
   );
-  const json = await response.json();
+  const json = await safeJson(response);
 
   if (!json.success) {
     throw new Error(json.error?.message ?? "Request failed");

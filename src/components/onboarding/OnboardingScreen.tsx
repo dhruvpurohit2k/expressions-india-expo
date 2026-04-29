@@ -12,7 +12,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { theme } from "@/src/theme";
 import { markOnboardingDone } from "@/src/lib/storage";
 import {
-  useGoogleSignIn,
+  signInWithGoogle,
   signInWithApple,
   isAppleAvailable,
   SignInCancelled,
@@ -25,7 +25,6 @@ export default function OnboardingScreen({
 }) {
   const [loading, setLoading] = useState<"google" | "apple" | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const { signIn: signInWithGoogle } = useGoogleSignIn();
 
   async function finish() {
     await markOnboardingDone();

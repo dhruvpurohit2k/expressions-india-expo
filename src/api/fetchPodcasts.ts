@@ -1,7 +1,7 @@
 import { API_URL } from "../lib/config";
 import z from "zod";
 import { PodcastListItemSchema } from "../types/podcast";
-import { ApiMeta } from "../utils/api";
+import { ApiMeta, safeJson } from "../utils/api";
 
 export type PodcastsResponse = {
   data: z.infer<typeof PodcastListItemSchema>[] | null;
@@ -18,7 +18,7 @@ export async function fetchPodcastList({
   const response = await fetch(
     `${API_URL}/podcast?limit=${limit ?? 10}&offset=${offset ?? 0}`,
   );
-  const json = await response.json();
+  const json = await safeJson(response);
 
   if (!json.success) {
     throw new Error(json.error?.message ?? "Request failed");

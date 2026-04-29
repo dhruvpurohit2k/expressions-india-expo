@@ -1,10 +1,11 @@
 import { API_URL } from "../lib/config";
 import z from "zod";
 import { LatestFeedItemSchema } from "../types/latestFeed";
+import { safeJson } from "../utils/api";
 
 export async function fetchLatestFeed(): Promise<z.infer<typeof LatestFeedItemSchema>[]> {
   const response = await fetch(`${API_URL}/latest-activity`);
-  const json = await response.json();
+  const json = await safeJson(response);
 
   if (!json.success) {
     throw new Error(json.error?.message ?? "Request failed");

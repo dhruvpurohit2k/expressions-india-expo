@@ -6,15 +6,21 @@
   "build": {
     "development": {
       "developmentClient": true,
-      "distribution": "internal"
+      "distribution": "internal",
+      "env": {
+        "EXPO_PUBLIC_API_URL": "https://deep-doodles-visit.loca.lt/api",
+        "EXPO_PUBLIC_REFRESH_TIME": "300000",
+        "EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID": "1065952993884-7qn72e9hup7ltr6tl4i7tt6evhdurru0.apps.googleusercontent.com",
+        "EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID": "1065952993884-q7vcgrtarmskc0npsktuegvhv4n7vnu2.apps.googleusercontent.com"
+      }
     },
     "preview": {
       "distribution": "internal",
       "env": {
         "EXPO_PUBLIC_API_URL": "https://13.206.10.230.nip.io/api",
         "EXPO_PUBLIC_REFRESH_TIME": "300000",
-        "EXPO_PUBLIC_GOOGLE_EXPO_CLIENT_ID": "448336239210-eqi6nkcupsgjq78vqgpgqkg16lj17kbc.apps.googleusercontent.com",
-        "EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID": "1065952993884-5qgmgao7lmvt4ee37p04hdsdu46n0le6.apps.googleusercontent.com"
+        "EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID": "1065952993884-7qn72e9hup7ltr6tl4i7tt6evhdurru0.apps.googleusercontent.com",
+        "EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID": "1065952993884-q7vcgrtarmskc0npsktuegvhv4n7vnu2.apps.googleusercontent.com"
       }
     },
     "production": {
@@ -22,8 +28,8 @@
       "env": {
         "EXPO_PUBLIC_API_URL": "https://13.206.10.230.nip.io/api",
         "EXPO_PUBLIC_REFRESH_TIME": "300000",
-        "EXPO_PUBLIC_GOOGLE_EXPO_CLIENT_ID": "448336239210-eqi6nkcupsgjq78vqgpgqkg16lj17kbc.apps.googleusercontent.com",
-        "EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID": "1065952993884-5qgmgao7lmvt4ee37p04hdsdu46n0le6.apps.googleusercontent.com"
+        "EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID": "1065952993884-7qn72e9hup7ltr6tl4i7tt6evhdurru0.apps.googleusercontent.com",
+        "EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID": "1065952993884-q7vcgrtarmskc0npsktuegvhv4n7vnu2.apps.googleusercontent.com"
       }
     }
   },

@@ -33,6 +33,10 @@ export async function tryRefresh(): Promise<string | null> {
         return null;
       }
       const data = json.data as RefreshResult;
+      // Guard against the logout race: if clearAuth() ran while the network
+      // request was in-flight, the refresh token is gone — don't re-store.
+      const stillValid = await getRefreshToken();
+      if (!stillValid) return null;
       await storeAuth(data.accessToken, data.refreshToken, {
         userId: data.userId,
         email: data.email,

@@ -5,29 +5,20 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": [
-      "expressionsindia",
-      "com.googleusercontent.apps.1065952993884-5qgmgao7lmvt4ee37p04hdsdu46n0le6"
-    ],
+    "scheme": "expressionsindia",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "usesAppleSignIn": true,
-      "bundleIdentifier": "com.expressionsindia.app",
-      "infoPlist": {
-        "NSAppTransportSecurity": {
-          "NSAllowsArbitraryLoads": true
-        }
-      }
+      "bundleIdentifier": "com.expressionsindia.app"
     },
     "androidStatusBar": {
-      "backgroundColor": "#000000",
+      "backgroundColor": "#dd382c",
       "barStyle": "light-content"
     },
     "android": {
       "package": "com.expressionsindia.app",
-      "usesCleartextTraffic": true,
+      "usesCleartextTraffic": false,
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/android-icon-foreground.png",
         "backgroundImage": "./assets/images/android-icon-background.png"
@@ -47,11 +38,11 @@
           "image": "./assets/images/splash-icon.png",
           "imageWidth": 200,
           "resizeMode": "contain",
-          "backgroundColor": "#ffffff"
+          "backgroundColor": "#dd382c"
         }
       ],
       "expo-secure-store",
-      "expo-apple-authentication"
+      "@react-native-google-signin/google-signin"
     ],
     "experiments": {
       "typedRoutes": true

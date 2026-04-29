@@ -23,7 +23,6 @@ export const PodcastCard = memo(function PodcastCard({
   index: number;
 }) {
   const thumb = getYouTubeThumbnail(item.link);
-  console.log(thumb);
   return (
     <Animated.View
       style={{ flex: 1 }}

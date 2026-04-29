@@ -11,7 +11,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 
 import {
-  useGoogleSignIn,
+  signInWithGoogle,
   signInWithApple,
   isAppleAvailable,
   SignInCancelled,
@@ -28,7 +28,6 @@ export default function LoginScreen() {
 
   const [loading, setLoading] = useState<"google" | "apple" | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const { signIn: signInWithGoogle } = useGoogleSignIn();
 
   function navigateAfterAuth() {
     // Always dismiss the full login + oauth2redirect stack back to (tabs).

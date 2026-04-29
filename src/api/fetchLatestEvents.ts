@@ -1,10 +1,11 @@
 import { API_URL } from "../lib/config";
 import z from "zod";
 import { EventListItemSchema } from "../types/event";
+import { safeJson } from "../utils/api";
 
 export async function fetchLatestEvents(): Promise<z.infer<typeof EventListItemSchema>[]> {
   const response = await fetch(`${API_URL}/event`);
-  const json = await response.json();
+  const json = await safeJson(response);
 
   if (!json.success) {
     throw new Error(json.error?.message ?? "Request failed");

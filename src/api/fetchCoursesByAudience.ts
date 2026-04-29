@@ -20,7 +20,7 @@ export async function fetchCoursesByAudience({
   const response = await fetch(
     `${API_URL}/course/audience/${audience}?limit=${limit ?? 10}&offset=${offset ?? 0}`,
   );
-  const json = await response.json();
+  const json = await safeJson(response);
   if (!json.success) throw new Error(json.error?.message ?? "Request failed");
   const parsed = z.array(CourseListItemSchema).safeParse(json.data);
   if (!parsed.success) throw new Error(parsed.error.message);

@@ -1,11 +1,12 @@
 import { API_URL } from "../lib/config";
 import { JournalSchema, Journal } from "../types/journal";
+import { safeJson } from "../utils/api";
 
 export async function fetchJournal(id: string): Promise<Journal> {
   const response = await fetch(
     `${API_URL}/journal/${id}`,
   );
-  const json = await response.json();
+  const json = await safeJson(response);
 
   if (!json.success) {
     throw new Error(json.error?.message ?? "Request failed");

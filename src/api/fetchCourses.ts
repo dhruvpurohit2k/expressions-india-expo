@@ -1,7 +1,7 @@
 import { API_URL } from "../lib/config";
 import { z } from "zod";
 import { CourseListItemSchema } from "../types/course";
-import { ApiMeta } from "../utils/api";
+import { ApiMeta, safeJson } from "../utils/api";
 
 export type CoursesResponse = {
   data: z.infer<typeof CourseListItemSchema>[];
@@ -33,7 +33,7 @@ export async function fetchCourseList(
   const response = await fetch(
     `${API_URL}/course?${query.toString()}`,
   );
-  const json = await response.json();
+  const json = await safeJson(response);
 
   if (!json.success) {
     throw new Error(json.error?.message ?? "Request failed");

@@ -1,10 +1,11 @@
 import { API_URL } from "../lib/config";
 import { z } from "zod";
 import { TeamSchema } from "../types/team";
+import { safeJson } from "../utils/api";
 
 export async function fetchTeams(): Promise<z.infer<typeof TeamSchema>[]> {
   const response = await fetch(`${API_URL}/team`);
-  const json = await response.json();
+  const json = await safeJson(response);
 
   if (!json.success) {
     throw new Error(json.error?.message ?? "Request failed");

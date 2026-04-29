@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { API_URL } from "../lib/config";
+import { safeJson } from "../utils/api";
 
 const BrochureItemSchema = z.object({
   id: z.string(),
@@ -14,7 +15,7 @@ export type BrochureItem = z.infer<typeof BrochureItemSchema>;
 export async function fetchBrochure(): Promise<BrochureItem | null> {
   const response = await fetch(`${API_URL}/brochure?limit=1&offset=0`);
   if (!response.ok) throw new Error(`Request failed: ${response.status}`);
-  const json = await response.json();
+  const json = await safeJson(response);
 
   if (!json.success) {
     throw new Error(json.error?.message ?? "Request failed");

@@ -6,11 +6,19 @@ export type ApiMeta = {
   totalPages?: number;
 };
 
+export async function safeJson(res: Response): Promise<unknown> {
+  try {
+    return await res.json();
+  } catch {
+    throw new Error(`Server error (${res.status}): unexpected response`);
+  }
+}
+
 export async function parseApiResponse<T>(
   response: Response,
   dataSchema: z.ZodType<T>,
 ): Promise<T | null> {
-  const json = await response.json();
+  const json = await safeJson(response);
   if (!json.success) {
     throw new Error(json.error?.message ?? "Request failed");
   }

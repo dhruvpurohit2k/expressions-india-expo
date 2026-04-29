@@ -2,6 +2,7 @@ import { API_URL } from "../lib/config";
 import { CourseChapterDetailSchema, CourseChapterDetail } from "../types/course";
 import { getToken } from "../lib/auth";
 import { tryRefresh } from "./refresh";
+import { safeJson } from "../utils/api";
 
 /** Thrown when the backend returns 401 (not logged in) or 403 (not enrolled). */
 export class AccessError extends Error {
@@ -45,7 +46,7 @@ export async function fetchChapter(
     throw new AccessError(403, "Purchase this course to access this chapter");
   }
 
-  const json = await response.json();
+  const json = await safeJson(response);
   if (!json.success) {
     throw new Error(json.error?.message ?? "Request failed");
   }

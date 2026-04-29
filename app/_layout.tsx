@@ -79,11 +79,13 @@ focusManager.setEventListener((handleFocus) => {
   return () => subscription.remove();
 });
 
+const refreshTime = Number(process.env.EXPO_PUBLIC_REFRESH_TIME) || 300_000;
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 30_000,
-      refetchOnWindowFocus: true,
+      staleTime: refreshTime,
+      refetchOnWindowFocus: false,
     },
   },
 });
