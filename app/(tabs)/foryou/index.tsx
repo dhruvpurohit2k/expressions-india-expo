@@ -19,18 +19,18 @@ type Option = {
 
 const options: Option[] = [
   {
+    icon: "chatbubbles-outline",
+    text: "Counselor\n(School and University)",
+    code: "counselor",
+    bg: "#f0ebff",
+    iconColor: "#7c3aed",
+  },
+  {
     icon: "school-outline",
     text: "Student",
     code: "student",
     bg: "#fdeced",
     iconColor: theme.red,
-  },
-  {
-    icon: "book-outline",
-    text: "Teacher",
-    code: "teacher",
-    bg: "#e8f1fd",
-    iconColor: "#2563eb",
   },
   {
     icon: "people-outline",
@@ -40,11 +40,11 @@ const options: Option[] = [
     iconColor: "#16a34a",
   },
   {
-    icon: "chatbubbles-outline",
-    text: "Counselor\n(School and University)",
-    code: "counselor",
-    bg: "#f0ebff",
-    iconColor: "#7c3aed",
+    icon: "book-outline",
+    text: "Teacher",
+    code: "teacher",
+    bg: "#e8f1fd",
+    iconColor: "#2563eb",
   },
   {
     icon: "business-outline",

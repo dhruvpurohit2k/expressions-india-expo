@@ -13,12 +13,11 @@
       "bundleIdentifier": "com.expressionsindia.app"
     },
     "androidStatusBar": {
-      "backgroundColor": "#dd382c",
-      "barStyle": "light-content"
+      "backgroundColor": "#ffffff",
+      "barStyle": "dark-content"
     },
     "android": {
       "package": "com.expressionsindia.app",
-      "usesCleartextTraffic": false,
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/android-icon-foreground.png",
         "backgroundImage": "./assets/images/android-icon-background.png"
@@ -38,7 +37,7 @@
           "image": "./assets/images/splash-icon.png",
           "imageWidth": 200,
           "resizeMode": "contain",
-          "backgroundColor": "#dd382c"
+          "backgroundColor": "#ffffff"
         }
       ],
       "expo-secure-store",

@@ -1,4 +1,6 @@
 import { useCallback, useState } from "react";
+import { router } from "expo-router";
+import { useIsLoggedIn } from "@/src/hooks/useIsLoggedIn";
 import {
   ActivityIndicator,
   Alert,
@@ -42,11 +44,12 @@ export default function CourseIndex() {
   const globalStyle = styleFactory();
   const [currentTab, setCurrentTab] = useState<Tab>("browse");
   const isFocused = useIsFocused();
+  const loggedIn = useIsLoggedIn();
   const {
     data: myCourses,
     isLoading: myLoading,
     error: myError,
-  } = useMyCourses({ enabled: isFocused && currentTab === "enrolled" });
+  } = useMyCourses({ enabled: isFocused && currentTab === "enrolled" && loggedIn === true });
   const {
     data: certApps,
     isLoading: certLoading,
@@ -322,7 +325,31 @@ export default function CourseIndex() {
       )}
 
       {currentTab === "enrolled" &&
-        (myLoading ? (
+        (loggedIn === false ? (
+          <View
+            style={{ flex: 1, justifyContent: "center", alignItems: "center", paddingHorizontal: 24, gap: 16 }}
+          >
+            <Text style={[globalStyle.text, { textAlign: "center" }]}>
+              Sign in to view your enrolled courses.
+            </Text>
+            <Pressable
+              onPress={() => router.push({ pathname: "/login", params: { from: "account" } })}
+              style={({ pressed }) => [
+                {
+                  backgroundColor: theme.red,
+                  paddingVertical: 12,
+                  paddingHorizontal: 32,
+                  borderRadius: 10,
+                },
+                pressed && { opacity: 0.85, transform: [{ scale: 0.98 }] },
+              ]}
+            >
+              <Text style={{ color: "white", fontFamily: theme.fontBold, fontSize: 15 }}>
+                Login
+              </Text>
+            </Pressable>
+          </View>
+        ) : myLoading ? (
           <View
             style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
           >
@@ -337,13 +364,8 @@ export default function CourseIndex() {
               paddingHorizontal: 24,
             }}
           >
-            <Text
-              style={[
-                globalStyle.text,
-                { textAlign: "center", color: theme.red },
-              ]}
-            >
-              Sign in to see your enrolled courses.
+            <Text style={[globalStyle.text, { textAlign: "center", color: theme.red }]}>
+              Could not load enrolled courses. Please try again.
             </Text>
           </View>
         ) : !myCourses?.length ? (

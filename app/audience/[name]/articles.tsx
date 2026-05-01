@@ -134,11 +134,13 @@ export default function AudienceArticles() {
                     >
                       {item.title}
                     </Text>
-                    <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
-                      <View style={{ backgroundColor: theme.red, borderRadius: 20, paddingHorizontal: 8, paddingVertical: 2 }}>
-                        <Text style={{ fontSize: 10, color: "white", fontFamily: theme.fontBold }}>{item.category}</Text>
-                      </View>
-                      <Text style={{ fontSize: 10, color: "hsl(0,0%,55%)", fontFamily: theme.font }}>
+                    <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "flex-end" }}>
+                      {item.author ? (
+                        <Text style={{ fontSize: 11, color: "rgba(200,0,0,0.72)", fontFamily: theme.fontBold, flex: 1 }} numberOfLines={1}>
+                          {item.author}
+                        </Text>
+                      ) : <View style={{ flex: 1 }} />}
+                      <Text style={{ fontSize: 10, color: "hsl(0,0%,55%)", fontFamily: theme.font, marginLeft: 8 }}>
                         {format(item.publishedAt, "do MMM yyyy")}
                       </Text>
                     </View>

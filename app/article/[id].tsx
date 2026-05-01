@@ -130,48 +130,39 @@ export default function ArticleDetail() {
         )}
 
         <View style={{ paddingHorizontal: 20, paddingTop: 22 }}>
-          {/* Category chip */}
-          <Animated.View
-            entering={FadeInDown.duration(400).delay(100)}
-            style={{
-              alignSelf: "flex-start",
-              backgroundColor: "rgba(200,0,0,0.09)",
-              borderRadius: 20,
-              paddingHorizontal: 12,
-              paddingVertical: 5,
-              marginBottom: 14,
-            }}
-          >
-            <Text
-              style={{
-                color: theme.red,
-                fontSize: 11,
-                fontFamily: theme.fontBold,
-                letterSpacing: 0.8,
-                textTransform: "uppercase",
-              }}
-            >
-              {article.category}
-            </Text>
-          </Animated.View>
-
           {/* Title */}
           <Animated.Text
-            entering={FadeInDown.duration(450).delay(160)}
+            entering={FadeInDown.duration(450).delay(100)}
             style={{
               fontSize: 26,
               fontFamily: theme.fontBold,
               color: theme.sectionHeadingColor,
               lineHeight: 36,
-              marginBottom: 10,
+              marginBottom: 8,
             }}
           >
             {article.title}
           </Animated.Text>
 
+          {/* Author */}
+          {article.author ? (
+            <Animated.Text
+              entering={FadeInDown.duration(400).delay(180)}
+              style={{
+                fontSize: 12,
+                color: "rgba(200,0,0,0.72)",
+                fontFamily: theme.fontBold,
+                letterSpacing: 0.3,
+                marginBottom: 4,
+              }}
+            >
+              {article.author}
+            </Animated.Text>
+          ) : null}
+
           {/* Date */}
           <Animated.Text
-            entering={FadeInDown.duration(400).delay(220)}
+            entering={FadeInDown.duration(400).delay(240)}
             style={{
               fontSize: 13,
               color: "hsl(0,0%,58%)",

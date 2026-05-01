@@ -71,36 +71,39 @@ export const ArticleCard = memo(function ArticleCard({
                 <View
                   style={{ flexDirection: "row", flexWrap: "wrap", gap: 4 }}
                 >
-                  <View
-                    style={{
-                      backgroundColor: theme.red + "18",
-                      borderRadius: 5,
-                      paddingHorizontal: 6,
-                      paddingVertical: 3,
-                    }}
-                  >
-                    <Text
+                  {item.author ? (
+                    <View
                       style={{
-                        fontSize: 10,
-                        color: "white",
-                        fontFamily: theme.fontBold,
+                        backgroundColor: "transparent",
+                        borderRadius: 5,
+                        paddingHorizontal: 6,
+                        paddingVertical: 3,
                       }}
                     >
-                      {item.category}
-                    </Text>
-                  </View>
+                      <Text
+                        style={{
+                          fontSize: 10,
+                          color: theme.red,
+                          fontFamily: theme.fontBold,
+                        }}
+                      >
+                        {`By - ${item.author}`}
+                      </Text>
+                    </View>
+                  ) : null}
                   <View
                     style={{
-                      backgroundColor: theme.backgroundColorDark,
+                      backgroundColor: theme.backgroundColor,
                       borderRadius: 5,
                       paddingHorizontal: 6,
                       paddingVertical: 3,
+                      marginLeft: "auto",
                     }}
                   >
                     <Text
                       style={{
                         fontSize: 10,
-                        color: "hsl(0,0%,45%)",
+                        color: "hsl(0,0%,25%)",
                         fontFamily: theme.font,
                       }}
                     >

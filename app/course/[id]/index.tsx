@@ -10,13 +10,14 @@ import {
   SafeAreaView,
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
-import { ChevronLeft, Lock, Unlock, ShoppingCart } from "lucide-react-native";
+import { ChevronLeft, Lock, Unlock, ShoppingCart, LogIn } from "lucide-react-native";
 import WebView from "react-native-webview";
 import { useCourseQuery } from "@/src/hooks/useCourseQuery";
 import { useIsFocused } from "@react-navigation/native";
 import { styleFactory } from "@/src/styleFactory";
 import { theme } from "@/src/theme";
 import { handleRegistration } from "@/src/lib/handleRegistration";
+import { useIsLoggedIn } from "@/src/hooks/useIsLoggedIn";
 
 function getEmbedHtml(url: string): string {
   const ytMatch = url.match(
@@ -41,6 +42,7 @@ export default function CourseOverview() {
   const globalStyle = styleFactory();
   const isFocused = useIsFocused();
   const insets = useSafeAreaInsets();
+  const loggedIn = useIsLoggedIn();
   const {
     data: course,
     isLoading,
@@ -325,46 +327,57 @@ export default function CourseOverview() {
           </Text>
         </Pressable>
 
-        <Pressable
-          onPress={() => handleRegistration(course.registrationUrl, id)}
-          disabled={!course.registrationUrl}
-          style={({ pressed }) => [
-            {
-              flex: 1,
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: 8,
-              backgroundColor: "white",
-              paddingVertical: 13,
-              borderRadius: 10,
-              borderWidth: 1.5,
-              borderColor: theme.red,
-            },
-            pressed &&
-            !course.registrationUrl && {
-              opacity: 0.85,
-              transform: [{ scale: 0.98 }],
-            },
-            pressed &&
-            course.registrationUrl && {
-              opacity: 0.85,
-              transform: [{ scale: 0.98 }],
-            },
-            !course.registrationUrl && { opacity: 0.5 },
-          ]}
-        >
-          <ShoppingCart size={20} color={theme.red} strokeWidth={2} />
-          <Text
-            style={{
-              color: theme.red,
-              fontFamily: theme.fontBold,
-              fontSize: 15,
-            }}
+        {loggedIn === false ? (
+          <Pressable
+            onPress={() => router.push({ pathname: "/login", params: { from: "course" } })}
+            style={({ pressed }) => [
+              {
+                flex: 1,
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 8,
+                backgroundColor: "white",
+                paddingVertical: 13,
+                borderRadius: 10,
+                borderWidth: 1.5,
+                borderColor: theme.red,
+              },
+              pressed && { opacity: 0.85, transform: [{ scale: 0.98 }] },
+            ]}
           >
-            Buy Now
-          </Text>
-        </Pressable>
+            <LogIn size={20} color={theme.red} strokeWidth={2} />
+            <Text style={{ color: theme.red, fontFamily: theme.fontBold, fontSize: 15 }}>
+              Login to Buy
+            </Text>
+          </Pressable>
+        ) : (
+          <Pressable
+            onPress={() => handleRegistration(course.registrationUrl, id)}
+            disabled={!course.registrationUrl}
+            style={({ pressed }) => [
+              {
+                flex: 1,
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 8,
+                backgroundColor: "white",
+                paddingVertical: 13,
+                borderRadius: 10,
+                borderWidth: 1.5,
+                borderColor: theme.red,
+              },
+              pressed && { opacity: 0.85, transform: [{ scale: 0.98 }] },
+              !course.registrationUrl && { opacity: 0.5 },
+            ]}
+          >
+            <ShoppingCart size={20} color={theme.red} strokeWidth={2} />
+            <Text style={{ color: theme.red, fontFamily: theme.fontBold, fontSize: 15 }}>
+              Buy Now
+            </Text>
+          </Pressable>
+        )}
       </View>
     </SafeAreaView>
   );

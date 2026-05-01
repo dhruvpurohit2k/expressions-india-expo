@@ -3,7 +3,7 @@ import { z } from "zod";
 export const ArticleListItemSchema = z.object({
   id: z.string(),
   title: z.string(),
-  category: z.string(),
+  author: z.string().nullable().optional(),
   thumbnailUrl: z.string().nullable().optional(),
   createdAt: z.coerce.date().nullable().optional(),
   updatedAt: z.coerce.date().nullable().optional(),
@@ -15,7 +15,7 @@ export const ArticleDetailSchema = z.object({
   id: z.string(),
   title: z.string(),
   content: z.string(),
-  category: z.string(),
+  author: z.string().nullable().optional(),
   audience: z.array(z.object({ name: z.string() })).default([]),
   medias: z
     .array(

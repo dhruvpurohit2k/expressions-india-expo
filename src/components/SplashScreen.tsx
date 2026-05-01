@@ -1,129 +1,154 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 import {
   View,
-  StyleSheet,
   Text,
+  Image,
+  StyleSheet,
+  Dimensions,
   Animated as RNAnimated,
   PanResponder,
-  Dimensions,
 } from "react-native";
+import { Audio } from "expo-av";
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
-  useAnimatedProps,
-  withTiming,
   withDelay,
-  withSequence,
-  withRepeat,
   withSpring,
-  interpolate,
-  Easing,
+  withTiming,
 } from "react-native-reanimated";
-import Svg, { Path, Circle, G } from "react-native-svg";
+import { LinearGradient } from "expo-linear-gradient";
 import { theme } from "@/src/theme";
 
-const AnimatedG = Animated.createAnimatedComponent(G);
-const AnimatedPath = Animated.createAnimatedComponent(Path);
-const AnimatedCircle = Animated.createAnimatedComponent(Circle);
+const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
+const CELL_HEIGHT = Math.round(SCREEN_HEIGHT * 0.2);
 
-const CX = 150;
-const CY = 150;
-const SWAY_OFFSET_Y = 125;
-const { height: SCREEN_HEIGHT } = Dimensions.get("window");
+// Top grid (above text): rows 0-1
+// Bottom grid (below text): rows 2-3
+// Each row has 2 images side by side.
+// fromLeft alternates per cell so adjacent cells come from opposite sides.
+// Images drift in slowly across the 3-second audio — first at 300ms, last at ~2.8s
+const IMAGES = [
+  { source: require("../../assets/splashimages/1_s.png"),  fromLeft: true,  delay: 300  },
+  { source: require("../../assets/splashimages/13_s.png"), fromLeft: true,  delay: 550  },
+  { source: require("../../assets/splashimages/3_s.png"),  fromLeft: false, delay: 800  },
+  { source: require("../../assets/splashimages/18_s.png"), fromLeft: false, delay: 1050 },
+  { source: require("../../assets/splashimages/6_s.png"),  fromLeft: false, delay: 1300 },
+  { source: require("../../assets/splashimages/3.jpg"),    fromLeft: false, delay: 1550 },
+  { source: require("../../assets/splashimages/9_s.png"),  fromLeft: true,  delay: 1800 },
+  { source: require("../../assets/splashimages/5_s.gif"),  fromLeft: true,  delay: 2050 },
+];
 
-function petalPath(
-  angle: number,
-  innerR: number,
-  outerR: number,
-  spread: number,
-) {
-  const rad = (angle * Math.PI) / 180;
-  const radLeft = ((angle - spread) * Math.PI) / 180;
-  const radRight = ((angle + spread) * Math.PI) / 180;
-  const x1 = CX + innerR * Math.cos(rad);
-  const y1 = CY + innerR * Math.sin(rad);
-  const xTip = CX + outerR * Math.cos(rad);
-  const yTip = CY + outerR * Math.sin(rad);
-  const xLeft = CX + outerR * 0.6 * Math.cos(radLeft);
-  const yLeft = CY + outerR * 0.6 * Math.sin(radLeft);
-  const xRight = CX + outerR * 0.6 * Math.cos(radRight);
-  const yRight = CY + outerR * 0.6 * Math.sin(radRight);
-  return `M ${x1} ${y1} Q ${xLeft} ${yLeft} ${xTip} ${yTip} Q ${xRight} ${yRight} ${x1} ${y1} Z`;
-}
+const TOP_IMAGES = IMAGES.slice(0, 4);
+const BOTTOM_IMAGES = IMAGES.slice(4);
 
-const OUTER_COUNT = 8;
-const INNER_COUNT = 6;
-
-const outerPetals = Array.from({ length: OUTER_COUNT }, (_, i) => ({
-  path: petalPath((360 / OUTER_COUNT) * i - 90, 8, 70, 18),
-}));
-const innerPetals = Array.from({ length: INNER_COUNT }, (_, i) => ({
-  path: petalPath((360 / INNER_COUNT) * i - 60, 6, 45, 22),
-}));
-
-function OuterPetal({
-  path,
-  bloom,
-  index,
+function SplashCell({
+  source,
+  fromLeft,
+  delay,
+  onLoad,
+  started,
+  isLeft,
 }: {
-  path: string;
-  bloom: Animated.SharedValue<number>;
-  index: number;
+  source: ReturnType<typeof require>;
+  fromLeft: boolean;
+  delay: number;
+  onLoad: () => void;
+  started: boolean;
+  isLeft: boolean;
 }) {
-  const start = (index / OUTER_COUNT) * 0.55;
-  const gProps = useAnimatedProps(() => {
-    const p = interpolate(bloom.value, [start, start + 0.5], [0, 1], "clamp");
-    return { scale: p, originX: CX, originY: CY, opacity: p };
-  });
+  const translateX = useSharedValue(fromLeft ? -SCREEN_WIDTH : SCREEN_WIDTH);
+
+  useEffect(() => {
+    if (!started) return;
+    translateX.value = withDelay(
+      delay,
+      withSpring(0, { damping: 28, stiffness: 55, mass: 1.2 }),
+    );
+  }, [started]);
+
+  const animStyle = useAnimatedStyle(() => ({
+    transform: [{ translateX: translateX.value }],
+  }));
+
   return (
-    <AnimatedG animatedProps={gProps}>
-      <Path
-        d={path}
-        fill="hsl(4, 74%, 52%)"
-        stroke="hsl(4, 84%, 35%)"
-        strokeWidth={1.5}
+    <Animated.View style={[styles.cell, animStyle]}>
+      <Image
+        source={source}
+        style={styles.cellImage}
+        resizeMode="cover"
+        onLoad={onLoad}
+        onError={onLoad} // count errors too so we never get stuck
       />
-    </AnimatedG>
+      {/* top fade */}
+      <LinearGradient
+        colors={["white", "transparent"] as const}
+        style={StyleSheet.absoluteFill}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 0, y: 0.38 }}
+        pointerEvents="none"
+      />
+      {/* bottom fade */}
+      <LinearGradient
+        colors={["transparent", "white"] as const}
+        style={StyleSheet.absoluteFill}
+        start={{ x: 0, y: 0.62 }}
+        end={{ x: 0, y: 1 }}
+        pointerEvents="none"
+      />
+      {/* outer edge fade */}
+      <LinearGradient
+        colors={["white", "transparent"] as const}
+        style={StyleSheet.absoluteFill}
+        start={{ x: isLeft ? 0 : 1, y: 0 }}
+        end={{ x: isLeft ? 0.22 : 0.78, y: 0 }}
+        pointerEvents="none"
+      />
+      {/* inner edge fade (between cells) */}
+      <LinearGradient
+        colors={["transparent", "white"] as const}
+        style={StyleSheet.absoluteFill}
+        start={{ x: isLeft ? 0.78 : 0.22, y: 0 }}
+        end={{ x: isLeft ? 1 : 0, y: 0 }}
+        pointerEvents="none"
+      />
+    </Animated.View>
   );
 }
 
-function InnerPetal({
-  path,
-  bloom,
-  index,
+function ImageGrid({
+  images,
+  onLoad,
+  started,
 }: {
-  path: string;
-  bloom: Animated.SharedValue<number>;
-  index: number;
+  images: typeof TOP_IMAGES;
+  onLoad: () => void;
+  started: boolean;
 }) {
-  const start = 0.15 + (index / INNER_COUNT) * 0.45;
-  const gProps = useAnimatedProps(() => {
-    const p = interpolate(bloom.value, [start, start + 0.5], [0, 1], "clamp");
-    return { scale: p, originX: CX, originY: CY, opacity: p };
-  });
   return (
-    <AnimatedG animatedProps={gProps}>
-      <Path
-        d={path}
-        fill="hsl(4, 84%, 42%)"
-        stroke="hsl(4, 70%, 30%)"
-        strokeWidth={1}
-      />
-    </AnimatedG>
+    <View style={styles.grid}>
+      {/* Row 1 */}
+      <View style={styles.row}>
+        <SplashCell {...images[0]} onLoad={onLoad} started={started} isLeft={true} />
+        <SplashCell {...images[1]} onLoad={onLoad} started={started} isLeft={false} />
+      </View>
+      {/* Row 2 */}
+      <View style={styles.row}>
+        <SplashCell {...images[2]} onLoad={onLoad} started={started} isLeft={true} />
+        <SplashCell {...images[3]} onLoad={onLoad} started={started} isLeft={false} />
+      </View>
+    </View>
   );
 }
 
 export default function SplashScreen({ onFinish }: { onFinish: () => void }) {
-  // ── Reanimated (flower) ────────────────────────────────────────────
-  const stemProgress = useSharedValue(0);
-  const centerScale = useSharedValue(0);
-  const bloom = useSharedValue(0);
-  const swayAngle = useSharedValue(0);
+  const [loadedCount, setLoadedCount] = useState(0);
+  const [started, setStarted] = useState(false);
+  const handleLoad = useCallback(() => setLoadedCount((c) => c + 1), []);
+
   const textOpacity = useSharedValue(0);
-  const textY = useSharedValue(20);
+  const textY = useSharedValue(14);
   const subtitleOpacity = useSharedValue(0);
 
-  // ── RN Animated (dismiss + hint) ──────────────────────────────────
   const dismissY = useRef(new RNAnimated.Value(0)).current;
   const dismissOpacity = useRef(new RNAnimated.Value(1)).current;
   const hintOpacity = useRef(new RNAnimated.Value(0)).current;
@@ -133,11 +158,14 @@ export default function SplashScreen({ onFinish }: { onFinish: () => void }) {
   const isDismissing = useRef(false);
   const onFinishRef = useRef(onFinish);
   onFinishRef.current = onFinish;
+  const soundRef = useRef<Audio.Sound | null>(null);
 
   function dismiss() {
     if (isDismissing.current) return;
     isDismissing.current = true;
     if (timerRef.current) clearTimeout(timerRef.current);
+    soundRef.current?.stopAsync().catch(() => {});
+    soundRef.current?.unloadAsync().catch(() => {});
     RNAnimated.parallel([
       RNAnimated.timing(dismissY, {
         toValue: -SCREEN_HEIGHT,
@@ -152,52 +180,47 @@ export default function SplashScreen({ onFinish }: { onFinish: () => void }) {
     ]).start(() => onFinishRef.current());
   }
 
-  // Store dismiss in a ref so PanResponder (created once) can call latest
   const dismissRef = useRef(dismiss);
+  dismissRef.current = dismiss;
 
   const panResponder = useRef(
     PanResponder.create({
       onStartShouldSetPanResponder: () => true,
       onMoveShouldSetPanResponder: (_, gs) => gs.dy < -8,
       onPanResponderRelease: (_, gs) => {
-        if (gs.dy < -60 || gs.vy < -0.4) {
-          dismissRef.current();
-        }
+        if (gs.dy < -60 || gs.vy < -0.4) dismissRef.current();
       },
     }),
   ).current;
 
+  // Start once all images loaded, or after 3s fallback (covers gifs/errors)
   useEffect(() => {
-    // ── Flower animations ────────────────────────────────────────────
-    stemProgress.value = withTiming(1, {
-      duration: 700,
-      easing: Easing.out(Easing.cubic),
-    });
-    centerScale.value = withDelay(
-      620,
-      withTiming(1, { duration: 300, easing: Easing.out(Easing.back(1.8)) }),
-    );
-    bloom.value = withDelay(
-      950,
-      withTiming(1, { duration: 900, easing: Easing.out(Easing.cubic) }),
-    );
-    swayAngle.value = withDelay(
-      1950,
-      withRepeat(
-        withSequence(
-          withTiming(5, { duration: 900, easing: Easing.inOut(Easing.sin) }),
-          withTiming(-5, { duration: 1800, easing: Easing.inOut(Easing.sin) }),
-          withTiming(0, { duration: 900, easing: Easing.inOut(Easing.sin) }),
-        ),
-        -1,
-        false,
-      ),
-    );
-    textOpacity.value = withDelay(1700, withTiming(1, { duration: 600 }));
-    textY.value = withDelay(1700, withSpring(0, { damping: 14, stiffness: 100 }));
-    subtitleOpacity.value = withDelay(2200, withTiming(1, { duration: 500 }));
+    const fallback = setTimeout(() => setStarted(true), 3000);
+    return () => clearTimeout(fallback);
+  }, []);
 
-    // ── Hint: fade in then bounce ────────────────────────────────────
+  useEffect(() => {
+    if (loadedCount >= IMAGES.length) setStarted(true);
+  }, [loadedCount]);
+
+  useEffect(() => {
+    if (!started) return;
+
+    Audio.setAudioModeAsync({ playsInSilentModeIOS: false }).catch(() => {});
+    // Delay audio by 1600ms so it's 1 second in when the text appears at 2600ms
+    setTimeout(() => {
+      Audio.Sound.createAsync(
+        require("../../assets/splashscreenaudio.mp3"),
+        { shouldPlay: true, isLooping: false, volume: 0.6 },
+      ).then(({ sound }) => {
+        soundRef.current = sound;
+      }).catch(() => {});
+    }, 1600);
+
+    textOpacity.value = withDelay(2600, withTiming(1, { duration: 700 }));
+    textY.value = withDelay(2600, withSpring(0, { damping: 14, stiffness: 90 }));
+    subtitleOpacity.value = withDelay(3100, withTiming(1, { duration: 600 }));
+
     const hintTimer = setTimeout(() => {
       RNAnimated.timing(hintOpacity, {
         toValue: 1,
@@ -206,70 +229,21 @@ export default function SplashScreen({ onFinish }: { onFinish: () => void }) {
       }).start(() => {
         RNAnimated.loop(
           RNAnimated.sequence([
-            RNAnimated.timing(hintBounce, {
-              toValue: -7,
-              duration: 480,
-              useNativeDriver: true,
-            }),
-            RNAnimated.timing(hintBounce, {
-              toValue: 0,
-              duration: 480,
-              useNativeDriver: true,
-            }),
+            RNAnimated.timing(hintBounce, { toValue: -7, duration: 480, useNativeDriver: true }),
+            RNAnimated.timing(hintBounce, { toValue: 0, duration: 480, useNativeDriver: true }),
           ]),
         ).start();
       });
-    }, 2500);
+    }, 4500);
 
-    // ── Auto-dismiss ─────────────────────────────────────────────────
-    timerRef.current = setTimeout(() => dismissRef.current(), 10000);
+    timerRef.current = setTimeout(() => dismissRef.current(), 15000);
 
     return () => {
       clearTimeout(hintTimer);
       if (timerRef.current) clearTimeout(timerRef.current);
+      soundRef.current?.unloadAsync().catch(() => {});
     };
-  }, []);
-
-  // ── Animated styles (Reanimated) ──────────────────────────────────
-  const stemProps = useAnimatedProps(() => {
-    const h = interpolate(stemProgress.value, [0, 1], [0, 60]);
-    return {
-      d: `M ${CX} ${CY + 65} Q ${CX + 5} ${CY + 65 + h * 0.5} ${CX} ${CY + 65 + h}`,
-      strokeWidth: 3,
-      opacity: stemProgress.value,
-    };
-  });
-
-  const leaf1Props = useAnimatedProps(() => {
-    const p = interpolate(stemProgress.value, [0.45, 1], [0, 1], "clamp");
-    return {
-      d: `M ${CX} ${CY + 95} Q ${CX - 25} ${CY + 80} ${CX - 20} ${CY + 92}`,
-      strokeWidth: 2,
-      opacity: p,
-    };
-  });
-
-  const leaf2Props = useAnimatedProps(() => {
-    const p = interpolate(stemProgress.value, [0.6, 1], [0, 1], "clamp");
-    return {
-      d: `M ${CX} ${CY + 108} Q ${CX + 25} ${CY + 93} ${CX + 22} ${CY + 105}`,
-      strokeWidth: 2,
-      opacity: p,
-    };
-  });
-
-  const centerProps = useAnimatedProps(() => ({
-    r: interpolate(centerScale.value, [0, 1], [0, 12]),
-    opacity: centerScale.value,
-  }));
-
-  const swayStyle = useAnimatedStyle(() => ({
-    transform: [
-      { translateY: SWAY_OFFSET_Y },
-      { rotate: `${swayAngle.value}deg` },
-      { translateY: -SWAY_OFFSET_Y },
-    ],
-  }));
+  }, [started]);
 
   const textStyle = useAnimatedStyle(() => ({
     opacity: textOpacity.value,
@@ -288,59 +262,22 @@ export default function SplashScreen({ onFinish }: { onFinish: () => void }) {
       ]}
       {...panResponder.panHandlers}
     >
-      <View style={styles.glow} />
+      <ImageGrid images={TOP_IMAGES} onLoad={handleLoad} started={started} />
 
-      <Animated.View style={swayStyle}>
-        <Svg width={300} height={300} viewBox="0 0 300 300">
-          <AnimatedPath
-            animatedProps={stemProps}
-            stroke="hsl(120, 35%, 40%)"
-            fill="none"
-            strokeLinecap="round"
-          />
-          <AnimatedPath
-            animatedProps={leaf1Props}
-            stroke="hsl(120, 40%, 45%)"
-            fill="hsl(120, 40%, 50%)"
-            strokeLinecap="round"
-          />
-          <AnimatedPath
-            animatedProps={leaf2Props}
-            stroke="hsl(120, 40%, 45%)"
-            fill="hsl(120, 40%, 50%)"
-            strokeLinecap="round"
-          />
-          {outerPetals.map((p, i) => (
-            <OuterPetal key={`o${i}`} path={p.path} bloom={bloom} index={i} />
-          ))}
-          {innerPetals.map((p, i) => (
-            <InnerPetal key={`n${i}`} path={p.path} bloom={bloom} index={i} />
-          ))}
-          <AnimatedCircle
-            cx={CX}
-            cy={CY}
-            fill="hsl(45, 90%, 60%)"
-            stroke="hsl(35, 80%, 50%)"
-            strokeWidth={2}
-            animatedProps={centerProps}
-          />
-        </Svg>
-      </Animated.View>
+      <View style={styles.textSection}>
+        <Animated.Text style={[styles.title, textStyle]}>
+          Expressions India
+        </Animated.Text>
+        <Animated.Text style={[styles.subtitle, subtitleStyle]}>
+          Nurturing Minds, Enriching Lives
+        </Animated.Text>
+      </View>
 
-      <Animated.Text style={[styles.title, textStyle]}>
-        Expressions India
-      </Animated.Text>
-      <Animated.Text style={[styles.subtitle, subtitleStyle]}>
-        Nurturing Minds, Enriching Lives
-      </Animated.Text>
+      <ImageGrid images={BOTTOM_IMAGES} onLoad={handleLoad} started={started} />
 
-      {/* Swipe-up hint */}
       <RNAnimated.View style={[styles.hint, { opacity: hintOpacity }]}>
         <RNAnimated.Text
-          style={[
-            styles.hintArrow,
-            { transform: [{ translateY: hintBounce }] },
-          ]}
+          style={[styles.hintArrow, { transform: [{ translateY: hintBounce }] }]}
         >
           ↑
         </RNAnimated.Text>
@@ -353,48 +290,63 @@ export default function SplashScreen({ onFinish }: { onFinish: () => void }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "white",
     justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: theme.backgroundColor,
   },
-  glow: {
-    position: "absolute",
-    width: 250,
-    height: 250,
-    borderRadius: 125,
-    backgroundColor: "hsla(4, 74%, 52%, 0.08)",
+  grid: {
+    width: "100%",
+  },
+  row: {
+    flexDirection: "row",
+    width: "100%",
+  },
+  cell: {
+    width: SCREEN_WIDTH / 2,
+    height: CELL_HEIGHT,
+    overflow: "hidden",
+  },
+  cellImage: {
+    width: "100%",
+    height: "100%",
+  },
+  textSection: {
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 10,
   },
   title: {
     fontFamily: "Delius_400Regular",
-    fontSize: 32,
+    fontSize: 30,
     color: theme.sectionHeadingColor,
-    marginTop: 10,
-    letterSpacing: 1,
+    letterSpacing: 0.8,
+    textAlign: "center",
   },
   subtitle: {
     fontFamily: theme.font,
-    fontSize: 14,
+    fontSize: 13,
     color: theme.text,
-    marginTop: 8,
-    letterSpacing: 0.5,
-    opacity: 0.7,
+    marginTop: 5,
+    letterSpacing: 0.4,
+    opacity: 0.65,
+    textAlign: "center",
   },
   hint: {
     position: "absolute",
-    bottom: 52,
+    bottom: 44,
+    alignSelf: "center",
     alignItems: "center",
-    gap: 2,
+    gap: 4,
+    paddingHorizontal: 18,
+    paddingVertical: 10,
   },
   hintArrow: {
-    fontSize: 20,
+    fontSize: 18,
     color: theme.sectionHeadingColor,
-    opacity: 0.7,
   },
   hintText: {
-    fontFamily: theme.font,
-    fontSize: 12,
-    color: theme.text,
-    opacity: 0.5,
+    fontFamily: theme.fontBold,
+    fontSize: 13,
+    color: theme.sectionHeadingColor,
     letterSpacing: 0.3,
   },
 });
