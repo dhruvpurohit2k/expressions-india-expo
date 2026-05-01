@@ -5,6 +5,7 @@ import { Link } from "expo-router";
 import { theme } from "@/src/theme";
 import { tileColor } from "@/src/utils/tileColor";
 import type { CourseListItem } from "@/src/types/course";
+import { AUDIENCE_LABELS } from "@/src/types/audience";
 
 export const CourseCard = memo(function CourseCard({
   item,
@@ -80,10 +81,9 @@ export const CourseCard = memo(function CourseCard({
                             fontSize: 10,
                             color: "white",
                             fontFamily: theme.fontBold,
-                            textTransform: "capitalize",
                           }}
                         >
-                          {audience}
+                          {AUDIENCE_LABELS[audience] ?? audience}
                         </Text>
                       </View>
                     ))}

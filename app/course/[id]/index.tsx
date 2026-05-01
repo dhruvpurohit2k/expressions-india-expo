@@ -10,7 +10,13 @@ import {
   SafeAreaView,
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
-import { ChevronLeft, Lock, Unlock, ShoppingCart, LogIn } from "lucide-react-native";
+import {
+  ChevronLeft,
+  Lock,
+  Unlock,
+  ShoppingCart,
+  LogIn,
+} from "lucide-react-native";
 import WebView from "react-native-webview";
 import { useCourseQuery } from "@/src/hooks/useCourseQuery";
 import { useIsFocused } from "@react-navigation/native";
@@ -215,7 +221,7 @@ export default function CourseOverview() {
                       paddingHorizontal: 14,
                       paddingVertical: 13,
                       gap: 10,
-                      backgroundColor: tileColor(chapter.id),
+                      // backgroundColor: tileColor(chapter.id),
                     },
                     i > 0 && {
                       borderTopWidth: 1,
@@ -330,7 +336,9 @@ export default function CourseOverview() {
 
         {loggedIn === false ? (
           <Pressable
-            onPress={() => router.push({ pathname: "/login", params: { from: "course" } })}
+            onPress={() =>
+              router.push({ pathname: "/login", params: { from: "course" } })
+            }
             style={({ pressed }) => [
               {
                 flex: 1,
@@ -348,7 +356,13 @@ export default function CourseOverview() {
             ]}
           >
             <LogIn size={20} color={theme.red} strokeWidth={2} />
-            <Text style={{ color: theme.red, fontFamily: theme.fontBold, fontSize: 15 }}>
+            <Text
+              style={{
+                color: theme.red,
+                fontFamily: theme.fontBold,
+                fontSize: 15,
+              }}
+            >
               Login to Buy
             </Text>
           </Pressable>
@@ -374,7 +388,13 @@ export default function CourseOverview() {
             ]}
           >
             <ShoppingCart size={20} color={theme.red} strokeWidth={2} />
-            <Text style={{ color: theme.red, fontFamily: theme.fontBold, fontSize: 15 }}>
+            <Text
+              style={{
+                color: theme.red,
+                fontFamily: theme.fontBold,
+                fontSize: 15,
+              }}
+            >
               Buy Now
             </Text>
           </Pressable>

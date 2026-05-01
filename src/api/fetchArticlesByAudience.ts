@@ -1,6 +1,7 @@
 import { API_URL } from "../lib/config";
 import z from "zod";
 import { ArticleListItemSchema } from "../types/article";
+import { safeJson } from "../utils/api";
 import type { ApiMeta } from "../utils/api";
 
 export type ArticlesByAudienceResponse = {

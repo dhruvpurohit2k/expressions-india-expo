@@ -22,7 +22,6 @@ import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context"
 import Animated, {
   FadeInDown,
   FadeInUp,
-  SlideInDown,
 } from "react-native-reanimated";
 
 const SECTION_CARDS = [
@@ -109,7 +108,7 @@ export default function AudiencePage() {
       </Animated.View>
 
       <ScrollView
-        contentContainerStyle={{ paddingHorizontal: 18, paddingBottom: 48 }}
+        contentContainerStyle={{ paddingHorizontal: 18, paddingTop: 16, paddingBottom: 48 }}
         showsVerticalScrollIndicator={false}
       >
         {/* Description */}
@@ -169,7 +168,7 @@ export default function AudiencePage() {
           return (
             <Animated.View
               key={card.key}
-              entering={SlideInDown.duration(450).delay(index * 100)}
+              entering={FadeInUp.duration(450).delay(index * 100)}
             >
               <Link href={`/audience/${name}/${card.key}`} asChild>
                 <Pressable>

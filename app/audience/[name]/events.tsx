@@ -91,7 +91,7 @@ export default function AudienceEvents() {
         <FlatList
           data={events}
           keyExtractor={(item) => item.id}
-          contentContainerStyle={{ paddingHorizontal: 15, gap: 10, paddingBottom: 12 }}
+          contentContainerStyle={{ paddingHorizontal: 15, gap: 10, paddingTop: 12, paddingBottom: 12 }}
           renderItem={({ item, index }) => (
             <Animated.View entering={SlideInDown.duration(450).delay(Math.min(index, 8) * 70)}>
               <Link href={`/event/${item.id}`} asChild>

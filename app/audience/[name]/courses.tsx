@@ -98,8 +98,8 @@ export default function AudienceCourses() {
           contentContainerStyle={{
             paddingHorizontal: 10,
             gap: 10,
+            paddingTop: 12,
             paddingBottom: 12,
-            marginTop: 4,
           }}
           columnWrapperStyle={{ gap: 10, paddingHorizontal: 5 }}
           renderItem={renderCourse}
