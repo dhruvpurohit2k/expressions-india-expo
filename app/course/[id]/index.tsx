@@ -18,6 +18,7 @@ import { styleFactory } from "@/src/styleFactory";
 import { theme } from "@/src/theme";
 import { handleRegistration } from "@/src/lib/handleRegistration";
 import { useIsLoggedIn } from "@/src/hooks/useIsLoggedIn";
+import { tileColor } from "@/src/utils/tileColor";
 
 function getEmbedHtml(url: string): string {
   const ytMatch = url.match(
@@ -214,6 +215,7 @@ export default function CourseOverview() {
                       paddingHorizontal: 14,
                       paddingVertical: 13,
                       gap: 10,
+                      backgroundColor: tileColor(chapter.id),
                     },
                     i > 0 && {
                       borderTopWidth: 1,

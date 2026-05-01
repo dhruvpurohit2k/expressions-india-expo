@@ -17,6 +17,7 @@ import {
 } from "react-native";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import Animated, { FadeInDown, FadeInUp, SlideInDown } from "react-native-reanimated";
+import { tileColor } from "@/src/utils/tileColor";
 
 const LIMIT = 10;
 
@@ -98,7 +99,7 @@ export default function AudienceArticles() {
                   <View
                     style={[
                       {
-                        backgroundColor: theme.backgroundColorLight,
+                        backgroundColor: tileColor(item.id),
                         borderRadius: 10,
                         overflow: "hidden",
                         elevation: 1,
@@ -112,19 +113,7 @@ export default function AudienceArticles() {
                       source={{ uri: item.thumbnailUrl }}
                       style={{ width: 120, height: 120, resizeMode: "cover" }}
                     />
-                  ) : (
-                    <View
-                      style={{
-                        width: 120,
-                        height: 120,
-                        backgroundColor: theme.backgroundColorDark,
-                        alignItems: "center",
-                        justifyContent: "center",
-                      }}
-                    >
-                      <Text style={{ fontSize: 24 }}>📄</Text>
-                    </View>
-                  )}
+                  ) : null}
                   <View style={{ flex: 1, padding: 10, justifyContent: "space-between" }}>
                     <Text
                       numberOfLines={2}

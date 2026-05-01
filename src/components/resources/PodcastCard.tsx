@@ -2,9 +2,9 @@ import Animated, { SlideInDown } from "react-native-reanimated";
 import { memo } from "react";
 import { Image, Pressable, Text, View } from "react-native";
 import { Link } from "expo-router";
-import { Mic } from "lucide-react-native";
 import { theme } from "@/src/theme";
 import { formatDate } from "@/src/utils/date";
+import { tileColor } from "@/src/utils/tileColor";
 import type { PodcastListItem } from "@/src/types/podcast";
 
 function getYouTubeThumbnail(url: string): string | null {
@@ -34,7 +34,7 @@ export const PodcastCard = memo(function PodcastCard({
             <View
               style={[
                 {
-                  backgroundColor: "hsl(0 0% 100%)",
+                  backgroundColor: tileColor(item.id),
                   borderWidth: 1,
                   borderColor: "hsl(0 0% 93%)",
                   borderRadius: 5,
@@ -55,17 +55,7 @@ export const PodcastCard = memo(function PodcastCard({
                   resizeMode="cover"
                 />
               ) : (
-                <View
-                  style={{
-                    width: "100%",
-                    aspectRatio: 16 / 9,
-                    backgroundColor: theme.red + "12",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <Mic size={36} color={theme.red} strokeWidth={1.5} />
-                </View>
+                <View style={{ width: "100%", aspectRatio: 16 / 9 }} />
               )}
               <View style={{ padding: 8, gap: 6 }}>
                 <Text

@@ -2,8 +2,8 @@ import Animated, { SlideInDown } from "react-native-reanimated";
 import { memo } from "react";
 import { Image, Pressable, Text, View } from "react-native";
 import { Link } from "expo-router";
-import { BookOpen } from "lucide-react-native";
 import { theme } from "@/src/theme";
+import { tileColor } from "@/src/utils/tileColor";
 import type { CourseListItem } from "@/src/types/course";
 
 export const CourseCard = memo(function CourseCard({
@@ -27,7 +27,7 @@ export const CourseCard = memo(function CourseCard({
             <View
               style={[
                 {
-                  backgroundColor: "hsl(0, 0%, 100%)",
+                  backgroundColor: tileColor(item.id),
                   borderRadius: 12,
                   elevation: 1,
                   overflow: "hidden",
@@ -46,17 +46,7 @@ export const CourseCard = memo(function CourseCard({
                   resizeMode="cover"
                 />
               ) : (
-                <View
-                  style={{
-                    width: "100%",
-                    aspectRatio: 16 / 9,
-                    backgroundColor: "rgb(225,0,0)",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <BookOpen size={36} color={theme.red} strokeWidth={1.5} />
-                </View>
+                <View style={{ width: "100%", aspectRatio: 16 / 9 }} />
               )}
               <View style={{ padding: 8, gap: 6 }}>
                 <Text

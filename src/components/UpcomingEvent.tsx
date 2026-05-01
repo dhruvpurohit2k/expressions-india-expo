@@ -16,6 +16,7 @@ import { format } from "date-fns";
 import Animated, { FadeInUp, SlideInDown } from "react-native-reanimated";
 import Pagination from "./Pagination";
 import { safeDate } from "../lib/date";
+import { tileColor } from "../utils/tileColor";
 
 const LIMIT = 6;
 
@@ -76,7 +77,7 @@ export default function UpcomingEvents() {
                     <View
                       style={[
                         {
-                          backgroundColor: "hsl(0, 0%, 100%)",
+                          backgroundColor: tileColor(item.id),
                           borderRadius: 5,
                           borderWidth: 1,
                           borderColor: "hsl(0 0% 93%)",
@@ -100,25 +101,7 @@ export default function UpcomingEvents() {
                           resizeMode="cover"
                         />
                       ) : (
-                        <View
-                          style={{
-                            width: "100%",
-                            aspectRatio: 2 / 1,
-                            backgroundColor: theme.sectionHeadingColor,
-                            alignItems: "center",
-                            justifyContent: "center",
-                          }}
-                        >
-                          <Text
-                            style={{
-                              color: "white",
-                              fontSize: 36,
-                              opacity: 0.6,
-                            }}
-                          >
-                            🌸
-                          </Text>
-                        </View>
+                        <View style={{ width: "100%", aspectRatio: 2 / 1 }} />
                       )}
                       <View style={{ padding: 8, gap: 6 }}>
                         <Text

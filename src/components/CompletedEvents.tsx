@@ -16,6 +16,7 @@ import { useIsFocused } from "@react-navigation/native";
 import Animated, { FadeInUp, SlideInDown } from "react-native-reanimated";
 import { format } from "date-fns";
 import { safeDate } from "../lib/date";
+import { tileColor } from "../utils/tileColor";
 
 const LIMIT = 6;
 
@@ -76,7 +77,7 @@ export default function CompletedEvents() {
                     <View
                       style={[
                         {
-                          backgroundColor: "hsl(0, 0%, 100%)",
+                          backgroundColor: tileColor(item.id),
                           borderRadius: 5,
                           // elevation: 1,
                           borderWidth: 1,
@@ -100,25 +101,7 @@ export default function CompletedEvents() {
                           resizeMode="cover"
                         />
                       ) : (
-                        <View
-                          style={{
-                            width: "100%",
-                            aspectRatio: 2 / 1,
-                            backgroundColor: theme.sectionHeadingColor,
-                            alignItems: "center",
-                            justifyContent: "center",
-                          }}
-                        >
-                          <Text
-                            style={{
-                              color: "white",
-                              fontSize: 36,
-                              opacity: 0.6,
-                            }}
-                          >
-                            🌸
-                          </Text>
-                        </View>
+                        <View style={{ width: "100%", aspectRatio: 2 / 1 }} />
                       )}
                       <View style={{ padding: 8, gap: 6 }}>
                         <Text

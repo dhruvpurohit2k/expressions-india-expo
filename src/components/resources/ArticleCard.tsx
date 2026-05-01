@@ -4,6 +4,7 @@ import { Image, Pressable, Text, View } from "react-native";
 import { Link } from "expo-router";
 import { theme } from "@/src/theme";
 import { formatDate } from "@/src/utils/date";
+import { tileColor } from "@/src/utils/tileColor";
 import type { ArticleListItem } from "@/src/types/article";
 
 export const ArticleCard = memo(function ArticleCard({
@@ -24,7 +25,7 @@ export const ArticleCard = memo(function ArticleCard({
             <View
               style={[
                 {
-                  backgroundColor: "hsl(0, 0%, 100%)",
+                  backgroundColor: tileColor(item.id),
                   borderRadius: 12,
                   elevation: 1,
                   overflow: "hidden",
@@ -43,17 +44,7 @@ export const ArticleCard = memo(function ArticleCard({
                   resizeMode="cover"
                 />
               ) : (
-                <View
-                  style={{
-                    width: "100%",
-                    aspectRatio: 1,
-                    backgroundColor: theme.backgroundColorDark,
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <Text style={{ fontSize: 28 }}>📄</Text>
-                </View>
+                <View style={{ width: "100%", aspectRatio: 1 }} />
               )}
               <View style={{ padding: 8, gap: 6 }}>
                 <Text
