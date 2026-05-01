@@ -90,8 +90,8 @@ export default function CourseOverview() {
 
   return (
     <SafeAreaView
-      style={[globalStyle.screen, { paddingHorizontal: 5 }]}
-      edges={["top"]}
+      style={globalStyle.screen}
+      edges={["left", "right", "bottom"]}
     >
       {/* Header */}
       <View
@@ -100,19 +100,18 @@ export default function CourseOverview() {
           alignItems: "center",
           paddingHorizontal: 15,
           paddingVertical: 10,
-          // borderBottomWidth: 1,
-          // borderBottomColor: "rgba(0,0,0,0.07)",
-          backgroundColor: "white",
+          paddingTop: insets.top + 10,
+          backgroundColor: theme.red,
         }}
       >
         <Pressable
           onPress={() => router.back()}
           style={({ pressed }) => [
             { paddingVertical: 3, borderRadius: 8 },
-            pressed && { backgroundColor: "hsl(0, 0%, 93%)" },
+            pressed && { backgroundColor: "rgba(0,0,0,0.15)" },
           ]}
         >
-          <ChevronLeft size={32} color={theme.text} strokeWidth={1} />
+          <ChevronLeft size={32} color="white" strokeWidth={1} />
         </Pressable>
       </View>
 

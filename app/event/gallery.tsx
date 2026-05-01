@@ -13,7 +13,7 @@ import {
   View,
 } from "react-native";
 import Animated from "react-native-reanimated";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 const COLUMN_GAP = 8;
@@ -25,6 +25,7 @@ const THUMB_SIZE =
 export default function Gallery() {
   const { urls } = useLocalSearchParams<{ urls: string }>();
   const { setImage } = useImageContext();
+  const insets = useSafeAreaInsets();
 
   let images: string[] = [];
   try {
@@ -36,6 +37,7 @@ export default function Gallery() {
   return (
     <SafeAreaView
       style={{ flex: 1, backgroundColor: theme.backgroundColorLight }}
+      edges={["left", "right", "bottom"]}
     >
       <View
         style={{
@@ -43,6 +45,8 @@ export default function Gallery() {
           alignItems: "center",
           paddingHorizontal: 15,
           paddingVertical: 10,
+          paddingTop: insets.top + 10,
+          backgroundColor: theme.red,
         }}
       >
         <Pressable
@@ -51,18 +55,17 @@ export default function Gallery() {
             {
               padding: 6,
               borderRadius: 8,
-              backgroundColor: "hsl(0, 0%, 95%)",
             },
-            pressed && { opacity: 0.7 },
+            pressed && { backgroundColor: "rgba(0,0,0,0.15)" },
           ]}
         >
-          <ChevronLeft size={24} color={theme.text} strokeWidth={2} />
+          <ChevronLeft size={24} color="white" strokeWidth={2} />
         </Pressable>
         <Text
           style={{
             fontSize: 20,
             fontFamily: theme.fontBold,
-            color: theme.sectionHeadingColor,
+            color: "white",
             marginLeft: 10,
           }}
         >

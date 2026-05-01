@@ -5,7 +5,7 @@ import { theme } from "@/src/theme";
 import { router, useLocalSearchParams } from "expo-router";
 import { ChevronLeft } from "lucide-react-native";
 import { ActivityIndicator, Pressable, ScrollView, Text, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { WebView } from "react-native-webview";
 import Animated, { FadeInDown, FadeInUp } from "react-native-reanimated";
 
@@ -29,6 +29,7 @@ export default function PodcastDetail() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const globalStyle = styleFactory();
   const isFocused = useIsFocused();
+  const insets = useSafeAreaInsets();
   const { data: podcast, isLoading, error } = usePodcast(id, { enabled: isFocused });
 
   if (isLoading) {
@@ -61,7 +62,7 @@ export default function PodcastDetail() {
     : [];
 
   return (
-    <SafeAreaView style={globalStyle.screen}>
+    <SafeAreaView style={globalStyle.screen} edges={["left", "right", "bottom"]}>
       <Animated.View
         entering={FadeInDown.duration(300)}
         style={{
@@ -69,16 +70,18 @@ export default function PodcastDetail() {
           alignItems: "center",
           paddingHorizontal: 15,
           paddingVertical: 10,
+          paddingTop: insets.top + 10,
+          backgroundColor: theme.red,
         }}
       >
         <Pressable
           onPress={() => router.back()}
           style={({ pressed }) => [
-            { padding: 6, borderRadius: 8, backgroundColor: "hsl(0, 0%, 95%)" },
-            pressed && { opacity: 0.7 },
+            { padding: 6, borderRadius: 8 },
+            pressed && { backgroundColor: "rgba(0,0,0,0.15)" },
           ]}
         >
-          <ChevronLeft size={24} color={theme.text} strokeWidth={2} />
+          <ChevronLeft size={24} color="white" strokeWidth={2} />
         </Pressable>
       </Animated.View>
 

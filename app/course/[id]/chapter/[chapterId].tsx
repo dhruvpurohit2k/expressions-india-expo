@@ -158,7 +158,7 @@ export default function ChapterView() {
   };
 
   return (
-    <SafeAreaView style={[globalStyle.screen, { flex: 1 }]} edges={["top"]}>
+    <SafeAreaView style={[globalStyle.screen, { flex: 1 }]} edges={["left", "right", "bottom"]}>
       {/* Chapter Drawer */}
       <Modal
         visible={drawerOpen}
@@ -234,7 +234,6 @@ export default function ChapterView() {
                         paddingHorizontal: 16,
                         paddingVertical: 14,
                       },
-                      isActive && { backgroundColor: theme.red + "10" },
                       i > 0 && {
                         borderTopWidth: 1,
                         borderTopColor: "rgba(0,0,0,0.05)",
@@ -289,9 +288,8 @@ export default function ChapterView() {
           alignItems: "center",
           paddingHorizontal: 12,
           paddingVertical: 10,
-          borderBottomWidth: 1,
-          borderBottomColor: "rgba(0,0,0,0.07)",
-          backgroundColor: "white",
+          paddingTop: insets.top + 10,
+          backgroundColor: theme.red,
           gap: 8,
         }}
       >
@@ -299,15 +297,15 @@ export default function ChapterView() {
           onPress={() => setDrawerOpen(true)}
           style={({ pressed }) => [
             { padding: 6, borderRadius: 8, flexDirection: "row", alignItems: "center", gap: 8 },
-            pressed && { backgroundColor: "hsl(0,0%,93%)" },
+            pressed && { backgroundColor: "rgba(0,0,0,0.15)" },
           ]}
         >
-          <Menu size={22} color={theme.text} strokeWidth={2} />
+          <Menu size={22} color="white" strokeWidth={2} />
           <Text
             style={{
               fontSize: 13,
               fontFamily: theme.fontBold,
-              color: theme.text,
+              color: "white",
             }}
           >
             Chapter {currentIndex + 1}
@@ -318,7 +316,7 @@ export default function ChapterView() {
           style={{
             flex: 1,
             fontSize: 13,
-            color: "#aaa",
+            color: "rgba(255,255,255,0.75)",
             fontFamily: theme.font,
             textAlign: "right",
           }}

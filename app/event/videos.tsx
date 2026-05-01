@@ -2,7 +2,7 @@ import { theme } from "@/src/theme";
 import { router, useLocalSearchParams } from "expo-router";
 import { ChevronLeft } from "lucide-react-native";
 import { Dimensions, Pressable, ScrollView, Text, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { WebView } from "react-native-webview";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
@@ -16,6 +16,7 @@ function extractYouTubeId(url: string): string | null {
 
 export default function Videos() {
   const { urls } = useLocalSearchParams<{ urls: string }>();
+  const insets = useSafeAreaInsets();
   let links: string[] = [];
   try {
     links = urls ? JSON.parse(urls) : [];
@@ -26,6 +27,7 @@ export default function Videos() {
   return (
     <SafeAreaView
       style={{ flex: 1, backgroundColor: theme.backgroundColorLight }}
+      edges={["left", "right", "bottom"]}
     >
       <View
         style={{
@@ -33,6 +35,8 @@ export default function Videos() {
           alignItems: "center",
           paddingHorizontal: 15,
           paddingVertical: 10,
+          paddingTop: insets.top + 10,
+          backgroundColor: theme.red,
         }}
       >
         <Pressable
@@ -41,18 +45,17 @@ export default function Videos() {
             {
               padding: 6,
               borderRadius: 8,
-              backgroundColor: "hsl(0, 0%, 95%)",
             },
-            pressed && { opacity: 0.7 },
+            pressed && { backgroundColor: "rgba(0,0,0,0.15)" },
           ]}
         >
-          <ChevronLeft size={24} color={theme.text} strokeWidth={2} />
+          <ChevronLeft size={24} color="white" strokeWidth={2} />
         </Pressable>
         <Text
           style={{
             fontSize: 20,
             fontFamily: theme.fontBold,
-            color: theme.sectionHeadingColor,
+            color: "white",
             marginLeft: 10,
           }}
         >

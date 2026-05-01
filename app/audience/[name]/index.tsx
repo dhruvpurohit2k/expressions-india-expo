@@ -18,7 +18,7 @@ import {
   Text,
   View,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import Animated, {
   FadeInDown,
   FadeInUp,
@@ -64,6 +64,7 @@ export default function AudiencePage() {
   const { name } = useLocalSearchParams<{ name: string }>();
   const globalStyle = styleFactory();
   const isFocused = useIsFocused();
+  const insets = useSafeAreaInsets();
   const { data: audience, isLoading } = useAudience(name, {
     enabled: isFocused,
   });
@@ -71,44 +72,37 @@ export default function AudiencePage() {
   const label = AUDIENCE_LABELS[name] ?? name;
 
   return (
-    <SafeAreaView style={globalStyle.screen}>
+    <SafeAreaView style={globalStyle.screen} edges={["left", "right", "bottom"]}>
       {/* Back */}
       <Animated.View
         entering={FadeInDown.duration(300)}
-        style={[
-          {
-            flexDirection: "row",
-            alignItems: "center",
-            paddingVertical: 10,
-          },
-        ]}
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          paddingHorizontal: 15,
+          paddingVertical: 10,
+          paddingTop: insets.top + 10,
+          gap: 10,
+          backgroundColor: theme.red,
+        }}
       >
-        <View
-          style={{
-            flexDirection: "row",
-            // alignItems: "center",
-            alignItems: "center",
-            paddingHorizontal: 15,
-            paddingVertical: 10,
-          }}
+        <Pressable
+          onPress={() => router.back()}
+          style={({ pressed }) => [
+            { padding: 6, borderRadius: 8 },
+            pressed && { backgroundColor: "rgba(0,0,0,0.15)" },
+          ]}
         >
-          <Pressable
-            onPress={() => router.back()}
-            style={({ pressed }) => [
-              { padding: 6, borderRadius: 8, backgroundColor: "hsl(0,0%,95%)" },
-              pressed && { opacity: 0.7 },
-            ]}
-          >
-            <ChevronLeft size={24} color={theme.text} strokeWidth={2} />
-          </Pressable>
-        </View>
+          <ChevronLeft size={24} color="white" strokeWidth={2} />
+        </Pressable>
         <Text
           style={{
-            fontSize: 26,
+            fontSize: 22,
             fontFamily: theme.fontBold,
-            color: theme.sectionHeadingColor,
-            marginBottom: 4,
+            color: "white",
+            flex: 1,
           }}
+          numberOfLines={1}
         >
           {label}
         </Text>

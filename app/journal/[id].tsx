@@ -12,7 +12,7 @@ import {
   Text,
   View,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL;
 
@@ -26,6 +26,7 @@ export default function JournalDetail() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const globalStyle = styleFactory();
   const isFocused = useIsFocused();
+  const insets = useSafeAreaInsets();
   const { data: journal, isLoading, error } = useJournal(id, { enabled: isFocused });
 
   if (isLoading) {
@@ -59,13 +60,15 @@ export default function JournalDetail() {
   const coverUrl = toAbsoluteUrl(journal.media?.url);
 
   return (
-    <SafeAreaView style={globalStyle.screen}>
+    <SafeAreaView style={globalStyle.screen} edges={["left", "right", "bottom"]}>
       <View
         style={{
           flexDirection: "row",
           alignItems: "center",
           paddingHorizontal: 15,
           paddingVertical: 10,
+          paddingTop: insets.top + 10,
+          backgroundColor: theme.red,
         }}
       >
         <Pressable
@@ -74,12 +77,11 @@ export default function JournalDetail() {
             {
               padding: 6,
               borderRadius: 8,
-              backgroundColor: "hsl(0, 0%, 95%)",
             },
-            pressed && { opacity: 0.7 },
+            pressed && { backgroundColor: "rgba(0,0,0,0.15)" },
           ]}
         >
-          <ChevronLeft size={24} color={theme.text} strokeWidth={2} />
+          <ChevronLeft size={24} color="white" strokeWidth={2} />
         </Pressable>
       </View>
 

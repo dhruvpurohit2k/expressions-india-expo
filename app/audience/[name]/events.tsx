@@ -16,7 +16,7 @@ import {
   Text,
   View,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import Animated, { FadeInDown, FadeInUp, SlideInDown } from "react-native-reanimated";
 
 const LIMIT = 10;
@@ -26,6 +26,7 @@ export default function AudienceEvents() {
   const globalStyle = styleFactory();
   const [page, setPage] = useState(1);
   const isFocused = useIsFocused();
+  const insets = useSafeAreaInsets();
 
   const { data, isLoading, error } = useEventsByAudience({
     audience: name,
@@ -39,7 +40,7 @@ export default function AudienceEvents() {
   const label = AUDIENCE_LABELS[name] ?? name;
 
   return (
-    <SafeAreaView style={globalStyle.screen}>
+    <SafeAreaView style={globalStyle.screen} edges={["left", "right", "bottom"]}>
       {/* Header */}
       <Animated.View
         entering={FadeInDown.duration(300)}
@@ -48,23 +49,25 @@ export default function AudienceEvents() {
           alignItems: "center",
           paddingHorizontal: 15,
           paddingVertical: 10,
+          paddingTop: insets.top + 10,
           gap: 10,
+          backgroundColor: theme.red,
         }}
       >
         <Pressable
           onPress={() => router.back()}
           style={({ pressed }) => [
-            { padding: 6, borderRadius: 8, backgroundColor: "hsl(0,0%,95%)" },
-            pressed && { opacity: 0.7 },
+            { padding: 6, borderRadius: 8 },
+            pressed && { backgroundColor: "rgba(0,0,0,0.15)" },
           ]}
         >
-          <ChevronLeft size={24} color={theme.text} strokeWidth={2} />
+          <ChevronLeft size={24} color="white" strokeWidth={2} />
         </Pressable>
         <Text
           style={{
             fontSize: 20,
             fontFamily: theme.fontBold,
-            color: theme.sectionHeadingColor,
+            color: "white",
             flex: 1,
           }}
           numberOfLines={1}

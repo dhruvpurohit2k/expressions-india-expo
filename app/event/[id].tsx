@@ -576,6 +576,7 @@ function CompletedEventDetail({
           paddingHorizontal: 15,
           paddingTop: insets.top + 10,
           paddingBottom: 10,
+          backgroundColor: theme.red,
         }}
       >
         <Pressable
@@ -584,12 +585,11 @@ function CompletedEventDetail({
             {
               padding: 6,
               borderRadius: 8,
-              backgroundColor: "hsl(0, 0%, 95%)",
             },
-            pressed && { opacity: 0.7 },
+            pressed && { backgroundColor: "rgba(0,0,0,0.15)" },
           ]}
         >
-          <ChevronLeft size={24} color={theme.text} strokeWidth={2} />
+          <ChevronLeft size={24} color="white" strokeWidth={2} />
         </Pressable>
       </View>
 
