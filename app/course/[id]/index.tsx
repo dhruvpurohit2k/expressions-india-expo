@@ -1,6 +1,7 @@
 import { router, useLocalSearchParams } from "expo-router";
 import {
   ActivityIndicator,
+  Linking,
   Pressable,
   ScrollView,
   Text,
@@ -250,45 +251,45 @@ export default function CourseOverview() {
                   >
                     {chapter.title}
                   </Text>
-                  {chapter.isFree ? (
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        alignItems: "center",
-                        gap: 4,
-                      }}
-                    >
-                      <Unlock size={13} color="#16a34a" strokeWidth={2} />
-                      <Text
-                        style={{
-                          fontSize: 12,
-                          color: "#16a34a",
-                          fontFamily: theme.fontBold,
-                        }}
-                      >
-                        Free
-                      </Text>
-                    </View>
-                  ) : (
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        alignItems: "center",
-                        gap: 4,
-                      }}
-                    >
-                      <Lock size={13} color="#aaa" strokeWidth={2} />
-                      <Text
-                        style={{
-                          fontSize: 12,
-                          color: "#aaa",
-                          fontFamily: theme.font,
-                        }}
-                      >
-                        Paid
-                      </Text>
-                    </View>
-                  )}
+                  {/* {chapter.isFree ? ( */}
+                  {/*   <View */}
+                  {/*     style={{ */}
+                  {/*       flexDirection: "row", */}
+                  {/*       alignItems: "center", */}
+                  {/*       gap: 4, */}
+                  {/*     }} */}
+                  {/*   > */}
+                  {/* <Unlock size={13} color="#16a34a" strokeWidth={2} /> */}
+                  {/*     <Text */}
+                  {/*       style={{ */}
+                  {/*         fontSize: 12, */}
+                  {/*         color: "#16a34a", */}
+                  {/*         fontFamily: theme.fontBold, */}
+                  {/*       }} */}
+                  {/*     > */}
+                  {/*       Free */}
+                  {/*     </Text> */}
+                  {/*   </View> */}
+                  {/* ) : ( */}
+                  {/*   <View */}
+                  {/*     style={{ */}
+                  {/*       flexDirection: "row", */}
+                  {/*       alignItems: "center", */}
+                  {/*       gap: 4, */}
+                  {/*     }} */}
+                  {/*   > */}
+                  {/* <Lock size={13} color="#aaa" strokeWidth={2} /> */}
+                  {/*     <Text */}
+                  {/*       style={{ */}
+                  {/*         fontSize: 12, */}
+                  {/*         color: "#aaa", */}
+                  {/*         fontFamily: theme.font, */}
+                  {/*       }} */}
+                  {/*     > */}
+                  {/*       Paid */}
+                  {/*     </Text> */}
+                  {/*   </View> */}
+                  {/* )} */}
                 </View>
               ))}
             </View>
@@ -363,13 +364,18 @@ export default function CourseOverview() {
                 fontSize: 15,
               }}
             >
-              Login to Buy
+              Login to Learn More
             </Text>
           </Pressable>
         ) : (
           <Pressable
-            onPress={() => handleRegistration(course.registrationUrl, id)}
-            disabled={!course.registrationUrl}
+            onPress={() => {
+              Linking.openURL(
+                `whatsapp://send?text=Hi, please tell me more about ${course.title} course &phone=+918469054912`,
+              );
+              // handleRegistration(course.registrationUrl, id);
+            }}
+            // disabled={!course.registrationUrl || true}
             style={({ pressed }) => [
               {
                 flex: 1,
@@ -384,10 +390,10 @@ export default function CourseOverview() {
                 borderColor: theme.red,
               },
               pressed && { opacity: 0.85, transform: [{ scale: 0.98 }] },
-              !course.registrationUrl && { opacity: 0.5 },
+              // !course.registrationUrl && { opacity: 0.5 },
             ]}
           >
-            <ShoppingCart size={20} color={theme.red} strokeWidth={2} />
+            {/* <ShoppingCart size={20} color={theme.red} strokeWidth={2} /> */}
             <Text
               style={{
                 color: theme.red,
@@ -395,7 +401,7 @@ export default function CourseOverview() {
                 fontSize: 15,
               }}
             >
-              Buy Now
+              Enquire Here
             </Text>
           </Pressable>
         )}

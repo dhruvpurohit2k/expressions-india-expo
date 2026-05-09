@@ -29,7 +29,10 @@ function getEmbedHtml(url: string): string {
   return `<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"><style>*{margin:0;padding:0}html,body{width:100%;height:100%;background:#000;overflow:hidden}video{width:100%;height:100%}</style></head><body><video src="${url}" controls playsinline></video></body></html>`;
 }
 
-import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
 import {
   Menu,
   X,
@@ -48,24 +51,63 @@ import { styleFactory } from "@/src/styleFactory";
 import { theme } from "@/src/theme";
 
 export default function ChapterView() {
-  const { id, chapterId } = useLocalSearchParams<{ id: string; chapterId: string }>();
+  const { id, chapterId } = useLocalSearchParams<{
+    id: string;
+    chapterId: string;
+  }>();
   const globalStyle = styleFactory();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const insets = useSafeAreaInsets();
 
   const isFocused = useIsFocused();
-  const { data: course, isLoading: courseLoading, error: courseError } = useCourseQuery(id, { enabled: isFocused });
-  const { data: chapter, isLoading: chapterLoading, error: chapterError } = useChapterQuery(id, chapterId, { enabled: isFocused });
+  const {
+    data: course,
+    isLoading: courseLoading,
+    error: courseError,
+  } = useCourseQuery(id, { enabled: isFocused });
+  const {
+    data: chapter,
+    isLoading: chapterLoading,
+    error: chapterError,
+  } = useChapterQuery(id, chapterId, { enabled: isFocused });
 
   // 401 — not logged in
   if (chapterError instanceof AccessError && chapterError.status === 401) {
     return (
-      <SafeAreaView style={[globalStyle.screen, { alignItems: "center", justifyContent: "center", padding: 32 }]}>
-        <Lock size={48} color="#ccc" strokeWidth={1.5} style={{ marginBottom: 20 }} />
-        <Text style={{ fontFamily: theme.fontBold, fontSize: 20, color: theme.sectionHeadingColor, textAlign: "center", marginBottom: 10 }}>
+      <SafeAreaView
+        style={[
+          globalStyle.screen,
+          { alignItems: "center", justifyContent: "center", padding: 32 },
+        ]}
+      >
+        <Lock
+          size={48}
+          color="#ccc"
+          strokeWidth={1.5}
+          style={{ marginBottom: 20 }}
+        />
+        <Text
+          style={{
+            fontFamily: theme.fontBold,
+            fontSize: 20,
+            color: theme.sectionHeadingColor,
+            textAlign: "center",
+            marginBottom: 10,
+          }}
+        >
           Login required
         </Text>
-        <Text style={{ fontFamily: theme.font, fontSize: 14, color: theme.text, opacity: 0.65, textAlign: "center", lineHeight: 21, marginBottom: 28 }}>
+        <Text
+          style={{
+            fontFamily: theme.font,
+            fontSize: 14,
+            color: theme.text,
+            opacity: 0.65,
+            textAlign: "center",
+            lineHeight: 21,
+            marginBottom: 28,
+          }}
+        >
           Please sign in to access this chapter.
         </Text>
         <Pressable
@@ -85,7 +127,14 @@ export default function ChapterView() {
             pressed && { opacity: 0.82, transform: [{ scale: 0.97 }] },
           ]}
         >
-          <Text style={{ fontFamily: theme.fontBold, fontSize: 15, color: "white", letterSpacing: 0.3 }}>
+          <Text
+            style={{
+              fontFamily: theme.fontBold,
+              fontSize: 15,
+              color: "white",
+              letterSpacing: 0.3,
+            }}
+          >
             Sign in to continue
           </Text>
         </Pressable>
@@ -96,14 +145,42 @@ export default function ChapterView() {
   // 403 — logged in but not enrolled
   if (chapterError instanceof AccessError && chapterError.status === 403) {
     return (
-      <SafeAreaView style={[globalStyle.screen, { alignItems: "center", justifyContent: "center", padding: 32 }]}>
-        <Lock size={48} color="#ccc" strokeWidth={1.5} style={{ marginBottom: 20 }} />
-        <Text style={{ fontFamily: theme.fontBold, fontSize: 20, color: theme.sectionHeadingColor, textAlign: "center", marginBottom: 10 }}>
-          Chapter locked
+      <SafeAreaView
+        style={[
+          globalStyle.screen,
+          { alignItems: "center", justifyContent: "center", padding: 32 },
+        ]}
+      >
+        {/* <Lock */}
+        {/*   size={48} */}
+        {/*   color="#ccc" */}
+        {/*   strokeWidth={1.5} */}
+        {/*   style={{ marginBottom: 20 }} */}
+        {/* /> */}
+        <Text
+          style={{
+            fontFamily: theme.fontBold,
+            fontSize: 20,
+            color: theme.sectionHeadingColor,
+            textAlign: "center",
+            marginBottom: 10,
+          }}
+        >
+          Please Contact Us to Know More
         </Text>
-        <Text style={{ fontFamily: theme.font, fontSize: 14, color: theme.text, opacity: 0.65, textAlign: "center", lineHeight: 21, marginBottom: 28 }}>
-          Purchase this course to unlock all chapters.
-        </Text>
+        {/* <Text */}
+        {/*   style={{ */}
+        {/*     fontFamily: theme.font, */}
+        {/*     fontSize: 14, */}
+        {/*     color: theme.text, */}
+        {/*     opacity: 0.65, */}
+        {/*     textAlign: "center", */}
+        {/*     lineHeight: 21, */}
+        {/*     marginBottom: 28, */}
+        {/*   }} */}
+        {/* > */}
+        {/*   Purchase this course to unlock all chapters. */}
+        {/* </Text> */}
         <Pressable
           onPress={() => router.back()}
           style={({ pressed }) => [
@@ -117,8 +194,15 @@ export default function ChapterView() {
             pressed && { opacity: 0.7 },
           ]}
         >
-          <Text style={{ fontFamily: theme.fontBold, fontSize: 15, color: theme.red, letterSpacing: 0.3 }}>
-            View course
+          <Text
+            style={{
+              fontFamily: theme.fontBold,
+              fontSize: 15,
+              color: theme.red,
+              letterSpacing: 0.3,
+            }}
+          >
+            Enquire
           </Text>
         </Pressable>
       </SafeAreaView>
@@ -128,7 +212,10 @@ export default function ChapterView() {
   if (courseLoading || chapterLoading) {
     return (
       <SafeAreaView
-        style={[globalStyle.screen, { alignItems: "center", justifyContent: "center" }]}
+        style={[
+          globalStyle.screen,
+          { alignItems: "center", justifyContent: "center" },
+        ]}
       >
         <ActivityIndicator size="large" color={theme.red} />
       </SafeAreaView>
@@ -138,10 +225,15 @@ export default function ChapterView() {
   if (courseError || chapterError || !course || !chapter) {
     return (
       <SafeAreaView
-        style={[globalStyle.screen, { alignItems: "center", justifyContent: "center", padding: 20 }]}
+        style={[
+          globalStyle.screen,
+          { alignItems: "center", justifyContent: "center", padding: 20 },
+        ]}
       >
         <Text style={[globalStyle.sectionHeading, { textAlign: "center" }]}>
-          {courseError || chapterError ? "Could not load chapter" : "Chapter not found"}
+          {courseError || chapterError
+            ? "Could not load chapter"
+            : "Chapter not found"}
         </Text>
       </SafeAreaView>
     );
@@ -150,15 +242,22 @@ export default function ChapterView() {
   const chapters = course.chapters;
   const currentIndex = chapters.findIndex((c) => c.id === chapterId);
   const prevChapter = currentIndex > 0 ? chapters[currentIndex - 1] : null;
-  const nextChapter = currentIndex < chapters.length - 1 ? chapters[currentIndex + 1] : null;
+  const nextChapter =
+    currentIndex < chapters.length - 1 ? chapters[currentIndex + 1] : null;
 
   const goToChapter = (cId: string) => {
     setDrawerOpen(false);
-    router.replace({ pathname: "/course/[id]/chapter/[chapterId]", params: { id, chapterId: cId } });
+    router.replace({
+      pathname: "/course/[id]/chapter/[chapterId]",
+      params: { id, chapterId: cId },
+    });
   };
 
   return (
-    <SafeAreaView style={[globalStyle.screen, { flex: 1 }]} edges={["left", "right", "bottom"]}>
+    <SafeAreaView
+      style={[globalStyle.screen, { flex: 1 }]}
+      edges={["left", "right", "bottom"]}
+    >
       {/* Chapter Drawer */}
       <Modal
         visible={drawerOpen}
@@ -263,9 +362,19 @@ export default function ChapterView() {
                       {c.title}
                     </Text>
                     {c.isFree ? (
-                      <Unlock size={13} color="#16a34a" strokeWidth={2} style={{ marginTop: 2 }} />
+                      <Unlock
+                        size={13}
+                        color="#16a34a"
+                        strokeWidth={2}
+                        style={{ marginTop: 2 }}
+                      />
                     ) : (
-                      <Lock size={13} color="#bbb" strokeWidth={2} style={{ marginTop: 2 }} />
+                      <Lock
+                        size={13}
+                        color="#bbb"
+                        strokeWidth={2}
+                        style={{ marginTop: 2 }}
+                      />
                     )}
                   </TouchableOpacity>
                 );
@@ -296,7 +405,13 @@ export default function ChapterView() {
         <Pressable
           onPress={() => setDrawerOpen(true)}
           style={({ pressed }) => [
-            { padding: 6, borderRadius: 8, flexDirection: "row", alignItems: "center", gap: 8 },
+            {
+              padding: 6,
+              borderRadius: 8,
+              flexDirection: "row",
+              alignItems: "center",
+              gap: 8,
+            },
             pressed && { backgroundColor: "rgba(0,0,0,0.15)" },
           ]}
         >
@@ -327,7 +442,11 @@ export default function ChapterView() {
 
       {/* Content */}
       <ScrollView
-        contentContainerStyle={{ paddingHorizontal: 15, paddingBottom: 20, paddingTop: 6 }}
+        contentContainerStyle={{
+          paddingHorizontal: 15,
+          paddingBottom: 20,
+          paddingTop: 6,
+        }}
         showsVerticalScrollIndicator={false}
       >
         {/* Chapter Title */}
@@ -364,7 +483,8 @@ export default function ChapterView() {
               onShouldStartLoadWithRequest={(req) => {
                 if (req.url.startsWith("https://www.youtube.com")) return true;
                 if (req.url.startsWith("https://player.vimeo.com")) return true;
-                if (req.url.startsWith("https://expressionsindia.app")) return true;
+                if (req.url.startsWith("https://expressionsindia.app"))
+                  return true;
                 if (req.url === "about:blank") return true;
                 return false;
               }}
@@ -442,7 +562,6 @@ export default function ChapterView() {
             </View>
           </View>
         )}
-
       </ScrollView>
 
       {/* Sticky Bottom Prev/Next Navigation */}
@@ -478,7 +597,11 @@ export default function ChapterView() {
             !prevChapter && { opacity: 0.4 },
           ]}
         >
-          <ChevronLeft size={16} color={prevChapter ? theme.red : "#bbb"} strokeWidth={2.5} />
+          <ChevronLeft
+            size={16}
+            color={prevChapter ? theme.red : "#bbb"}
+            strokeWidth={2.5}
+          />
           <Text
             style={{
               flex: 1,
@@ -507,7 +630,8 @@ export default function ChapterView() {
               borderRadius: 10,
               backgroundColor: nextChapter ? theme.red : "rgba(0,0,0,0.06)",
             },
-            pressed && nextChapter && { opacity: 0.85, transform: [{ scale: 0.98 }] },
+            pressed &&
+            nextChapter && { opacity: 0.85, transform: [{ scale: 0.98 }] },
             !nextChapter && { opacity: 0.4 },
           ]}
         >
