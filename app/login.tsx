@@ -35,7 +35,10 @@ export default function LoginScreen() {
 
     if (redirectCourseId && redirectChapterId) {
       // Restore the full back stack: (tabs) → course → chapter
-      router.push({ pathname: "/course/[id]", params: { id: redirectCourseId } });
+      router.push({
+        pathname: "/course/[id]",
+        params: { id: redirectCourseId },
+      });
       router.push({
         pathname: "/course/[id]/chapter/[chapterId]",
         params: { id: redirectCourseId, chapterId: redirectChapterId },
@@ -101,7 +104,9 @@ export default function LoginScreen() {
           }}
           hitSlop={12}
         >
-          <Text style={{ fontSize: 18, color: theme.sectionHeadingColor }}>←</Text>
+          <Text style={{ fontSize: 18, color: theme.sectionHeadingColor }}>
+            ←
+          </Text>
           <Text
             style={{
               fontFamily: theme.font,
@@ -133,7 +138,7 @@ export default function LoginScreen() {
               marginBottom: 28,
             }}
           >
-            Continue with your Google or Apple account.
+            Continue with your Google account.
           </Text>
 
           {error && (

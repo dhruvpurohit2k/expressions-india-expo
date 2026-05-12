@@ -26,6 +26,7 @@ import { theme } from "@/src/theme";
 import { handleRegistration } from "@/src/lib/handleRegistration";
 import { useIsLoggedIn } from "@/src/hooks/useIsLoggedIn";
 import { tileColor } from "@/src/utils/tileColor";
+import { getStoredUser } from "@/src/lib/auth";
 
 function getEmbedHtml(url: string): string {
   const ytMatch = url.match(
@@ -369,9 +370,11 @@ export default function CourseOverview() {
           </Pressable>
         ) : (
           <Pressable
-            onPress={() => {
+            onPress={async () => {
+              const user = await getStoredUser();
+
               Linking.openURL(
-                `whatsapp://send?text=Hi, please tell me more about ${course.title} course &phone=+918469054912`,
+                `whatsapp://send?text=Hi${user?.name ? ", I am " + user.name : " "}, please tell me more about ${course.title} course &phone=+918469054912`,
               );
               // handleRegistration(course.registrationUrl, id);
             }}

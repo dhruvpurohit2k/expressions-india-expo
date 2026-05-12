@@ -121,6 +121,7 @@ export default function App() {
       <Tabs.Screen
         name="course"
         options={{
+          href: null,
           headerShown: false,
           title: "Courses",
           tabBarIcon: ({ color, size }) => (
