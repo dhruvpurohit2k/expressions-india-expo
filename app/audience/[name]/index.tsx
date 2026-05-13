@@ -49,14 +49,14 @@ const SECTION_CARDS = [
     color: "#7c3aed",
     bg: "#f3e8ff",
   },
-  {
-    key: "courses",
-    label: "Courses",
-    description: "Structured learning paths for you",
-    icon: Award,
-    color: "#059669",
-    bg: "#ecfdf5",
-  },
+  // {
+  //   key: "courses",
+  //   label: "Courses",
+  //   description: "Structured learning paths for you",
+  //   icon: Award,
+  //   color: "#059669",
+  //   bg: "#ecfdf5",
+  // },
 ] as const;
 
 export default function AudiencePage() {
