@@ -24,6 +24,9 @@
       }
     },
     "production": {
+      "android": {
+        "buildType": "apk"
+      },
       "autoIncrement": true,
       "env": {
         "EXPO_PUBLIC_API_URL": "https://13.206.10.230.nip.io/api",

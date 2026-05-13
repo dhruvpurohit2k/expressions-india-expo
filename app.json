@@ -10,14 +10,14 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.expressionsindia.app"
+      "bundleIdentifier": "com.expressionsindia.mobile"
     },
     "androidStatusBar": {
       "backgroundColor": "#ffffff",
       "barStyle": "dark-content"
     },
     "android": {
-      "package": "com.expressionsindia.app",
+      "package": "com.expressionsindia.mobile",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/android-icon-foreground.png",
         "backgroundImage": "./assets/images/android-icon-background.png"
@@ -30,6 +30,12 @@
       "favicon": "./assets/images/expressionsindialogo.png"
     },
     "plugins": [
+      [
+        "expo-adi-registration",
+        {
+          "token": "DXRB565PQL6QCAAAAAAAAAAAAA"
+        }
+      ],
       "expo-router",
       [
         "expo-splash-screen",
@@ -41,7 +47,8 @@
         }
       ],
       "expo-secure-store",
-      "@react-native-google-signin/google-signin"
+      "@react-native-google-signin/google-signin",
+      "expo-web-browser"
     ],
     "experiments": {
       "typedRoutes": true
