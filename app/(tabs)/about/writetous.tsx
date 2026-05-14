@@ -184,8 +184,7 @@ export default function WriteToUs() {
               marginBottom: 24,
             }}
           >
-            {`We'd love to hear from you. Fill in the form and we'll get back to
-            you shortly.`}
+            {`We'd love to hear from you. Fill in the form and we'll get back to you shortly.`}
           </Animated.Text>
 
           <View style={{ gap: 18 }}>
