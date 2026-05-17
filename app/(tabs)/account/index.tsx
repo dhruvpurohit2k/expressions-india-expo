@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react";
 import { View, Text, Pressable, Alert, Platform } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useFocusEffect, router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import Animated, { FadeInDown } from "react-native-reanimated";
@@ -47,19 +47,19 @@ export default function AccountScreen() {
     ]);
   }
 
+  const insets = useSafeAreaInsets();
+
   if (loading) return null;
 
   return (
-    <SafeAreaView
-      style={{ flex: 1, backgroundColor: theme.backgroundColorLight }}
-      edges={["top"]}
-    >
+    <View style={{ flex: 1, backgroundColor: theme.backgroundColorLight }}>
+      <View style={{ height: insets.top, backgroundColor: theme.red }} />
       {user ? (
         <LoggedInView user={user} onLogout={handleLogout} />
       ) : (
         <LoggedOutView />
       )}
-    </SafeAreaView>
+    </View>
   );
 }
 

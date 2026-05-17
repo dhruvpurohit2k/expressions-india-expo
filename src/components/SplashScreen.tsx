@@ -8,7 +8,7 @@ import {
   Animated as RNAnimated,
   PanResponder,
 } from "react-native";
-import { Audio } from "expo-av";
+import { createAudioPlayer } from "expo-audio";
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -28,14 +28,14 @@ const CELL_HEIGHT = Math.round(SCREEN_HEIGHT * 0.2);
 // fromLeft alternates per cell so adjacent cells come from opposite sides.
 // Images drift in slowly across the 3-second audio — first at 300ms, last at ~2.8s
 const IMAGES = [
-  { source: require("../../assets/splashimages/1_s.png"),  fromLeft: true,  delay: 300  },
-  { source: require("../../assets/splashimages/13_s.png"), fromLeft: true,  delay: 550  },
-  { source: require("../../assets/splashimages/3_s.png"),  fromLeft: false, delay: 800  },
+  { source: require("../../assets/splashimages/1_s.png"), fromLeft: true, delay: 300 },
+  { source: require("../../assets/splashimages/13_s.png"), fromLeft: true, delay: 550 },
+  { source: require("../../assets/splashimages/3_s.png"), fromLeft: false, delay: 800 },
   { source: require("../../assets/splashimages/18_s.png"), fromLeft: false, delay: 1050 },
-  { source: require("../../assets/splashimages/6_s.png"),  fromLeft: false, delay: 1300 },
-  { source: require("../../assets/splashimages/3.jpg"),    fromLeft: false, delay: 1550 },
-  { source: require("../../assets/splashimages/9_s.png"),  fromLeft: true,  delay: 1800 },
-  { source: require("../../assets/splashimages/5_s.gif"),  fromLeft: true,  delay: 2050 },
+  { source: require("../../assets/splashimages/6_s.png"), fromLeft: false, delay: 1300 },
+  { source: require("../../assets/splashimages/3.jpg"), fromLeft: false, delay: 1550 },
+  { source: require("../../assets/splashimages/9_s.png"), fromLeft: true, delay: 1800 },
+  { source: require("../../assets/splashimages/5_s.gif"), fromLeft: true, delay: 2050 },
 ];
 
 const TOP_IMAGES = IMAGES.slice(0, 4);
@@ -154,18 +154,19 @@ export default function SplashScreen({ onFinish }: { onFinish: () => void }) {
   const hintOpacity = useRef(new RNAnimated.Value(0)).current;
   const hintBounce = useRef(new RNAnimated.Value(0)).current;
 
-  const timerRef = useRef<ReturnType<typeof setTimeout>>();
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isDismissing = useRef(false);
   const onFinishRef = useRef(onFinish);
   onFinishRef.current = onFinish;
-  const soundRef = useRef<Audio.Sound | null>(null);
+  const playerRef = useRef<ReturnType<typeof createAudioPlayer> | null>(null);
 
   function dismiss() {
     if (isDismissing.current) return;
     isDismissing.current = true;
     if (timerRef.current) clearTimeout(timerRef.current);
-    soundRef.current?.stopAsync().catch(() => {});
-    soundRef.current?.unloadAsync().catch(() => {});
+    playerRef.current?.pause();
+    playerRef.current?.remove();
+    playerRef.current = null;
     RNAnimated.parallel([
       RNAnimated.timing(dismissY, {
         toValue: -SCREEN_HEIGHT,
@@ -206,15 +207,16 @@ export default function SplashScreen({ onFinish }: { onFinish: () => void }) {
   useEffect(() => {
     if (!started) return;
 
-    Audio.setAudioModeAsync({ playsInSilentModeIOS: false }).catch(() => {});
     // Delay audio by 1600ms so it's 1 second in when the text appears at 2600ms
     setTimeout(() => {
-      Audio.Sound.createAsync(
-        require("../../assets/splashscreenaudio.mp3"),
-        { shouldPlay: true, isLooping: false, volume: 0.6 },
-      ).then(({ sound }) => {
-        soundRef.current = sound;
-      }).catch(() => {});
+      try {
+        const player = createAudioPlayer(
+          require("../../assets/splashscreenaudio.mp3"),
+        );
+        player.volume = 0.6;
+        player.play();
+        playerRef.current = player;
+      } catch { }
     }, 1600);
 
     textOpacity.value = withDelay(2600, withTiming(1, { duration: 700 }));
@@ -241,7 +243,8 @@ export default function SplashScreen({ onFinish }: { onFinish: () => void }) {
     return () => {
       clearTimeout(hintTimer);
       if (timerRef.current) clearTimeout(timerRef.current);
-      soundRef.current?.unloadAsync().catch(() => {});
+      playerRef.current?.remove();
+      playerRef.current = null;
     };
   }, [started]);
 

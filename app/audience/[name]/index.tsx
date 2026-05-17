@@ -18,11 +18,11 @@ import {
   Text,
   View,
 } from "react-native";
-import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
-import Animated, {
-  FadeInDown,
-  FadeInUp,
-} from "react-native-reanimated";
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
+import Animated, { FadeInDown, FadeInUp } from "react-native-reanimated";
 
 const SECTION_CARDS = [
   {
@@ -71,7 +71,10 @@ export default function AudiencePage() {
   const label = AUDIENCE_LABELS[name] ?? name;
 
   return (
-    <SafeAreaView style={globalStyle.screen} edges={["left", "right", "bottom"]}>
+    <SafeAreaView
+      style={globalStyle.screen}
+      edges={["left", "right", "bottom"]}
+    >
       {/* Back */}
       <Animated.View
         entering={FadeInDown.duration(300)}
@@ -96,7 +99,7 @@ export default function AudiencePage() {
         </Pressable>
         <Text
           style={{
-            fontSize: 22,
+            fontSize: 18,
             fontFamily: theme.fontBold,
             color: "white",
             flex: 1,
@@ -108,7 +111,11 @@ export default function AudiencePage() {
       </Animated.View>
 
       <ScrollView
-        contentContainerStyle={{ paddingHorizontal: 18, paddingTop: 16, paddingBottom: 48 }}
+        contentContainerStyle={{
+          paddingHorizontal: 18,
+          paddingTop: 16,
+          paddingBottom: 48,
+        }}
         showsVerticalScrollIndicator={false}
       >
         {/* Description */}

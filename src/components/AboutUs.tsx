@@ -92,7 +92,7 @@ function AboutTheOrg() {
         scrollEventThrottle={16}
       >
         <Text style={globalStyle.sectionHeading}>Who are we ? </Text>
-        <Text style={[globalStyle.text, { fontSize: 13 }]}>
+        <Text style={[globalStyle.text]}>
           It is now widely acclaimed that Life Skills play a dynamic role in
           overall future capacities of every student. Mental Health Awareness
           and Wellbeing should be included as part of general education through
@@ -109,7 +109,7 @@ function AboutTheOrg() {
           style={{ width: screenWidth - 100, marginHorizontal: "auto" }}
           resizeMode="contain"
         />
-        <Text style={[globalStyle.text, { fontSize: 13 }]}>
+        <Text style={[globalStyle.text]}>
           <Text style={globalStyle.companyName}>Expressions India</Text> - The
           National Life Skills and School Wellness Program is a well-recognized
           and awarded initiative by the government and non governmental
@@ -180,8 +180,8 @@ function MissionAndVision() {
               gap: 12,
               backgroundColor: theme.backgroundColorLight,
               borderRadius: 12,
-              padding: 14,
-              marginBottom: 10,
+              padding: 5,
+              marginBottom: 0,
               // elevation: 5,
               shadowColor: "#000",
               shadowOffset: { width: 0, height: 1 },

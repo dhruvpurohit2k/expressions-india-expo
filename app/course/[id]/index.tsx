@@ -365,20 +365,12 @@ export default function CourseOverview() {
                 fontSize: 15,
               }}
             >
-              Login to Learn More
+              Login to Buy
             </Text>
           </Pressable>
         ) : (
           <Pressable
-            onPress={async () => {
-              const user = await getStoredUser();
-
-              Linking.openURL(
-                `whatsapp://send?text=Hi${user?.name ? ", I am " + user.name : " "}, please tell me more about ${course.title} course &phone=+918469054912`,
-              );
-              // handleRegistration(course.registrationUrl, id);
-            }}
-            // disabled={!course.registrationUrl || true}
+            onPress={async () => { }}
             style={({ pressed }) => [
               {
                 flex: 1,

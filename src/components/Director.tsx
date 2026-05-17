@@ -15,16 +15,17 @@ export default function Director() {
         style={{
           alignItems: "center",
           width: "100%",
-          marginVertical: 20,
-          gap: 10,
+          // marginVertical: 20,
+          // gap: 10,
         }}
       >
         <View
           style={{
             width: 180,
-            height: 180,
-            borderRadius: 90,
+            height: 230,
             overflow: "hidden",
+            alignItems: "center",
+            justifyContent: "center",
           }}
         >
           <Image
@@ -32,9 +33,10 @@ export default function Director() {
             style={{
               width: "100%",
               height: "100%",
-              transform: [{ scale: 1.2 }, { translateY: 15 }],
+              borderRadius: 20,
+              transform: [{ translateY: 10 }],
             }}
-            resizeMode="cover"
+            resizeMode="contain"
           />
         </View>
         <View style={{ alignItems: "center", gap: 2 }}>
@@ -72,7 +74,12 @@ export default function Director() {
           </Text>
         </View>
       </View>
-      <Text style={[globalStyle.text, { marginTop: 30, fontSize: 14, textAlign: "justify" }]}>
+      <Text
+        style={[
+          globalStyle.text,
+          { marginTop: 30, fontSize: 14, textAlign: "justify" },
+        ]}
+      >
         Dr. Jitendra Nagpal (MD DNB) is Program Director of Expressions India -
         The National Life Skills, Values, Community and School Wellness Program.
         The Expressions India programme has over 6500 Child and Adolescent

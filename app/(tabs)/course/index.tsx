@@ -27,14 +27,14 @@ import { AUDIENCE_LABELS } from "@/src/types/audience";
 import type { CourseListItem } from "@/src/types/course";
 import type { ListRenderItem } from "react-native";
 
-type Tab = "browse" | "enrolled" | "certification";
+type Tab = "browse" | "enrolled" | "certificates";
 type SortField = "createdAt" | "updatedAt";
 type SortDir = "asc" | "desc";
 
 const TABS: { key: Tab; label: string }[] = [
   { key: "browse", label: "Browse" },
   { key: "enrolled", label: "Enrolled" },
-  { key: "certification", label: "Certification" },
+  { key: "certificates", label: "Certificates" },
 ];
 
 const AUDIENCES = Object.entries(AUDIENCE_LABELS) as [string, string][];
@@ -49,13 +49,15 @@ export default function CourseIndex() {
     data: myCourses,
     isLoading: myLoading,
     error: myError,
-  } = useMyCourses({ enabled: isFocused && currentTab === "enrolled" && loggedIn === true });
+  } = useMyCourses({
+    enabled: isFocused && currentTab === "enrolled" && loggedIn === true,
+  });
   const {
     data: certApps,
     isLoading: certLoading,
     error: certError,
   } = useCertificateApplications({
-    enabled: isFocused && currentTab === "certification",
+    enabled: isFocused && currentTab === "certificates",
   });
   const [search, setSearch] = useState("");
   const [selectedAudiences, setSelectedAudiences] = useState<Set<string>>(
@@ -327,13 +329,21 @@ export default function CourseIndex() {
       {currentTab === "enrolled" &&
         (loggedIn === false ? (
           <View
-            style={{ flex: 1, justifyContent: "center", alignItems: "center", paddingHorizontal: 24, gap: 16 }}
+            style={{
+              flex: 1,
+              justifyContent: "center",
+              alignItems: "center",
+              paddingHorizontal: 24,
+              gap: 16,
+            }}
           >
             <Text style={[globalStyle.text, { textAlign: "center" }]}>
               Sign in to view your enrolled courses.
             </Text>
             <Pressable
-              onPress={() => router.push({ pathname: "/login", params: { from: "account" } })}
+              onPress={() =>
+                router.push({ pathname: "/login", params: { from: "account" } })
+              }
               style={({ pressed }) => [
                 {
                   backgroundColor: theme.red,
@@ -344,7 +354,13 @@ export default function CourseIndex() {
                 pressed && { opacity: 0.85, transform: [{ scale: 0.98 }] },
               ]}
             >
-              <Text style={{ color: "white", fontFamily: theme.fontBold, fontSize: 15 }}>
+              <Text
+                style={{
+                  color: "white",
+                  fontFamily: theme.fontBold,
+                  fontSize: 15,
+                }}
+              >
                 Login
               </Text>
             </Pressable>
@@ -364,7 +380,12 @@ export default function CourseIndex() {
               paddingHorizontal: 24,
             }}
           >
-            <Text style={[globalStyle.text, { textAlign: "center", color: theme.red }]}>
+            <Text
+              style={[
+                globalStyle.text,
+                { textAlign: "center", color: theme.red },
+              ]}
+            >
               Could not load enrolled courses. Please try again.
             </Text>
           </View>
@@ -481,10 +502,10 @@ function CertApplicationCard({ item }: { item: CertApplicationPublic }) {
   const dateStr = (d?: Date | null) =>
     d
       ? d.toLocaleDateString("en-IN", {
-          day: "numeric",
-          month: "short",
-          year: "numeric",
-        })
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+      })
       : null;
 
   const openFrom = dateStr(item.openFrom);
@@ -518,7 +539,7 @@ function CertApplicationCard({ item }: { item: CertApplicationPublic }) {
           color: theme.sectionHeadingColor,
         }}
       >
-        Apply For Certification Below
+        Apply For Certificates Below
       </Text>
       <View
         style={{

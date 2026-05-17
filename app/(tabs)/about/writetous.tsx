@@ -10,7 +10,7 @@ import {
   Alert,
   TextInputProps,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Button from "@/src/components/ui/button";
 import { useForm } from "@tanstack/react-form";
 import { z } from "zod";
@@ -150,8 +150,10 @@ export default function WriteToUs() {
     },
   });
   const globalStyle = styleFactory();
+  const insets = useSafeAreaInsets();
   return (
-    <SafeAreaView style={[globalStyle.screen]}>
+    <View style={[globalStyle.screen, { flex: 1 }]}>
+      <View style={{ height: insets.top, backgroundColor: theme.red }} />
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -204,31 +206,6 @@ export default function WriteToUs() {
                 >
                   <StyledInput
                     placeholder="Your full name"
-                    value={field.state.value}
-                    onChangeText={field.handleChange}
-                    onBlur={field.handleBlur}
-                    hasError={field.state.meta.errors.length > 0}
-                  />
-                </FormField>
-              )}
-            </form.Field>
-
-            <form.Field
-              name="subject"
-              validators={{ onChange: ContactFormSchema.shape.subject }}
-            >
-              {(field) => (
-                <FormField
-                  label="Subject"
-                  error={
-                    field.state.meta.errors.length > 0
-                      ? getErrorMessage(field.state.meta.errors[0])
-                      : undefined
-                  }
-                  delay={120}
-                >
-                  <StyledInput
-                    placeholder="Subject of your enquiry"
                     value={field.state.value}
                     onChangeText={field.handleChange}
                     onBlur={field.handleBlur}
@@ -305,7 +282,7 @@ export default function WriteToUs() {
                   delay={240}
                 >
                   <StyledInput
-                    placeholder="+91 00000 00000"
+                    placeholder="0000000000"
                     value={field.state.value}
                     onChangeText={field.handleChange}
                     onBlur={field.handleBlur}
@@ -315,7 +292,30 @@ export default function WriteToUs() {
                 </FormField>
               )}
             </form.Field>
-
+            <form.Field
+              name="subject"
+              validators={{ onChange: ContactFormSchema.shape.subject }}
+            >
+              {(field) => (
+                <FormField
+                  label="Subject"
+                  error={
+                    field.state.meta.errors.length > 0
+                      ? getErrorMessage(field.state.meta.errors[0])
+                      : undefined
+                  }
+                  delay={120}
+                >
+                  <StyledInput
+                    placeholder="Subject of your enquiry"
+                    value={field.state.value}
+                    onChangeText={field.handleChange}
+                    onBlur={field.handleBlur}
+                    hasError={field.state.meta.errors.length > 0}
+                  />
+                </FormField>
+              )}
+            </form.Field>
             <form.Field
               name="enquiry"
               validators={{ onChange: ContactFormSchema.shape.enquiry }}
@@ -353,6 +353,6 @@ export default function WriteToUs() {
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
-    </SafeAreaView>
+    </View>
   );
 }

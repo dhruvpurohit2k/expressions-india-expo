@@ -12,7 +12,7 @@ import {
   Text,
   View,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Link } from "expo-router";
 import { safeDate } from "@/src/lib/date";
 
@@ -50,8 +50,11 @@ export default function AllPastEvents() {
   const total = data?.meta?.total ?? 0;
   const totalPages = data?.meta?.totalPages ?? Math.ceil(total / LIMIT);
 
+  const insets = useSafeAreaInsets();
+
   return (
-    <SafeAreaView style={globalStyle.screen} edges={["top"]}>
+    <View style={[globalStyle.screen]}>
+      <View style={{ height: insets.top, backgroundColor: theme.red }} />
       <Text style={[globalStyle.sectionHeading, { marginHorizontal: 15 }]}>
         Past Events
       </Text>
@@ -226,6 +229,6 @@ export default function AllPastEvents() {
           <ChevronRight size={18} color="white" strokeWidth={2.5} />
         </Pressable>
       </View>
-    </SafeAreaView>
+    </View>
   );
 }

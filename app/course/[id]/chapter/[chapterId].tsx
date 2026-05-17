@@ -166,7 +166,7 @@ export default function ChapterView() {
             marginBottom: 10,
           }}
         >
-          Please Contact Us to Know More
+          Buy the course to access more
         </Text>
         {/* <Text */}
         {/*   style={{ */}
@@ -202,7 +202,7 @@ export default function ChapterView() {
               letterSpacing: 0.3,
             }}
           >
-            Enquire
+            Buy
           </Text>
         </Pressable>
       </SafeAreaView>

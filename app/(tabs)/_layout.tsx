@@ -27,7 +27,14 @@ function PillTabButton(props: any) {
       {...props}
       style={[
         props.style,
-        { flex: 1, alignItems: "center", justifyContent: "center", borderTopLeftRadius: 12, borderTopRightRadius: 12, overflow: "hidden" },
+        {
+          flex: 1,
+          alignItems: "center",
+          justifyContent: "center",
+          borderTopLeftRadius: 12,
+          borderTopRightRadius: 12,
+          overflow: "hidden",
+        },
       ]}
     >
       <Animated.View
@@ -121,7 +128,7 @@ export default function App() {
       <Tabs.Screen
         name="course"
         options={{
-          href: null,
+          // href: null,
           headerShown: false,
           title: "Courses",
           tabBarIcon: ({ color, size }) => (
