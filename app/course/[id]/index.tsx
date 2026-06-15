@@ -1,7 +1,6 @@
 import { router, useLocalSearchParams } from "expo-router";
 import {
   ActivityIndicator,
-  Linking,
   Pressable,
   ScrollView,
   Text,
@@ -17,16 +16,18 @@ import {
   Unlock,
   ShoppingCart,
   LogIn,
+  Play,
 } from "lucide-react-native";
 import WebView from "react-native-webview";
+import { useQuery } from "@tanstack/react-query";
 import { useCourseQuery } from "@/src/hooks/useCourseQuery";
 import { useIsFocused } from "@react-navigation/native";
 import { styleFactory } from "@/src/styleFactory";
 import { theme } from "@/src/theme";
-import { handleRegistration } from "@/src/lib/handleRegistration";
 import { useIsLoggedIn } from "@/src/hooks/useIsLoggedIn";
-import { tileColor } from "@/src/utils/tileColor";
-import { getStoredUser } from "@/src/lib/auth";
+import { fetchMyCourses } from "@/src/api/fetchMyCourses";
+import { queryKeys } from "@/src/lib/queryKeys";
+import * as Linking from "expo-linking";
 
 function getEmbedHtml(url: string): string {
   const ytMatch = url.match(
@@ -58,6 +59,15 @@ export default function CourseOverview() {
     error,
   } = useCourseQuery(id, { enabled: isFocused });
 
+  // Check if the user is enrolled in this course.
+  const { data: myCourses } = useQuery({
+    queryKey: queryKeys.courses.my(),
+    queryFn: fetchMyCourses,
+    enabled: loggedIn === true && isFocused,
+  });
+
+  const isEnrolled = myCourses?.some((c) => c.id === id) ?? false;
+
   if (isLoading) {
     return (
       <SafeAreaView
@@ -87,6 +97,7 @@ export default function CourseOverview() {
   }
 
   const firstChapter = course.chapters[0];
+  const isFree = false; // For now, force users to enroll via the Buy button even if price is 0
 
   const handleStartDemo = () => {
     if (firstChapter) {
@@ -95,6 +106,10 @@ export default function CourseOverview() {
         params: { id, chapterId: firstChapter.id },
       });
     }
+  };
+
+  const handleBuy = () => {
+    router.push(`/course/${id}/buy`);
   };
 
   return (
@@ -223,7 +238,6 @@ export default function CourseOverview() {
                       paddingHorizontal: 14,
                       paddingVertical: 13,
                       gap: 10,
-                      // backgroundColor: tileColor(chapter.id),
                     },
                     i > 0 && {
                       borderTopWidth: 1,
@@ -252,45 +266,45 @@ export default function CourseOverview() {
                   >
                     {chapter.title}
                   </Text>
-                  {/* {chapter.isFree ? ( */}
-                  {/*   <View */}
-                  {/*     style={{ */}
-                  {/*       flexDirection: "row", */}
-                  {/*       alignItems: "center", */}
-                  {/*       gap: 4, */}
-                  {/*     }} */}
-                  {/*   > */}
-                  {/* <Unlock size={13} color="#16a34a" strokeWidth={2} /> */}
-                  {/*     <Text */}
-                  {/*       style={{ */}
-                  {/*         fontSize: 12, */}
-                  {/*         color: "#16a34a", */}
-                  {/*         fontFamily: theme.fontBold, */}
-                  {/*       }} */}
-                  {/*     > */}
-                  {/*       Free */}
-                  {/*     </Text> */}
-                  {/*   </View> */}
-                  {/* ) : ( */}
-                  {/*   <View */}
-                  {/*     style={{ */}
-                  {/*       flexDirection: "row", */}
-                  {/*       alignItems: "center", */}
-                  {/*       gap: 4, */}
-                  {/*     }} */}
-                  {/*   > */}
-                  {/* <Lock size={13} color="#aaa" strokeWidth={2} /> */}
-                  {/*     <Text */}
-                  {/*       style={{ */}
-                  {/*         fontSize: 12, */}
-                  {/*         color: "#aaa", */}
-                  {/*         fontFamily: theme.font, */}
-                  {/*       }} */}
-                  {/*     > */}
-                  {/*       Paid */}
-                  {/*     </Text> */}
-                  {/*   </View> */}
-                  {/* )} */}
+                  {chapter.isFree ? (
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        gap: 4,
+                      }}
+                    >
+                      <Unlock size={13} color="#16a34a" strokeWidth={2} />
+                      <Text
+                        style={{
+                          fontSize: 12,
+                          color: "#16a34a",
+                          fontFamily: theme.fontBold,
+                        }}
+                      >
+                        Free
+                      </Text>
+                    </View>
+                  ) : (
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        gap: 4,
+                      }}
+                    >
+                      <Lock size={13} color="#aaa" strokeWidth={2} />
+                      <Text
+                        style={{
+                          fontSize: 12,
+                          color: "#aaa",
+                          fontFamily: theme.font,
+                        }}
+                      >
+                        Paid
+                      </Text>
+                    </View>
+                  )}
                 </View>
               ))}
             </View>
@@ -311,6 +325,7 @@ export default function CourseOverview() {
           backgroundColor: "white",
         }}
       >
+        {/* Start / Start Demo button — always shown if there's a first chapter */}
         <Pressable
           onPress={handleStartDemo}
           disabled={!firstChapter}
@@ -329,14 +344,17 @@ export default function CourseOverview() {
             !firstChapter && { opacity: 0.5 },
           ]}
         >
+          <Play size={18} color="white" strokeWidth={2} />
           <Text
             style={{ color: "white", fontFamily: theme.fontBold, fontSize: 15 }}
           >
-            Start
+            {isEnrolled || isFree ? "Start Learning" : "Preview"}
           </Text>
         </Pressable>
 
+        {/* Second CTA — depends on login + enrollment state */}
         {loggedIn === false ? (
+          // Not logged in → Login to Buy
           <Pressable
             onPress={() =>
               router.push({ pathname: "/login", params: { from: "course" } })
@@ -368,9 +386,13 @@ export default function CourseOverview() {
               Login to Buy
             </Text>
           </Pressable>
+        ) : isEnrolled || isFree ? (
+          // Logged in + enrolled (or free course) → no buy button needed
+          null
         ) : (
+          // Logged in + NOT enrolled → Buy Course
           <Pressable
-            onPress={async () => { }}
+            onPress={handleBuy}
             style={({ pressed }) => [
               {
                 flex: 1,
@@ -385,10 +407,9 @@ export default function CourseOverview() {
                 borderColor: theme.red,
               },
               pressed && { opacity: 0.85, transform: [{ scale: 0.98 }] },
-              // !course.registrationUrl && { opacity: 0.5 },
             ]}
           >
-            {/* <ShoppingCart size={20} color={theme.red} strokeWidth={2} /> */}
+            <ShoppingCart size={20} color={theme.red} strokeWidth={2} />
             <Text
               style={{
                 color: theme.red,
@@ -396,7 +417,7 @@ export default function CourseOverview() {
                 fontSize: 15,
               }}
             >
-              Enquire Here
+              Buy — ₹{course.price ?? 0}
             </Text>
           </Pressable>
         )}
@@ -404,3 +425,4 @@ export default function CourseOverview() {
     </SafeAreaView>
   );
 }
+

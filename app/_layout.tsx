@@ -22,6 +22,7 @@ import { styleFactory } from "@/src/styleFactory";
 import SplashScreen from "@/src/components/SplashScreen";
 import OnboardingScreen from "@/src/components/onboarding/OnboardingScreen";
 import { hasCompletedOnboarding } from "@/src/lib/storage";
+import { initPurchases } from "@/src/lib/purchases";
 
 function BottomSystemBar() {
   const insets = useSafeAreaInsets();
@@ -115,6 +116,9 @@ export default function RootLayout() {
       NavigationBar.setBackgroundColorAsync(theme.red);
       NavigationBar.setButtonStyleAsync("light");
     }
+
+    // Initialize purchases (stub mode in Phase 1)
+    initPurchases();
   }, []);
 
   const handleSplashFinish = useCallback(async () => {

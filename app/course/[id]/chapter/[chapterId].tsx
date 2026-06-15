@@ -182,7 +182,7 @@ export default function ChapterView() {
         {/*   Purchase this course to unlock all chapters. */}
         {/* </Text> */}
         <Pressable
-          onPress={() => router.back()}
+          onPress={() => router.push(`/course/${id}/buy`)}
           style={({ pressed }) => [
             {
               borderWidth: 1.5,
