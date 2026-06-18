@@ -21,7 +21,7 @@ import {
 import WebView from "react-native-webview";
 import { useQuery } from "@tanstack/react-query";
 import { useCourseQuery } from "@/src/hooks/useCourseQuery";
-import { useIsFocused } from "@react-navigation/native";
+import { useIsFocused  } from "expo-router";
 import { styleFactory } from "@/src/styleFactory";
 import { theme } from "@/src/theme";
 import { useIsLoggedIn } from "@/src/hooks/useIsLoggedIn";

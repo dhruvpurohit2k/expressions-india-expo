@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useIsFocused } from "@react-navigation/native";
+import { useIsFocused  } from "expo-router";
 import { isLoggedIn } from "@/src/lib/auth";
 
 export function useIsLoggedIn(): boolean | null {

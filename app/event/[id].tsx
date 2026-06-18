@@ -1,7 +1,7 @@
 import { useImageContext } from "@/src/context/imageContext";
 import { safeDate } from "@/src/lib/date";
 import { useEvent } from "@/src/hooks/useEvent";
-import { useIsFocused } from "@react-navigation/native";
+import { useIsFocused  } from "expo-router";
 import { styleFactory } from "@/src/styleFactory";
 import { theme } from "@/src/theme";
 import { Ionicons } from "@expo/vector-icons";

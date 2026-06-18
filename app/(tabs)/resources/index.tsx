@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { useIsFocused } from "@react-navigation/native";
+import { useIsFocused  } from "expo-router";
 import { ActivityIndicator, FlatList, Text, View } from "react-native";
 import { styleFactory } from "@/src/styleFactory";
 import { theme } from "@/src/theme";

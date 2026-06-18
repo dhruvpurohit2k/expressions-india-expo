@@ -1,5 +1,5 @@
 import { useArticle } from "@/src/hooks/useArticle";
-import { useIsFocused } from "@react-navigation/native";
+import { useIsFocused  } from "expo-router";
 import { styleFactory } from "@/src/styleFactory";
 import { theme } from "@/src/theme";
 import { format } from "date-fns";

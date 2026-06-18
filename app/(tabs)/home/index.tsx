@@ -17,7 +17,7 @@ import Animated, { FadeInDown } from "react-native-reanimated";
 import { ExternalLink } from "lucide-react-native";
 import { useUpcomingCarouselImages } from "@/src/hooks/useUpcomingCarouselImages";
 import { useCompletedCarouselImages } from "@/src/hooks/useCompletedCarouselImages";
-import { useIsFocused } from "@react-navigation/native";
+import { useIsFocused  } from "expo-router";
 import { useQuery } from "@tanstack/react-query";
 import { fetchAlmanac } from "@/src/api/fetchAlmanac";
 import { fetchBrochure } from "@/src/api/fetchBrochure";

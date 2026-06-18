@@ -21,7 +21,7 @@ import { useMyCourses } from "@/src/hooks/useMyCourses";
 import { useCertificateApplications } from "@/src/hooks/useCertificateApplications";
 import type { CertApplicationPublic } from "@/src/api/fetchCertificateApplications";
 import * as Linking from "expo-linking";
-import { useIsFocused } from "@react-navigation/native";
+import { useIsFocused  } from "expo-router";
 import { CourseCard } from "@/src/components/course/CourseCard";
 import { AUDIENCE_LABELS } from "@/src/types/audience";
 import type { CourseListItem } from "@/src/types/course";

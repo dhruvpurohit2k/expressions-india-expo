@@ -1,6 +1,7 @@
 import { View, Text, ScrollView, Image, Dimensions } from "react-native";
 import { styleFactory } from "../styleFactory";
 import { theme } from "../theme";
+import JustifiedText from "./JustifiedText";
 export default function Director() {
   const globalStyle = styleFactory();
   const screenWidth = Dimensions.get("window").width;
@@ -74,32 +75,14 @@ export default function Director() {
           </Text>
         </View>
       </View>
-      <Text
-        style={[
-          globalStyle.text,
-          { marginTop: 30, fontSize: 14, textAlign: "justify" },
+      <JustifiedText
+        paragraphs={[
+          "Dr. Jitendra Nagpal (MD DNB) is Program Director of Expressions India - The National Life Skills, Values, Community and School Wellness Program. The Expressions India programme has over 6500 Child and Adolescent centred sensitization workshops, training programmes and community seminars to its credit. A large number of schooling systems and higher education institutions in the country regularly seek technical expertise from Expressions India for their advocacy, research, training and enrichment. He has been conducted a large number of corporate workshops on Work Life Balance.",
+          "Sr. Consultant Psychiatrist and Head of the Instt. of Mental Health and Life Skills Promotion and Institute of Child Development and Adolescent Health at Moolchand Medcity, New Delhi.",
         ]}
-      >
-        Dr. Jitendra Nagpal (MD DNB) is Program Director of Expressions India -
-        The National Life Skills, Values, Community and School Wellness Program.
-        The Expressions India programme has over 6500 Child and Adolescent
-        centred sensitization workshops, training programmes and community
-        seminars to its credit. A large number of schooling systems and higher
-        education institutions in the country regularly seek technical expertise
-        from Expressions India for their advocacy, research, training and
-        enrichment. He has been conducted a large number of corporate workshops
-        on Work Life Balance.
-      </Text>
-      <Text
-        style={[
-          globalStyle.text,
-          { fontFamily: theme.font, fontSize: 14, textAlign: "justify" },
-        ]}
-      >
-        Sr. Consultant Psychiatrist and Head of the Instt. of Mental Health and
-        Life Skills Promotion and Institute of Child Development and Adolescent
-        Health at Moolchand Medcity, New Delhi.
-      </Text>
+        fontSize={14}
+        lineHeight={22}
+      />
     </ScrollView>
   );
 }

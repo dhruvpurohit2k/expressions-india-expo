@@ -1,4 +1,4 @@
-import { View, Text, Image, Dimensions } from "react-native";
+import { View, Text, Image, Dimensions, Platform } from "react-native";
 // import { Image } from "expo-image";
 import { useImageContext } from "@/src/context/imageContext";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -69,7 +69,7 @@ export default function Modal() {
           backgroundColor: "black",
         }}
       >
-        <StatusBar backgroundColor="black" />
+        <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
         <GestureDetector gesture={composed}>
           <Animated.View
             style={[

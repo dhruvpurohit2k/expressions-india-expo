@@ -10,7 +10,7 @@ import {
   ChevronLeft,
   Calendar,
 } from "lucide-react-native";
-import { useIsFocused } from "@react-navigation/native";
+import { useIsFocused  } from "expo-router";
 import {
   ActivityIndicator,
   Pressable,

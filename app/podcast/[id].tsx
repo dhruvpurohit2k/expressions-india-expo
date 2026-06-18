@@ -1,5 +1,5 @@
 import { usePodcast } from "@/src/hooks/usePodcast";
-import { useIsFocused } from "@react-navigation/native";
+import { useIsFocused  } from "expo-router";
 import { styleFactory } from "@/src/styleFactory";
 import { theme } from "@/src/theme";
 import { router, useLocalSearchParams } from "expo-router";
@@ -22,7 +22,7 @@ function getYouTubeEmbedUrl(link: string): string | null {
     return null;
   }
   if (!videoId) return null;
-  return `https://www.youtube.com/embed/${videoId}?modestbranding=1&rel=0&showinfo=0&controls=1&disablekb=1&fs=0&iv_load_policy=3&playsinline=1`;
+  return `https://www.youtube.com/embed/${videoId}?modestbranding=1&rel=0&showinfo=0&controls=1&disablekb=0&iv_load_policy=3&playsinline=0&fs=1`;
 }
 
 export default function PodcastDetail() {
@@ -115,7 +115,8 @@ export default function PodcastDetail() {
 <style>*{margin:0;padding:0}html,body,iframe{width:100%;height:100%;border:0;background:#000}</style>
 </head><body>
 <iframe src="${embedUrl}&origin=https://expressionsindia.app"
-  allow="accelerometer;autoplay;encrypted-media;gyroscope;picture-in-picture"></iframe>
+  allow="accelerometer;autoplay;encrypted-media;gyroscope;picture-in-picture;fullscreen"
+  allowfullscreen></iframe>
 </body></html>`,
                 baseUrl: "https://expressionsindia.app",
               }}

@@ -9,7 +9,7 @@ import {
 } from "lucide-react-native";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import { useLatestFeed } from "../hooks/useLatestFeed";
-import { useIsFocused } from "@react-navigation/native";
+import { useIsFocused  } from "expo-router";
 import { LatestFeedItem } from "../types/latestFeed";
 import { router } from "expo-router";
 

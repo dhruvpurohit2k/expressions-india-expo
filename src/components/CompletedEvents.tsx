@@ -12,7 +12,7 @@ import { theme } from "../theme";
 import Pagination from "./Pagination";
 import { usePastEventQuery } from "../hooks/usePastEventQuery";
 import { useState } from "react";
-import { useIsFocused } from "@react-navigation/native";
+import { useIsFocused  } from "expo-router";
 import Animated, { FadeInUp, SlideInDown } from "react-native-reanimated";
 import { format } from "date-fns";
 import { safeDate } from "../lib/date";

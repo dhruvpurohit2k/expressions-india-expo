@@ -46,7 +46,7 @@ import WebView from "react-native-webview";
 import { useCourseQuery } from "@/src/hooks/useCourseQuery";
 import { useChapterQuery } from "@/src/hooks/useChapterQuery";
 import { AccessError } from "@/src/api/fetchChapter";
-import { useIsFocused } from "@react-navigation/native";
+import { useIsFocused  } from "expo-router";
 import { styleFactory } from "@/src/styleFactory";
 import { theme } from "@/src/theme";
 

@@ -11,6 +11,7 @@ import Animated, {
   withSpring,
 } from "react-native-reanimated";
 import AnimatedDots from "./AnimatedDots";
+import JustifiedText from "./JustifiedText";
 
 const globalStyle = styleFactory();
 const screenWidth = Dimensions.get("window").width;
@@ -92,51 +93,20 @@ function AboutTheOrg() {
         scrollEventThrottle={16}
       >
         <Text style={globalStyle.sectionHeading}>Who are we ? </Text>
-        <Text style={[globalStyle.text]}>
-          It is now widely acclaimed that Life Skills play a dynamic role in
-          overall future capacities of every student. Mental Health Awareness
-          and Wellbeing should be included as part of general education through
-          the complete span of schooling years. The focus is on evolving good
-          practices in schools for overall personality and resilience
-          development, with intensive participation in behavioral safety,
-          hygiene, gender sensitivity, healthy cyber and social media habits. It
-          has also been noted that schools are the key forums for acquisition of
-          life long behavioral health knowledge, attitudes and Skills through
-          Peer learning and Leadership Training.
-        </Text>
+        <JustifiedText
+          paragraphs={[
+            "It is now widely acclaimed that Life Skills play a dynamic role in overall future capacities of every student. Mental Health Awareness and Wellbeing should be included as part of general education through the complete span of schooling years. The focus is on evolving good practices in schools for overall personality and resilience development, with intensive participation in behavioral safety, hygiene, gender sensitivity, healthy cyber and social media habits. It has also been noted that schools are the key forums for acquisition of life long behavioral health knowledge, attitudes and Skills through Peer learning and Leadership Training.",
+            "Expressions India - The National Life Skills and School Wellness Program is a well-recognized and awarded initiative by the government and non governmental organizations in the country. This program strives to empower, support and streamline the co-scholastic and allied elements to effectively promote Child and Adolescent Life Skills and Wellbeing Culture in an inclusive student led environment for Indian Schools. Having been the technical support for the CBSE Adolescent Life Skills Leadership Program with focus on building the teachers and students as Well Being Ambassadors across the country, a technical resource pool of erudite professionals is effectively functional to facilitate these innovative programs.",
+            "The need for a continued dialogue and educational intervention in pursuit of empowering the adolescents of our country as Life Skills and Well-Being Ambassadors has been strongly felt. When adolescents acquire knowledge, values and life skills, they benefit in a variety of ways. These qualities help them to make informed decisions, solve problems, think critically and creatively, communicate effectively, build healthy relationships, empathize with others and cope with and manage their lives in a healthy, safe and productive manner. Expressions India has taken the key technical role in furthering the cause of Health and Behavioral change with the Life skills approach and empowered learning in schools.",
+          ]}
+          fontSize={13}
+          lineHeight={20}
+        />
         <Image
           source={require("@/assets/images/about/about_us.jpg")}
           style={{ width: screenWidth - 100, marginHorizontal: "auto" }}
           resizeMode="contain"
         />
-        <Text style={[globalStyle.text]}>
-          <Text style={globalStyle.companyName}>Expressions India</Text> - The
-          National Life Skills and School Wellness Program is a well-recognized
-          and awarded initiative by the government and non governmental
-          organizations in the country. This program strives to empower, support
-          and streamline the co-scholastic and allied elements to effectively
-          promote Child and Adolescent Life Skills and Wellbeing Culture in an
-          inclusive student led environment for Indian Schools. Having been the
-          technical support for the CBSE Adolescent Life Skills Leadership
-          Program with focus on building the teachers and students as Well Being
-          Ambassadors across the country, a technical resource pool of erudite
-          professionals is effectively functional to facilitate these innovative
-          programs.
-        </Text>
-        <Text style={globalStyle.text}>
-          The need for a continued dialogue and educational intervention in
-          pursuit of empowering the adolescents of our country as Life Skills
-          and Well-Being Ambassadors has been strongly felt. When adolescents
-          acquire knowledge, values and life skills, they benefit in a variety
-          of ways. These qualities help them to make informed decisions, solve
-          problems, think critically and creatively, communicate effectively,
-          build healthy relationships, empathize with others and cope with and
-          manage their lives in a healthy, safe and productive manner.{" "}
-          <Text style={globalStyle.companyName}>Expressions India</Text> has
-          taken the key technical role in furthering the cause of Health and
-          Behavioral change with the Life skills approach and empowered learning
-          in schools.
-        </Text>
       </Animated.ScrollView>
       <Animated.View
         style={[
@@ -213,7 +183,7 @@ function MissionAndVision() {
             </View>
             <Text
               style={[
-                { fontSize: 16, color: theme.text, flex: 1, marginBottom: 0 },
+                { fontSize: 16, color: theme.text, flex: 1, marginBottom: 0, textAlign: "justify" },
               ]}
             >
               {item}
@@ -280,7 +250,7 @@ function ObjectivesAndFocus() {
             </View>
             <Text
               style={[
-                { fontSize: 16, color: theme.text, flex: 1, marginBottom: 0 },
+                { fontSize: 16, color: theme.text, flex: 1, marginBottom: 0, textAlign: "justify" },
               ]}
             >
               {item}

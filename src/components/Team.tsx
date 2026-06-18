@@ -2,7 +2,7 @@ import { View, Text, ScrollView, ActivityIndicator } from "react-native";
 import { styleFactory } from "../styleFactory";
 import { theme } from "../theme";
 import { useTeamListQuery } from "../hooks/useTeamListQuery";
-import { useIsFocused } from "@react-navigation/native";
+import { useIsFocused  } from "expo-router";
 
 export default function Team() {
   const globalStyle = styleFactory();

@@ -1,5 +1,5 @@
 import { usePastEventQuery } from "@/src/hooks/usePastEventQuery";
-import { useIsFocused } from "@react-navigation/native";
+import { useIsFocused  } from "expo-router";
 import { styleFactory } from "@/src/styleFactory";
 import { theme } from "@/src/theme";
 import { ChevronLeft, ChevronRight } from "lucide-react-native";

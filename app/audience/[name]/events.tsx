@@ -7,7 +7,7 @@ import { router, useLocalSearchParams, Link } from "expo-router";
 import { format } from "date-fns";
 import { ChevronLeft, ChevronRight } from "lucide-react-native";
 import { useState } from "react";
-import { useIsFocused } from "@react-navigation/native";
+import { useIsFocused  } from "expo-router";
 import {
   ActivityIndicator,
   FlatList,

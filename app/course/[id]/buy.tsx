@@ -14,7 +14,7 @@ import {
 } from "react-native-safe-area-context";
 import { ChevronLeft, ShieldAlert, ShoppingCart } from "lucide-react-native";
 import { Image } from "expo-image";
-import { useIsFocused } from "@react-navigation/native";
+import { useIsFocused  } from "expo-router";
 import { useQueryClient } from "@tanstack/react-query";
 
 import { useCourseQuery } from "@/src/hooks/useCourseQuery";

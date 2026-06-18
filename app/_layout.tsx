@@ -91,17 +91,17 @@ const queryClient = new QueryClient({
   },
 });
 
-type AppState = "splash" | "checking" | "onboarding" | "app";
+type BootState = "splash" | "checking" | "onboarding" | "app";
 
 // Survives component remounts (e.g. web tab navigation) so splash only runs once.
-let _cachedAppState: AppState | null = null;
+let _cachedBootState: BootState | null = null;
 
 export default function RootLayout() {
   const globalStyles = styleFactory();
-  const [appState, setAppState] = useState<AppState>(_cachedAppState ?? "splash");
+  const [appState, setAppState] = useState<BootState>(_cachedBootState ?? "splash");
 
-  function updateAppState(next: AppState) {
-    _cachedAppState = next;
+  function updateAppState(next: BootState) {
+    _cachedBootState = next;
     setAppState(next);
   }
   const [loaded] = useFonts({
@@ -111,11 +111,7 @@ export default function RootLayout() {
   });
 
   useEffect(() => {
-    SystemUI.setBackgroundColorAsync(theme.red);
-    if (Platform.OS === "android") {
-      NavigationBar.setBackgroundColorAsync(theme.red);
-      NavigationBar.setButtonStyleAsync("light");
-    }
+    SystemUI.setBackgroundColorAsync(theme.red).catch(() => {});
 
     // Initialize purchases (stub mode in Phase 1)
     initPurchases();
@@ -157,7 +153,7 @@ export default function RootLayout() {
     return (
       <ErrorBoundary>
         <SafeAreaProvider>
-          <StatusBar backgroundColor="transparent" translucent style="dark" />
+          <StatusBar style="dark" />
           <OnboardingScreen onComplete={handleOnboardingComplete} />
         </SafeAreaProvider>
       </ErrorBoundary>
@@ -166,13 +162,9 @@ export default function RootLayout() {
 
   return (
     <ErrorBoundary>
+    <ImageProvider>
     <SafeAreaProvider>
-      <StatusBar
-        backgroundColor={theme.red}
-        translucent={true}
-        style="light"
-      />
-      <ImageProvider>
+      <StatusBar style="light" />
         <QueryClientProvider client={queryClient}>
           <View style={{ flex: 1 }}>
             <Stack
@@ -208,8 +200,8 @@ export default function RootLayout() {
             <BottomSystemBar />
           </View>
         </QueryClientProvider>
-      </ImageProvider>
     </SafeAreaProvider>
+    </ImageProvider>
     </ErrorBoundary>
   );
 }

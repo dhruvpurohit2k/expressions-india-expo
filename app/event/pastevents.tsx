@@ -18,7 +18,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { usePastEventQuery } from "@/src/hooks/usePastEventQuery";
-import { useIsFocused } from "@react-navigation/native";
+import { useIsFocused  } from "expo-router";
 
 export default function PastEvents() {
   const isFocused = useIsFocused();

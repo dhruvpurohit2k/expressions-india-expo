@@ -12,7 +12,7 @@ import { theme } from "../theme";
 import { useState } from "react";
 import { WorkshopListSchema } from "../types";
 import { useQuery } from "@tanstack/react-query";
-import { useIsFocused } from "@react-navigation/native";
+import { useIsFocused  } from "expo-router";
 import { Link, router } from "expo-router";
 import Animated, {
   Easing,

@@ -22,7 +22,7 @@ import { useImageContext } from "../context/imageContext";
 import { Link } from "expo-router";
 import UpcomingEvent from "./UpcomingEvent";
 import CompletedEvents from "./CompletedEvents";
-import { useIsFocused } from "@react-navigation/native";
+import { useIsFocused  } from "expo-router";
 
 const globalStyle = styleFactory();
 const screenWidth = Dimensions.get("window").width;
