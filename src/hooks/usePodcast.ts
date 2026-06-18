@@ -9,7 +9,5 @@ export function usePodcast(id: string, { enabled = true }: { enabled?: boolean }
     queryKey: queryKeys.podcasts.detail(id),
     queryFn: () => fetchPodcast(id),
     enabled: !!id && enabled,
-    refetchInterval: refreshTime,
-    refetchIntervalInBackground: false,
   });
 }

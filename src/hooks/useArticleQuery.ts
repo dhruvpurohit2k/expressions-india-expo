@@ -16,8 +16,6 @@ export function useArticleQuery({
   return useQuery({
     queryKey: queryKeys.articles.list({ limit, offset }),
     queryFn: () => fetchArticleList({ limit, offset }),
-    refetchInterval: refreshTime,
-    refetchIntervalInBackground: false,
     enabled,
   });
 }

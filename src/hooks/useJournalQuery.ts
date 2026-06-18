@@ -16,8 +16,6 @@ export function useJournalQuery({
   return useQuery({
     queryKey: queryKeys.journals.list({ limit, offset }),
     queryFn: () => fetchJournalList({ limit, offset }),
-    refetchInterval: refreshTime,
-    refetchIntervalInBackground: false,
     enabled,
   });
 }

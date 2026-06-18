@@ -9,7 +9,5 @@ export function useCourseQuery(id: string, { enabled = true }: { enabled?: boole
     queryKey: queryKeys.courses.detail(id),
     queryFn: () => fetchCourse(id),
     enabled: !!id && enabled,
-    refetchInterval: refreshTime,
-    refetchIntervalInBackground: false,
   });
 }

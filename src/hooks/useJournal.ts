@@ -9,7 +9,5 @@ export function useJournal(id: string, { enabled = true }: { enabled?: boolean }
     queryKey: queryKeys.journals.detail(id),
     queryFn: () => fetchJournal(id),
     enabled: !!id && enabled,
-    refetchInterval: refreshTime,
-    refetchIntervalInBackground: false,
   });
 }

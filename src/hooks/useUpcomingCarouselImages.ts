@@ -8,8 +8,6 @@ export function useUpcomingCarouselImages({ enabled = true }: { enabled?: boolea
   return useQuery({
     queryKey: queryKeys.homeImages.upcoming(),
     queryFn: fetchUpcomingCarouselImages,
-    refetchInterval: refreshTime,
-    refetchIntervalInBackground: false,
     enabled,
   });
 }

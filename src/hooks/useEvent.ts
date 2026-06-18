@@ -9,7 +9,5 @@ export function useEvent(id: string, { enabled = true }: { enabled?: boolean } =
     queryKey: queryKeys.events.detail(id),
     queryFn: () => fetchEvent(id),
     enabled: !!id && enabled,
-    refetchInterval: refreshTime,
-    refetchIntervalInBackground: false,
   });
 }

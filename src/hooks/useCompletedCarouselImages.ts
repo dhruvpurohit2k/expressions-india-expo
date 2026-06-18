@@ -8,8 +8,6 @@ export function useCompletedCarouselImages({ enabled = true }: { enabled?: boole
   return useQuery({
     queryKey: queryKeys.homeImages.completed(),
     queryFn: fetchCompletedCarouselImages,
-    refetchInterval: refreshTime,
-    refetchIntervalInBackground: false,
     enabled,
   });
 }

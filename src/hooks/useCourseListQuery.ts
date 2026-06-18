@@ -11,8 +11,6 @@ export function useCourseListQuery({
   return useQuery({
     queryKey: queryKeys.courses.list(params),
     queryFn: () => fetchCourseList(params),
-    refetchInterval: refreshTime,
-    refetchIntervalInBackground: false,
     enabled,
   });
 }

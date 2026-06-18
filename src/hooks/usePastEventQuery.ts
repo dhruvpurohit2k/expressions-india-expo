@@ -16,8 +16,6 @@ export function usePastEventQuery({
   return useQuery({
     queryKey: queryKeys.events.past({ limit, offset }),
     queryFn: () => fetchPastEventList({ limit, offset }),
-    refetchInterval: refreshTime,
-    refetchIntervalInBackground: false,
     enabled,
   });
 }

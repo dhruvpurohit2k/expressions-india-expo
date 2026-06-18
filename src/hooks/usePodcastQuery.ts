@@ -16,8 +16,6 @@ export function usePodcastQuery({
   return useQuery({
     queryKey: queryKeys.podcasts.list({ limit, offset }),
     queryFn: () => fetchPodcastList({ limit, offset }),
-    refetchInterval: refreshTime,
-    refetchIntervalInBackground: false,
     enabled,
   });
 }
