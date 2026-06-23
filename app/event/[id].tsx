@@ -2,6 +2,8 @@ import { useImageContext } from "@/src/context/imageContext";
 import { safeDate } from "@/src/lib/date";
 import { useEvent } from "@/src/hooks/useEvent";
 import { useIsFocused  } from "expo-router";
+import { StatusBar } from "expo-status-bar";
+import JustifiedText from "@/src/components/JustifiedText";
 import { styleFactory } from "@/src/styleFactory";
 import { theme } from "@/src/theme";
 import { Ionicons } from "@expo/vector-icons";
@@ -326,18 +328,14 @@ function UpcomingEventDetail({
             {/* Content */}
             <View style={{ paddingTop: 20 }}>
               {/* Description */}
-              <Text
-                style={{
-                  fontSize: 15,
-                  fontFamily: theme.font,
-                  color: "hsl(0,0%,38%)",
-                  lineHeight: 25,
-                  textAlign: "justify",
-                  marginBottom: 28,
-                }}
-              >
-                {event.description ?? "No description available."}
-              </Text>
+              <View style={{ marginBottom: 28 }}>
+                <JustifiedText
+                  paragraphs={[(event.description ?? "No description available.")]}
+                  fontSize={15}
+                  lineHeight={25}
+                  color="hsl(0,0%,38%)"
+                />
+              </View>
 
               {/* Perks */}
               {event.perks && event.perks.length > 0 && (
@@ -574,8 +572,8 @@ function CompletedEventDetail({
           flexDirection: "row",
           alignItems: "center",
           paddingHorizontal: 15,
-          paddingTop: insets.top + 10,
-          paddingBottom: 10,
+          paddingTop: insets.top + 8,
+          paddingBottom: 8,
           backgroundColor: theme.red,
         }}
       >
@@ -594,7 +592,7 @@ function CompletedEventDetail({
       </View>
 
       <ScrollView
-        contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 40 }}
+        contentContainerStyle={{ paddingHorizontal: 20, paddingTop: 24, paddingBottom: 40 }}
         showsVerticalScrollIndicator={false}
       >
         {/* Title */}
@@ -609,18 +607,13 @@ function CompletedEventDetail({
 
         {/* Description */}
         {event.description && (
-          <Text
-            style={{
-              fontSize: 16,
-              color: theme.text,
-              textAlign: "justify",
-              lineHeight: 24,
-              marginTop: 10,
-              marginBottom: 20,
-            }}
-          >
-            {event.description}
-          </Text>
+          <View style={{ marginTop: 10, marginBottom: 20 }}>
+            <JustifiedText
+              paragraphs={[event.description]}
+              fontSize={16}
+              lineHeight={24}
+            />
+          </View>
         )}
 
         {/* Date & Venue */}
@@ -943,6 +936,7 @@ export default function EventDetail() {
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.backgroundColorLight }}>
+      <StatusBar style="light" />
       {event.status === "completed" ? (
         <CompletedEventDetail event={event} globalStyle={globalStyle} />
       ) : (

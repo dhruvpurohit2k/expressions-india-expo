@@ -111,7 +111,7 @@ export default function UpcomingEvents() {
                             fontSize: 12,
                             fontFamily: theme.fontBold,
                             color: theme.text,
-                            lineHeight: 17,
+                            lineHeight: 16,
                           }}
                         >
                           {item.title}

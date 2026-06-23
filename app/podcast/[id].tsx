@@ -1,5 +1,7 @@
 import { usePodcast } from "@/src/hooks/usePodcast";
 import { useIsFocused  } from "expo-router";
+import { StatusBar } from "expo-status-bar";
+import JustifiedText from "@/src/components/JustifiedText";
 import { styleFactory } from "@/src/styleFactory";
 import { theme } from "@/src/theme";
 import { router, useLocalSearchParams } from "expo-router";
@@ -63,14 +65,15 @@ export default function PodcastDetail() {
 
   return (
     <SafeAreaView style={globalStyle.screen} edges={["left", "right", "bottom"]}>
+      <StatusBar style="light" />
       <Animated.View
         entering={FadeInDown.duration(300)}
         style={{
           flexDirection: "row",
           alignItems: "center",
           paddingHorizontal: 15,
-          paddingVertical: 10,
-          paddingTop: insets.top + 10,
+          paddingVertical: 8,
+          paddingTop: insets.top + 8,
           backgroundColor: theme.red,
         }}
       >
@@ -86,7 +89,7 @@ export default function PodcastDetail() {
       </Animated.View>
 
       <ScrollView
-        contentContainerStyle={{ paddingHorizontal: 15, paddingBottom: 40 }}
+        contentContainerStyle={{ paddingHorizontal: 15, paddingTop: 24, paddingBottom: 40 }}
         showsVerticalScrollIndicator={false}
       >
         <Animated.Text
@@ -165,9 +168,11 @@ export default function PodcastDetail() {
         {podcast.description && (
           <Animated.View entering={FadeInUp.duration(400).delay(280)} style={{ marginBottom: 16 }}>
             <Text style={{ fontSize: 18, color: "#777", marginBottom: 8 }}>Description</Text>
-            <Text style={{ fontSize: 15, color: theme.text, textAlign: "justify", lineHeight: 22 }}>
-              {podcast.description}
-            </Text>
+            <JustifiedText
+              paragraphs={[podcast.description]}
+              fontSize={15}
+              lineHeight={22}
+            />
           </Animated.View>
         )}
 

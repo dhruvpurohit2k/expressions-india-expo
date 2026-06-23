@@ -1,5 +1,7 @@
 import { useArticle } from "@/src/hooks/useArticle";
 import { useIsFocused  } from "expo-router";
+import { StatusBar } from "expo-status-bar";
+import JustifiedText from "@/src/components/JustifiedText";
 import { styleFactory } from "@/src/styleFactory";
 import { theme } from "@/src/theme";
 import { format } from "date-fns";
@@ -88,6 +90,7 @@ export default function ArticleDetail() {
 
   return (
     <SafeAreaView style={globalStyle.screen} edges={["left", "right", "bottom"]}>
+      <StatusBar style="light" />
       {/* Back button */}
       <Animated.View
         entering={FadeInDown.duration(300)}
@@ -95,8 +98,8 @@ export default function ArticleDetail() {
           flexDirection: "row",
           alignItems: "center",
           paddingHorizontal: 15,
-          paddingVertical: 10,
-          paddingTop: insets.top + 10,
+          paddingVertical: 8,
+          paddingTop: insets.top + 8,
           backgroundColor: theme.red,
         }}
       >
@@ -190,22 +193,11 @@ export default function ArticleDetail() {
           />
 
           {/* Content paragraphs */}
-          {paragraphs.map((para, i) => (
-            <Animated.Text
-              key={i}
-              entering={FadeInUp.duration(450).delay(300 + Math.min(i, 5) * 60)}
-              style={{
-                fontSize: i === 0 ? 15 : 15,
-                color: i === 0 ? "hsl(0,0%,25%)" : theme.text,
-                fontFamily: i === 0 ? theme.font : theme.font,
-                lineHeight: i === 0 ? 28 : 26,
-                marginBottom: 20,
-                textAlign: "justify",
-              }}
-            >
-              {para}
-            </Animated.Text>
-          ))}
+          <JustifiedText
+            paragraphs={paragraphs}
+            fontSize={15}
+            lineHeight={26}
+          />
 
           {/* Extra images gallery */}
           {extraImages.length > 0 && (

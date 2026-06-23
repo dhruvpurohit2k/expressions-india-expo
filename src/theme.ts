@@ -11,8 +11,8 @@ export const theme = {
   font: "Inter_400Regular",
   fontBold: "Inter_700Bold",
   TITLEFONT: "GloriaHallelujah_400Regular",
-  sectionHeadingSize: 28,
-  fontSize: 13,
+  sectionHeadingSize: 22,
+  fontSize: 15,
   sectionHeadingColor: "hsl(4, 80%, 48%)",
   red: "hsl(4, 72%, 52%)",
 };

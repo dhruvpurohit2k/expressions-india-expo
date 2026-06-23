@@ -10,7 +10,7 @@ import * as SystemUI from "expo-system-ui";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useState, useCallback, Component } from "react";
-import { AppState, Image, Platform, View, Text, ScrollView } from "react-native";
+import { AppState, Image, Platform, View, Text, ScrollView, StatusBar as RNStatusBar } from "react-native";
 import { SafeAreaProvider, useSafeAreaInsets } from "react-native-safe-area-context";
 import { ImageProvider } from "@/src/context/imageContext";
 import {
@@ -36,7 +36,7 @@ function BottomSystemBar() {
         right: 0,
         bottom: 0,
         height: insets.bottom,
-        backgroundColor: theme.red,
+        backgroundColor: "hsla(4, 72%, 52%, 0.94)",
       }}
     />
   );
@@ -164,7 +164,7 @@ export default function RootLayout() {
     <ErrorBoundary>
     <ImageProvider>
     <SafeAreaProvider>
-      <StatusBar style="light" />
+      <RNStatusBar backgroundColor="#dc3522" barStyle="light-content" translucent />
         <QueryClientProvider client={queryClient}>
           <View style={{ flex: 1 }}>
             <Stack

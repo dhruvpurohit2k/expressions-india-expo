@@ -47,6 +47,8 @@ import { useCourseQuery } from "@/src/hooks/useCourseQuery";
 import { useChapterQuery } from "@/src/hooks/useChapterQuery";
 import { AccessError } from "@/src/api/fetchChapter";
 import { useIsFocused  } from "expo-router";
+import { StatusBar } from "expo-status-bar";
+import JustifiedText from "@/src/components/JustifiedText";
 import { styleFactory } from "@/src/styleFactory";
 import { theme } from "@/src/theme";
 
@@ -255,10 +257,11 @@ export default function ChapterView() {
 
   return (
     <SafeAreaView
-      style={[globalStyle.screen, { flex: 1 }]}
+      style={globalStyle.screen}
       edges={["left", "right", "bottom"]}
     >
-      {/* Chapter Drawer */}
+      <StatusBar style="light" />
+      {/* Drawer Menu Modal */}
       <Modal
         visible={drawerOpen}
         transparent
@@ -396,8 +399,8 @@ export default function ChapterView() {
           flexDirection: "row",
           alignItems: "center",
           paddingHorizontal: 12,
-          paddingVertical: 10,
-          paddingTop: insets.top + 10,
+          paddingVertical: 8,
+          paddingTop: insets.top + 8,
           backgroundColor: theme.red,
           gap: 8,
         }}
@@ -445,7 +448,7 @@ export default function ChapterView() {
         contentContainerStyle={{
           paddingHorizontal: 15,
           paddingBottom: 20,
-          paddingTop: 6,
+          paddingTop: 24,
         }}
         showsVerticalScrollIndicator={false}
       >
@@ -494,17 +497,13 @@ export default function ChapterView() {
 
         {/* Description */}
         {chapter.description ? (
-          <Text
-            style={{
-              fontSize: 15,
-              color: theme.text,
-              lineHeight: 23,
-              marginBottom: 24,
-              textAlign: "justify",
-            }}
-          >
-            {chapter.description}
-          </Text>
+          <View style={{ marginBottom: 24 }}>
+            <JustifiedText
+              paragraphs={[chapter.description]}
+              fontSize={15}
+              lineHeight={23}
+            />
+          </View>
         ) : null}
 
         {/* Downloadable Content */}

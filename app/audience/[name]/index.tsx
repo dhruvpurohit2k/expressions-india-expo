@@ -3,6 +3,8 @@ import { AUDIENCE_LABELS } from "@/src/types/audience";
 import { styleFactory } from "@/src/styleFactory";
 import { theme } from "@/src/theme";
 import { router, useLocalSearchParams, Link } from "expo-router";
+import { StatusBar } from "expo-status-bar";
+import JustifiedText from "@/src/components/JustifiedText";
 import {
   Newspaper,
   Headphones,
@@ -75,6 +77,7 @@ export default function AudiencePage() {
       style={globalStyle.screen}
       edges={["left", "right", "bottom"]}
     >
+      <StatusBar style="light" />
       {/* Back */}
       <Animated.View
         entering={FadeInDown.duration(300)}
@@ -82,8 +85,8 @@ export default function AudiencePage() {
           flexDirection: "row",
           alignItems: "center",
           paddingHorizontal: 15,
-          paddingVertical: 10,
-          paddingTop: insets.top + 10,
+          paddingVertical: 8,
+          paddingTop: insets.top + 8,
           gap: 10,
           backgroundColor: theme.red,
         }}
@@ -113,7 +116,7 @@ export default function AudiencePage() {
       <ScrollView
         contentContainerStyle={{
           paddingHorizontal: 18,
-          paddingTop: 16,
+          paddingTop: 24,
           paddingBottom: 48,
         }}
         showsVerticalScrollIndicator={false}
@@ -125,20 +128,11 @@ export default function AudiencePage() {
               <ActivityIndicator size="small" color={theme.red} />
             </View>
           ) : audience?.introduction ? (
-            <Animated.Text
-              entering={FadeInDown.duration(400).delay(100)}
-              style={{
-                fontSize: 15,
-                fontFamily: theme.font,
-                color: theme.text,
-                lineHeight: 24,
-                marginBottom: 28,
-                marginTop: 8,
-                textAlign: "justify",
-              }}
-            >
-              {audience.introduction}
-            </Animated.Text>
+            <JustifiedText
+              paragraphs={audience.introduction.split(/\n\n+/).map((p) => p.trim()).filter(Boolean)}
+              fontSize={15}
+              lineHeight={24}
+            />
           ) : (
             <View style={{ height: 24 }} />
           )}

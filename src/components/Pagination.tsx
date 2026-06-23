@@ -1,6 +1,6 @@
 import Animated, { SlideInDown } from "react-native-reanimated";
 import { theme } from "../theme";
-import { Text, Pressable } from "react-native";
+import { Text, Pressable, View } from "react-native";
 import { ChevronLeft, ChevronRight } from "lucide-react-native";
 
 export default function Pagination({
@@ -19,11 +19,9 @@ export default function Pagination({
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "space-between",
-        paddingHorizontal: 15,
-        paddingVertical: 10,
+        paddingHorizontal: 20,
+        paddingVertical: 12,
         backgroundColor: theme.backgroundColorLight,
-        // No shadow — the tab bar below casts the single shared shadow
-        // so pagination + tab bar read as one continuous floating panel.
         borderTopWidth: 1,
         borderTopColor: "rgba(0,0,0,0.06)",
       }}
@@ -33,25 +31,30 @@ export default function Pagination({
         disabled={page === 1}
         style={({ pressed }) => [
           {
-            flexDirection: "row",
+            width: 44,
+            height: 44,
+            borderRadius: 22,
             alignItems: "center",
-            backgroundColor: "rgb(255,240,240)",
-            paddingVertical: 8,
-            paddingHorizontal: 24,
-            borderRadius: 8,
-            opacity: page === 1 ? 0.35 : 1,
+            justifyContent: "center",
+            backgroundColor: page === 1 ? "hsl(0, 0%, 95%)" : theme.red,
+            elevation: page === 1 ? 0 : 2,
+            shadowColor: "#000",
+            shadowOffset: { width: 0, height: 1 },
+            shadowOpacity: page === 1 ? 0 : 0.1,
+            shadowRadius: 2,
           },
-          pressed && { opacity: 0.75 },
+          pressed && page !== 1 && { opacity: 0.88, transform: [{ scale: 0.95 }] },
         ]}
       >
-        <ChevronLeft size={26} color={theme.red} strokeWidth={2.5} />
+        <ChevronLeft size={22} color={page === 1 ? "hsl(0, 0%, 65%)" : "white"} strokeWidth={3} />
       </Pressable>
 
       <Text
         style={{
-          color: "hsl(0 0% 50%)",
-          fontFamily: theme.font,
-          fontSize: 20,
+          color: "hsl(0, 0%, 30%)",
+          fontFamily: theme.fontBold,
+          fontSize: 16,
+          letterSpacing: 0.5,
         }}
       >
         {totalPages > 0 ? `${page} / ${totalPages}` : "—"}
@@ -62,18 +65,22 @@ export default function Pagination({
         disabled={page >= totalPages}
         style={({ pressed }) => [
           {
-            flexDirection: "row",
+            width: 44,
+            height: 44,
+            borderRadius: 22,
             alignItems: "center",
-            backgroundColor: "rgb(255,240,240)",
-            paddingVertical: 8,
-            paddingHorizontal: 24,
-            borderRadius: 8,
-            opacity: page >= totalPages ? 0.35 : 1,
+            justifyContent: "center",
+            backgroundColor: page >= totalPages ? "hsl(0, 0%, 95%)" : theme.red,
+            elevation: page >= totalPages ? 0 : 2,
+            shadowColor: "#000",
+            shadowOffset: { width: 0, height: 1 },
+            shadowOpacity: page >= totalPages ? 0 : 0.1,
+            shadowRadius: 2,
           },
-          pressed && { opacity: 0.75 },
+          pressed && page < totalPages && { opacity: 0.88, transform: [{ scale: 0.95 }] },
         ]}
       >
-        <ChevronRight size={26} color={theme.red} strokeWidth={2.5} />
+        <ChevronRight size={22} color={page >= totalPages ? "hsl(0, 0%, 65%)" : "white"} strokeWidth={3} />
       </Pressable>
     </Animated.View>
   );

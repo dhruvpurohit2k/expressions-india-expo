@@ -11,7 +11,7 @@ import Animated, {
 import { useEffect } from "react";
 
 function PillTabButton(props: any) {
-  const focused = props.accessibilityState?.selected ?? false;
+  const focused = props['aria-selected'] ?? props.accessibilityState?.selected ?? false;
   const opacity = useSharedValue(focused ? 1 : 0);
 
   useEffect(() => {
@@ -33,7 +33,10 @@ function PillTabButton(props: any) {
           justifyContent: "center",
           borderTopLeftRadius: 12,
           borderTopRightRadius: 12,
+          borderBottomLeftRadius: 0,
+          borderBottomRightRadius: 0,
           overflow: "hidden",
+          backgroundColor: "transparent",
         },
       ]}
     >
@@ -41,13 +44,15 @@ function PillTabButton(props: any) {
         style={[
           {
             position: "absolute",
-            top: 5,
-            bottom: 5,
-            left: 4,
-            right: 4,
+            top: 0,
+            bottom: 0,
+            left: 0,
+            right: 0,
             borderTopLeftRadius: 12,
             borderTopRightRadius: 12,
-            backgroundColor: theme.red,
+            borderBottomLeftRadius: 0,
+            borderBottomRightRadius: 0,
+            backgroundColor: "hsla(4, 72%, 52%, 0.94)",
           },
           pillStyle,
         ]}
@@ -65,20 +70,19 @@ export default function App() {
         tabBarStyle: {
           height: 60 + insets.bottom,
           paddingBottom: insets.bottom,
-          borderTopWidth: 0,
-          borderRadius: 20,
-          // Floating shadow — single source for the whole bottom panel
-          elevation: 16,
-          shadowColor: "#000",
-          shadowOffset: { width: 0, height: -4 },
-          shadowOpacity: 0.08,
-          shadowRadius: 12,
+          borderWidth: 1,
+          borderColor: "rgba(0,0,0,0.06)",
+          borderBottomWidth: 0,
+          borderTopLeftRadius: 12,
+          borderTopRightRadius: 12,
+          overflow: "hidden",
+          elevation: 0,
+          shadowOpacity: 0,
+          backgroundColor: theme.backgroundColorLight,
         },
         tabBarLabelStyle: {
           fontSize: 10,
         },
-        tabBarActiveBackgroundColor: theme.red,
-        tabBarInactiveBackgroundColor: theme.backgroundColorLight,
         tabBarActiveTintColor: "white",
         tabBarInactiveTintColor: "hsl(0,0%,55%)",
         tabBarButton: (props) => <PillTabButton {...props} />,

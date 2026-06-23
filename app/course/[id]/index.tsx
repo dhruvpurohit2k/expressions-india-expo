@@ -22,6 +22,8 @@ import WebView from "react-native-webview";
 import { useQuery } from "@tanstack/react-query";
 import { useCourseQuery } from "@/src/hooks/useCourseQuery";
 import { useIsFocused  } from "expo-router";
+import { StatusBar } from "expo-status-bar";
+import JustifiedText from "@/src/components/JustifiedText";
 import { styleFactory } from "@/src/styleFactory";
 import { theme } from "@/src/theme";
 import { useIsLoggedIn } from "@/src/hooks/useIsLoggedIn";
@@ -117,14 +119,15 @@ export default function CourseOverview() {
       style={globalStyle.screen}
       edges={["left", "right", "bottom"]}
     >
+      <StatusBar style="light" />
       {/* Header */}
       <View
         style={{
           flexDirection: "row",
           alignItems: "center",
           paddingHorizontal: 15,
-          paddingVertical: 10,
-          paddingTop: insets.top + 10,
+          paddingVertical: 8,
+          paddingTop: insets.top + 8,
           backgroundColor: theme.red,
         }}
       >
@@ -140,7 +143,7 @@ export default function CourseOverview() {
       </View>
 
       <ScrollView
-        contentContainerStyle={{ paddingHorizontal: 15, paddingBottom: 20 }}
+        contentContainerStyle={{ paddingHorizontal: 15, paddingTop: 24, paddingBottom: 20 }}
         showsVerticalScrollIndicator={false}
       >
         {/* Title */}
@@ -193,17 +196,13 @@ export default function CourseOverview() {
 
         {/* Description */}
         {course.description ? (
-          <Text
-            style={{
-              fontSize: 15,
-              color: theme.text,
-              lineHeight: 23,
-              marginBottom: 24,
-              textAlign: "justify",
-            }}
-          >
-            {course.description}
-          </Text>
+          <View style={{ marginBottom: 24 }}>
+            <JustifiedText
+              paragraphs={[course.description]}
+              fontSize={15}
+              lineHeight={23}
+            />
+          </View>
         ) : null}
 
         {/* Chapter List */}

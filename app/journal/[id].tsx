@@ -1,5 +1,7 @@
 import { useJournal } from "@/src/hooks/useJournal";
 import { useIsFocused  } from "expo-router";
+import { StatusBar } from "expo-status-bar";
+import JustifiedText from "@/src/components/JustifiedText";
 import { styleFactory } from "@/src/styleFactory";
 import { theme } from "@/src/theme";
 import { router, useLocalSearchParams } from "expo-router";
@@ -61,13 +63,14 @@ export default function JournalDetail() {
 
   return (
     <SafeAreaView style={globalStyle.screen} edges={["left", "right", "bottom"]}>
+      <StatusBar style="light" />
       <View
         style={{
           flexDirection: "row",
           alignItems: "center",
           paddingHorizontal: 15,
-          paddingVertical: 10,
-          paddingTop: insets.top + 10,
+          paddingVertical: 8,
+          paddingTop: insets.top + 8,
           backgroundColor: theme.red,
         }}
       >
@@ -86,7 +89,7 @@ export default function JournalDetail() {
       </View>
 
       <ScrollView
-        contentContainerStyle={{ paddingHorizontal: 15, paddingBottom: 40 }}
+        contentContainerStyle={{ paddingHorizontal: 15, paddingTop: 24, paddingBottom: 40 }}
         showsVerticalScrollIndicator={false}
       >
         <Text
@@ -112,16 +115,11 @@ export default function JournalDetail() {
             <Text style={{ fontSize: 18, color: "#777", marginBottom: 8 }}>
               Description
             </Text>
-            <Text
-              style={{
-                fontSize: 15,
-                color: theme.text,
-                textAlign: "justify",
-                lineHeight: 22,
-              }}
-            >
-              {journal.description}
-            </Text>
+            <JustifiedText
+              paragraphs={[journal.description]}
+              fontSize={15}
+              lineHeight={22}
+            />
           </View>
         )}
 

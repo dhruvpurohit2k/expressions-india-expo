@@ -183,7 +183,7 @@ function MissionAndVision() {
             </View>
             <Text
               style={[
-                { fontSize: 16, color: theme.text, flex: 1, marginBottom: 0, textAlign: "justify" },
+                { fontSize: 16, color: theme.text, flex: 1, marginBottom: 0 },
               ]}
             >
               {item}
@@ -250,7 +250,7 @@ function ObjectivesAndFocus() {
             </View>
             <Text
               style={[
-                { fontSize: 16, color: theme.text, flex: 1, marginBottom: 0, textAlign: "justify" },
+                { fontSize: 16, color: theme.text, flex: 1, marginBottom: 0 },
               ]}
             >
               {item}

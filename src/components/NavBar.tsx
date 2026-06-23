@@ -33,23 +33,20 @@ export function NavBar({
     <Animated.View
       entering={slideInFromTop}
       style={{
-        backgroundColor: theme.red,
+        backgroundColor: "hsla(4, 72%, 52%, 0.94)",
         paddingHorizontal: 15,
-        paddingTop: insets.top + 10,
-        paddingBottom: 10,
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.22,
-        shadowRadius: 8,
-        elevation: 6,
+        paddingTop: insets.top + 8,
+        paddingBottom: 12,
+        borderBottomWidth: 1,
+        borderBottomColor: "rgba(255,255,255,0.15)",
       }}
     >
       <Animated.Text
         entering={slideInFromTop}
         style={{
           marginHorizontal: 5,
-          marginBottom: 10,
-          fontSize: 38,
+          marginBottom: 8,
+          fontSize: 30,
           color: "white",
           fontFamily: theme.fontBold,
         }}
@@ -62,7 +59,10 @@ export function NavBar({
         style={{
           flexDirection: "row",
           alignItems: "center",
-          padding: 5,
+          backgroundColor: "rgba(255,255,255,0.16)",
+          borderRadius: 24,
+          padding: 4,
+          marginHorizontal: 5,
         }}
       >
         {tabs.map((tab) => (
@@ -110,7 +110,7 @@ function NavBarTab({
       <Animated.View
         style={[
           {
-            paddingVertical: 9,
+            paddingVertical: 8,
             alignItems: "center",
             justifyContent: "center",
           },
@@ -123,17 +123,22 @@ function NavBarTab({
               position: "absolute",
               top: 0,
               bottom: 0,
-              left: 5,
-              right: 5,
+              left: 0,
+              right: 0,
               borderRadius: 20,
               backgroundColor: "white",
+              elevation: 2,
+              shadowColor: "#000",
+              shadowOffset: { width: 0, height: 1 },
+              shadowOpacity: 0.08,
+              shadowRadius: 2,
             },
             pillStyle,
           ]}
         />
         <Text
           style={{
-            color: isActive ? theme.red : "rgba(255,255,255,0.72)",
+            color: isActive ? theme.red : "rgba(255, 255, 255, 0.8)",
             fontFamily: theme.fontBold,
             textAlign: "center",
             fontSize: 13,

@@ -10,6 +10,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 import * as Linking from "expo-linking";
+import { StatusBar } from "expo-status-bar";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import RecentFeed from "@/src/components/RecentFeed";
 import Carousel from "@/src/components/Carousel";
@@ -46,15 +47,18 @@ export default function Home() {
 
   return (
     <SafeAreaView style={[globalStyle.screen]} edges={["left", "right"]}>
+      <StatusBar style="light" />
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* Header */}
         <Animated.View
           entering={FadeInDown.duration(400)}
           style={{
-            backgroundColor: theme.red,
+            backgroundColor: "hsla(4, 72%, 52%, 0.94)",
             paddingTop: insets.top + 18,
             paddingBottom: 24,
             paddingHorizontal: 16,
+            borderBottomWidth: 1,
+            borderBottomColor: "rgba(255,255,255,0.15)",
           }}
         >
           <Text
@@ -287,7 +291,6 @@ function DownloadCard({
                 fontSize: 13,
                 color: "hsl(0,0%,50%)",
                 lineHeight: 18,
-                textAlign: "justify",
               }}
             >
               {description}

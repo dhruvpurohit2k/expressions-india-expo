@@ -15,15 +15,18 @@ export const styleFactory = () => {
     },
     title: {
       fontFamily: theme.fontBold,
-      fontSize: 44,
+      fontSize: 38,
       color: theme.text,
       marginVertical: 15,
+      lineHeight: 46,
     },
     sectionHeading: {
       fontSize: theme.sectionHeadingSize,
-      fontFamily: theme.font,
+      fontFamily: theme.fontBold,
       marginVertical: 10,
       color: theme.sectionHeadingColor,
+      lineHeight: 30,
+      letterSpacing: 0.2,
     },
 
     container: {
@@ -45,8 +48,8 @@ export const styleFactory = () => {
       fontSize: theme.fontSize,
       color: theme.text,
       fontFamily: theme.font,
-      marginVertical: 10,
-      textAlign: "justify",
+      marginVertical: 8,
+      lineHeight: 22,
     },
     aboutCard: {
       paddingVertical: 15,
