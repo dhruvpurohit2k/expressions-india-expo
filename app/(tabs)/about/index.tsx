@@ -90,7 +90,7 @@ function SectionLabel({ children }: { children: string }) {
         style={{
           fontSize: 13,
           fontFamily: theme.fontBold,
-          color: lightRed,
+          color: theme.textPrimary,
           textTransform: "uppercase",
           letterSpacing: 0.8,
         }}

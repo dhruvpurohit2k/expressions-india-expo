@@ -153,7 +153,7 @@ export default function WriteToUs() {
   const insets = useSafeAreaInsets();
   return (
     <View style={[globalStyle.screen, { flex: 1 }]}>
-      <View style={{ height: insets.top, backgroundColor: theme.red }} />
+      <View style={{ height: insets.top, backgroundColor: theme.backgroundColorLight }} />
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -169,7 +169,7 @@ export default function WriteToUs() {
             style={{
               fontSize: 30,
               textAlign: "center",
-              color: "rgb(225,0,0)",
+              color: theme.redMuted,
               marginBottom: 6,
               marginTop: 6,
             }}

@@ -5,8 +5,8 @@ export const styleFactory = () => {
   return StyleSheet.create({
     headerStyle: {
       fontSize: 30,
-      backgroundColor: theme.sectionHeadingColor,
-      color: "white",
+      backgroundColor: theme.cardBackground,
+      color: theme.textPrimary,
     },
     screen: {
       flex: 1,

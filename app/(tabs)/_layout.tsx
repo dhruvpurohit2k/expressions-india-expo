@@ -10,16 +10,17 @@ import Animated, {
 } from "react-native-reanimated";
 import { useEffect } from "react";
 
-function PillTabButton(props: any) {
+function MinimalTabButton(props: any) {
   const focused = props['aria-selected'] ?? props.accessibilityState?.selected ?? false;
-  const opacity = useSharedValue(focused ? 1 : 0);
+  const dotScale = useSharedValue(focused ? 1 : 0);
 
   useEffect(() => {
-    opacity.value = withTiming(focused ? 1 : 0, { duration: 180 });
+    dotScale.value = withTiming(focused ? 1 : 0, { duration: 200 });
   }, [focused]);
 
-  const pillStyle = useAnimatedStyle(() => ({
-    opacity: opacity.value,
+  const dotStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: dotScale.value }],
+    opacity: dotScale.value,
   }));
 
   return (
@@ -31,33 +32,24 @@ function PillTabButton(props: any) {
           flex: 1,
           alignItems: "center",
           justifyContent: "center",
-          borderTopLeftRadius: 12,
-          borderTopRightRadius: 12,
-          borderBottomLeftRadius: 0,
-          borderBottomRightRadius: 0,
-          overflow: "hidden",
           backgroundColor: "transparent",
         },
       ]}
     >
+      {props.children}
       <Animated.View
         style={[
           {
+            width: 4,
+            height: 4,
+            borderRadius: 2,
+            backgroundColor: theme.red,
             position: "absolute",
-            top: 0,
-            bottom: 0,
-            left: 0,
-            right: 0,
-            borderTopLeftRadius: 12,
-            borderTopRightRadius: 12,
-            borderBottomLeftRadius: 0,
-            borderBottomRightRadius: 0,
-            backgroundColor: "hsla(4, 72%, 52%, 0.94)",
+            bottom: 6,
           },
-          pillStyle,
+          dotStyle,
         ]}
       />
-      {props.children}
     </Pressable>
   );
 }
@@ -70,22 +62,20 @@ export default function App() {
         tabBarStyle: {
           height: 60 + insets.bottom,
           paddingBottom: insets.bottom,
-          borderWidth: 1,
-          borderColor: "rgba(0,0,0,0.06)",
-          borderBottomWidth: 0,
-          borderTopLeftRadius: 12,
-          borderTopRightRadius: 12,
-          overflow: "hidden",
+          borderTopWidth: 1,
+          borderTopColor: "rgba(0,0,0,0.06)",
           elevation: 0,
           shadowOpacity: 0,
           backgroundColor: theme.backgroundColorLight,
         },
         tabBarLabelStyle: {
           fontSize: 10,
+          fontFamily: theme.fontBold,
+          marginBottom: 4,
         },
-        tabBarActiveTintColor: "white",
-        tabBarInactiveTintColor: "hsl(0,0%,55%)",
-        tabBarButton: (props) => <PillTabButton {...props} />,
+        tabBarActiveTintColor: theme.red,
+        tabBarInactiveTintColor: "hsl(0,0%,65%)",
+        tabBarButton: (props) => <MinimalTabButton {...props} />,
       }}
     >
       <Tabs.Screen

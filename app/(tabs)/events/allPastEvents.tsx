@@ -54,7 +54,7 @@ export default function AllPastEvents() {
 
   return (
     <View style={[globalStyle.screen]}>
-      <View style={{ height: insets.top, backgroundColor: theme.red }} />
+      <View style={{ height: insets.top, backgroundColor: theme.backgroundColorLight }} />
       <Text style={[globalStyle.sectionHeading, { marginHorizontal: 15 }]}>
         Past Events
       </Text>

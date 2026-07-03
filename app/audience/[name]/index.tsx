@@ -77,7 +77,7 @@ export default function AudiencePage() {
       style={globalStyle.screen}
       edges={["left", "right", "bottom"]}
     >
-      <StatusBar style="light" />
+      <StatusBar style="dark" />
       {/* Back */}
       <Animated.View
         entering={FadeInDown.duration(300)}
@@ -88,23 +88,25 @@ export default function AudiencePage() {
           paddingVertical: 8,
           paddingTop: insets.top + 8,
           gap: 10,
-          backgroundColor: theme.red,
+          backgroundColor: theme.backgroundColorLight,
+          borderBottomWidth: 1,
+          borderBottomColor: "rgba(0,0,0,0.06)",
         }}
       >
         <Pressable
           onPress={() => router.back()}
           style={({ pressed }) => [
             { padding: 6, borderRadius: 8 },
-            pressed && { backgroundColor: "rgba(0,0,0,0.15)" },
+            pressed && { backgroundColor: "rgba(0,0,0,0.06)" },
           ]}
         >
-          <ChevronLeft size={24} color="white" strokeWidth={2} />
+          <ChevronLeft size={24} color={theme.textPrimary} strokeWidth={2} />
         </Pressable>
         <Text
           style={{
             fontSize: 18,
             fontFamily: theme.fontBold,
-            color: "white",
+            color: theme.redMuted,
             flex: 1,
           }}
           numberOfLines={1}
@@ -178,11 +180,17 @@ export default function AudiencePage() {
                       style={[
                         {
                           alignItems: "center",
-                          backgroundColor: theme.backgroundColorLight,
-                          borderRadius: 18,
+                          backgroundColor: card.bg,
+                          borderRadius: 20,
                           paddingVertical: 28,
                           paddingHorizontal: 20,
                           marginBottom: 14,
+                          borderWidth: 1,
+                          borderColor: "rgba(0,0,0,0.03)",
+                          shadowColor: "#000",
+                          shadowOffset: { width: 0, height: 2 },
+                          shadowOpacity: 0.02,
+                          shadowRadius: 6,
                           elevation: 1,
                         },
                         pressed && {
@@ -196,10 +204,15 @@ export default function AudiencePage() {
                           width: 72,
                           height: 72,
                           borderRadius: 36,
-                          backgroundColor: card.bg,
+                          backgroundColor: "#ffffff",
                           alignItems: "center",
                           justifyContent: "center",
                           marginBottom: 14,
+                          shadowColor: "#000",
+                          shadowOffset: { width: 0, height: 1 },
+                          shadowOpacity: 0.05,
+                          shadowRadius: 2,
+                          elevation: 1,
                         }}
                       >
                         <Icon size={34} color={card.color} strokeWidth={1.6} />
@@ -208,7 +221,7 @@ export default function AudiencePage() {
                         style={{
                           fontSize: 18,
                           fontFamily: theme.fontBold,
-                          color: theme.sectionHeadingColor,
+                          color: theme.textPrimary,
                           marginBottom: 6,
                           textAlign: "center",
                         }}
@@ -219,7 +232,7 @@ export default function AudiencePage() {
                         style={{
                           fontSize: 13,
                           fontFamily: theme.font,
-                          color: "hsl(0,0%,55%)",
+                          color: theme.textSecondary,
                           textAlign: "center",
                         }}
                       >

@@ -90,7 +90,7 @@ export default function ArticleDetail() {
 
   return (
     <SafeAreaView style={globalStyle.screen} edges={["left", "right", "bottom"]}>
-      <StatusBar style="light" />
+      <StatusBar style="dark" />
       {/* Back button */}
       <Animated.View
         entering={FadeInDown.duration(300)}
@@ -100,17 +100,19 @@ export default function ArticleDetail() {
           paddingHorizontal: 15,
           paddingVertical: 8,
           paddingTop: insets.top + 8,
-          backgroundColor: theme.red,
+          backgroundColor: theme.backgroundColorLight,
+          borderBottomWidth: 1,
+          borderBottomColor: "rgba(0,0,0,0.06)",
         }}
       >
         <Pressable
           onPress={() => router.back()}
           style={({ pressed }) => [
             { padding: 6, borderRadius: 8 },
-            pressed && { backgroundColor: "rgba(0,0,0,0.15)" },
+            pressed && { backgroundColor: "rgba(0,0,0,0.06)" },
           ]}
         >
-          <ChevronLeft size={24} color="white" strokeWidth={2} />
+          <ChevronLeft size={24} color={theme.textPrimary} strokeWidth={2} />
         </Pressable>
       </Animated.View>
 

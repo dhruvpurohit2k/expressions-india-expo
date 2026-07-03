@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { View, Text, Pressable, Alert, Platform } from "react-native";
+import { View, Text, Pressable, Alert, Platform, ScrollView } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useFocusEffect, router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
@@ -53,7 +53,7 @@ export default function AccountScreen() {
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.backgroundColorLight }}>
-      <View style={{ height: insets.top, backgroundColor: theme.red }} />
+      <View style={{ height: insets.top, backgroundColor: theme.backgroundColorLight }} />
       {user ? (
         <LoggedInView user={user} onLogout={handleLogout} />
       ) : (
@@ -73,13 +73,17 @@ function LoggedInView({
   onLogout: () => void;
 }) {
   return (
-    <View
+    <ScrollView
       style={{
         flex: 1,
-        paddingHorizontal: 20,
-        paddingTop: 12,
         backgroundColor: theme.backgroundColorLight,
       }}
+      contentContainerStyle={{
+        paddingHorizontal: 20,
+        paddingTop: 12,
+        paddingBottom: 32,
+      }}
+      showsVerticalScrollIndicator={false}
     >
       <Text
         style={{
@@ -153,7 +157,7 @@ function LoggedInView({
           </Text>
         </Pressable>
       </Animated.View>
-    </View>
+    </ScrollView>
   );
 }
 

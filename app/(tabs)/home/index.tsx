@@ -47,25 +47,25 @@ export default function Home() {
 
   return (
     <SafeAreaView style={[globalStyle.screen]} edges={["left", "right"]}>
-      <StatusBar style="light" />
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <StatusBar style="dark" />
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 24 }}>
         {/* Header */}
         <Animated.View
           entering={FadeInDown.duration(400)}
           style={{
-            backgroundColor: "hsla(4, 72%, 52%, 0.94)",
+            backgroundColor: theme.backgroundColorLight,
             paddingTop: insets.top + 18,
             paddingBottom: 24,
             paddingHorizontal: 16,
             borderBottomWidth: 1,
-            borderBottomColor: "rgba(255,255,255,0.15)",
+            borderBottomColor: "rgba(0,0,0,0.06)",
           }}
         >
           <Text
             style={{
               fontSize: 38,
               fontFamily: theme.fontBold,
-              color: "white",
+              color: theme.redMuted,
               textAlign: "center",
               marginBottom: 8,
             }}
@@ -77,7 +77,7 @@ export default function Home() {
               fontFamily: theme.font,
               fontSize: 15,
               textAlign: "center",
-              color: "rgba(255,255,255,0.82)",
+              color: theme.textSecondary,
             }}
           >
             National Life Skills & School Wellness Program
@@ -178,7 +178,7 @@ function SectionTitle({ label }: { label: string }) {
         style={{
           fontSize: 16,
           fontFamily: theme.fontBold,
-          color: lightRed,
+          color: theme.textPrimary,
           letterSpacing: 0.3,
         }}
       >

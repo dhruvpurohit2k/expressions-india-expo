@@ -115,7 +115,7 @@ export default function RecentFeed() {
           style={{
             fontSize: 16,
             fontFamily: theme.fontBold,
-            color: lightRed,
+            color: theme.textPrimary,
             letterSpacing: 0.3,
           }}
         >

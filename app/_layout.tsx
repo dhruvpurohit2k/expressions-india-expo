@@ -36,7 +36,7 @@ function BottomSystemBar() {
         right: 0,
         bottom: 0,
         height: insets.bottom,
-        backgroundColor: "hsla(4, 72%, 52%, 0.94)",
+        backgroundColor: "#ffffff",
       }}
     />
   );
@@ -111,7 +111,7 @@ export default function RootLayout() {
   });
 
   useEffect(() => {
-    SystemUI.setBackgroundColorAsync(theme.red).catch(() => {});
+    SystemUI.setBackgroundColorAsync("#ffffff").catch(() => {});
 
     // Initialize purchases (stub mode in Phase 1)
     initPurchases();
@@ -164,7 +164,7 @@ export default function RootLayout() {
     <ErrorBoundary>
     <ImageProvider>
     <SafeAreaProvider>
-      <RNStatusBar backgroundColor="#dc3522" barStyle="light-content" translucent />
+      <RNStatusBar backgroundColor="#ffffff" barStyle="dark-content" translucent />
         <QueryClientProvider client={queryClient}>
           <View style={{ flex: 1 }}>
             <Stack

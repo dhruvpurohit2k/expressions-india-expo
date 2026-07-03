@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useIsFocused  } from "expo-router";
+import { useIsFocused, Link } from "expo-router";
 import { useUpcomingEventQuery } from "../hooks/useUpcomingEventQuery";
 import { styleFactory } from "../styleFactory";
 import {
@@ -11,7 +11,6 @@ import {
   Image,
 } from "react-native";
 import { theme } from "../theme";
-import { Link } from "expo-router";
 import { format } from "date-fns";
 import Animated, { FadeInUp, SlideInDown } from "react-native-reanimated";
 import Pagination from "./Pagination";

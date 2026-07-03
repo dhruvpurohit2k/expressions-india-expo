@@ -129,15 +129,13 @@ ${paragraphHtml}
       scrollEnabled={false}
       showsVerticalScrollIndicator={false}
       showsHorizontalScrollIndicator={false}
+      javaScriptEnabled={true}
       onMessage={(event) => {
         const reportedHeight = parseInt(event.nativeEvent.data, 10);
         if (!isNaN(reportedHeight) && reportedHeight > 0) {
           setHeight(reportedHeight);
         }
       }}
-      onShouldStartLoadWithRequest={(request) =>
-        request.url === "about:blank" || request.url.startsWith("data:")
-      }
     />
   );
 }

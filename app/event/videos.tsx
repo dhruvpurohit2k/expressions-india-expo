@@ -36,7 +36,9 @@ export default function Videos() {
           paddingHorizontal: 15,
           paddingVertical: 10,
           paddingTop: insets.top + 10,
-          backgroundColor: theme.red,
+          backgroundColor: theme.backgroundColorLight,
+          borderBottomWidth: 1,
+          borderBottomColor: "rgba(0,0,0,0.06)",
         }}
       >
         <Pressable
@@ -46,16 +48,16 @@ export default function Videos() {
               padding: 6,
               borderRadius: 8,
             },
-            pressed && { backgroundColor: "rgba(0,0,0,0.15)" },
+            pressed && { backgroundColor: "rgba(0,0,0,0.06)" },
           ]}
         >
-          <ChevronLeft size={24} color="white" strokeWidth={2} />
+          <ChevronLeft size={24} color={theme.textPrimary} strokeWidth={2} />
         </Pressable>
         <Text
           style={{
             fontSize: 20,
             fontFamily: theme.fontBold,
-            color: "white",
+            color: theme.textPrimary,
             marginLeft: 10,
           }}
         >

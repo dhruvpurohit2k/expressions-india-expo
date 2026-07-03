@@ -8,6 +8,10 @@ export const theme = {
   // backgroundColorLight: "hsl(0,0%,10%)",
   text: "hsl(0,0%,30%)",
   // text: "hsl(0,0%,70%)",
+  textPrimary: "hsl(0, 0%, 12%)",
+  textSecondary: "hsl(0, 0%, 55%)",
+  border: "rgba(0,0,0,0.06)",
+  cardBackground: "#ffffff",
   font: "Inter_400Regular",
   fontBold: "Inter_700Bold",
   TITLEFONT: "GloriaHallelujah_400Regular",
@@ -15,4 +19,5 @@ export const theme = {
   fontSize: 15,
   sectionHeadingColor: "hsl(4, 80%, 48%)",
   red: "hsl(4, 72%, 52%)",
+  redMuted: "hsl(4, 68%, 45%)",
 };

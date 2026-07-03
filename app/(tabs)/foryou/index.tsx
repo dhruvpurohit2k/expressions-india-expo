@@ -2,7 +2,7 @@ import { theme } from "@/src/theme";
 import { Link } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { StatusBar } from "expo-status-bar";
-import { View, Text, Pressable } from "react-native";
+import { View, Text, Pressable, ScrollView } from "react-native";
 import {
   SafeAreaView,
   useSafeAreaInsets,
@@ -85,15 +85,15 @@ function BentoCard({
                 {
                   flex: 1,
                   backgroundColor: option.bg,
-                  borderRadius: 12,
+                  borderRadius: 20,
                   padding: 18,
                   justifyContent: "space-between",
                   borderWidth: 1,
-                  borderColor: option.iconColor + "14",
-                  shadowColor: option.iconColor,
+                  borderColor: "rgba(0,0,0,0.03)",
+                  shadowColor: "#000",
                   shadowOffset: { width: 0, height: 2 },
-                  shadowOpacity: 0.04,
-                  shadowRadius: 5,
+                  shadowOpacity: 0.02,
+                  shadowRadius: 6,
                   elevation: 1,
                 },
                 pressed && { opacity: 0.82, transform: [{ scale: 0.97 }] },
@@ -101,17 +101,22 @@ function BentoCard({
             >
               <View
                 style={{
-                  width: iconSize + 22,
-                  height: iconSize + 22,
-                  borderRadius: (iconSize + 22) / 2,
-                  backgroundColor: "rgba(255,255,255,0.7)",
+                  width: iconSize + 16,
+                  height: iconSize + 16,
+                  borderRadius: (iconSize + 16) / 2,
+                  backgroundColor: "#ffffff",
                   alignItems: "center",
                   justifyContent: "center",
+                  shadowColor: "#000",
+                  shadowOffset: { width: 0, height: 1 },
+                  shadowOpacity: 0.05,
+                  shadowRadius: 2,
+                  elevation: 1,
                 }}
               >
                 <Ionicons
                   name={option.icon}
-                  size={iconSize}
+                  size={iconSize - 4}
                   color={option.iconColor}
                 />
               </View>
@@ -119,7 +124,7 @@ function BentoCard({
                 style={{
                   fontFamily: theme.fontBold,
                   fontSize: 14,
-                  color: "hsl(0,0%,20%)",
+                  color: theme.textPrimary,
                   lineHeight: 20,
                 }}
               >
@@ -139,49 +144,55 @@ export default function ForYou() {
 
   return (
     <SafeAreaView style={[globalStyle.screen]} edges={["left", "right"]}>
-      <StatusBar style="light" />
+      <StatusBar style="dark" />
       <View
         style={{
-          backgroundColor: "hsla(4, 72%, 52%, 0.94)",
+          backgroundColor: theme.backgroundColorLight,
           paddingTop: insets.top + 18,
           paddingBottom: 22,
           paddingHorizontal: 20,
           borderBottomWidth: 1,
-          borderBottomColor: "rgba(255,255,255,0.15)",
-          marginBottom: 28,
+          borderBottomColor: "rgba(0,0,0,0.06)",
+          marginBottom: 16,
         }}
       >
         <Text
           style={{
             fontSize: 38,
             fontFamily: theme.fontBold,
-            color: "white",
+            color: theme.redMuted,
           }}
         >
           Who are you?
         </Text>
       </View>
 
-      <View
-        style={{
-          flex: 1,
-          flexDirection: "row",
-          flexWrap: "wrap",
-          justifyContent: "center",
-          alignContent: "center",
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{
           paddingHorizontal: 14,
-          gap: 10,
+          paddingTop: 12,
+          paddingBottom: 32,
         }}
       >
-        {options.map((option, index) => (
-          <BentoCard
-            key={option.code}
-            option={option}
-            iconSize={42}
-            delay={index * 80}
-          />
-        ))}
-      </View>
+        <View
+          style={{
+            flexDirection: "row",
+            flexWrap: "wrap",
+            justifyContent: "center",
+            gap: 10,
+          }}
+        >
+          {options.map((option, index) => (
+            <BentoCard
+              key={option.code}
+              option={option}
+              iconSize={42}
+              delay={index * 80}
+            />
+          ))}
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }

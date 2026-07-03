@@ -63,7 +63,7 @@ export default function JournalDetail() {
 
   return (
     <SafeAreaView style={globalStyle.screen} edges={["left", "right", "bottom"]}>
-      <StatusBar style="light" />
+      <StatusBar style="dark" />
       <View
         style={{
           flexDirection: "row",
@@ -71,7 +71,9 @@ export default function JournalDetail() {
           paddingHorizontal: 15,
           paddingVertical: 8,
           paddingTop: insets.top + 8,
-          backgroundColor: theme.red,
+          backgroundColor: theme.backgroundColorLight,
+          borderBottomWidth: 1,
+          borderBottomColor: "rgba(0,0,0,0.06)",
         }}
       >
         <Pressable
@@ -81,10 +83,10 @@ export default function JournalDetail() {
               padding: 6,
               borderRadius: 8,
             },
-            pressed && { backgroundColor: "rgba(0,0,0,0.15)" },
+            pressed && { backgroundColor: "rgba(0,0,0,0.06)" },
           ]}
         >
-          <ChevronLeft size={24} color="white" strokeWidth={2} />
+          <ChevronLeft size={24} color={theme.textPrimary} strokeWidth={2} />
         </Pressable>
       </View>
 

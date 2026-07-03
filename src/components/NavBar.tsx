@@ -1,4 +1,4 @@
-import { Pressable, Text } from "react-native";
+import { Pressable, Text, View } from "react-native";
 import Animated, {
   Easing,
   Keyframe,
@@ -33,12 +33,12 @@ export function NavBar({
     <Animated.View
       entering={slideInFromTop}
       style={{
-        backgroundColor: "hsla(4, 72%, 52%, 0.94)",
+        backgroundColor: theme.backgroundColorLight,
         paddingHorizontal: 15,
         paddingTop: insets.top + 8,
         paddingBottom: 12,
         borderBottomWidth: 1,
-        borderBottomColor: "rgba(255,255,255,0.15)",
+        borderBottomColor: "rgba(0,0,0,0.06)",
       }}
     >
       <Animated.Text
@@ -47,7 +47,7 @@ export function NavBar({
           marginHorizontal: 5,
           marginBottom: 8,
           fontSize: 30,
-          color: "white",
+          color: theme.redMuted,
           fontFamily: theme.fontBold,
         }}
       >
@@ -59,7 +59,7 @@ export function NavBar({
         style={{
           flexDirection: "row",
           alignItems: "center",
-          backgroundColor: "rgba(255,255,255,0.16)",
+          backgroundColor: "hsl(0,0%,95%)",
           borderRadius: 24,
           padding: 4,
           marginHorizontal: 5,
@@ -126,11 +126,11 @@ function NavBarTab({
               left: 0,
               right: 0,
               borderRadius: 20,
-              backgroundColor: "white",
+              backgroundColor: theme.backgroundColorLight,
               elevation: 2,
               shadowColor: "#000",
               shadowOffset: { width: 0, height: 1 },
-              shadowOpacity: 0.08,
+              shadowOpacity: 0.06,
               shadowRadius: 2,
             },
             pillStyle,
@@ -138,7 +138,7 @@ function NavBarTab({
         />
         <Text
           style={{
-            color: isActive ? theme.red : "rgba(255, 255, 255, 0.8)",
+            color: isActive ? theme.red : "hsl(0,0%,50%)",
             fontFamily: theme.fontBold,
             textAlign: "center",
             fontSize: 13,
@@ -150,3 +150,4 @@ function NavBarTab({
     </Pressable>
   );
 }
+
