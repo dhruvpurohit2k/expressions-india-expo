@@ -141,55 +141,12 @@ function MissionAndVision() {
     <View style={[globalStyle.aboutCard, { width: screenWidth - 30 }]}>
       <Text style={globalStyle.sectionHeading}>Mission And Vision</Text>
       <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
-        {items.map((item, i) => (
-          <View
-            key={i}
-            style={{
-              flexDirection: "row",
-              alignItems: "flex-start",
-              gap: 12,
-              backgroundColor: theme.backgroundColorLight,
-              borderRadius: 12,
-              padding: 5,
-              marginBottom: 0,
-              // elevation: 5,
-              shadowColor: "#000",
-              shadowOffset: { width: 0, height: 1 },
-              shadowOpacity: 0.06,
-              shadowRadius: 3,
-            }}
-          >
-            <View
-              style={{
-                width: 18,
-                height: 18,
-                borderRadius: 14,
-                backgroundColor: theme.red + "18",
-                alignItems: "center",
-                justifyContent: "center",
-                flexShrink: 0,
-                marginTop: 5,
-              }}
-            >
-              <Text
-                style={{
-                  fontFamily: theme.fontBold,
-                  fontSize: 10,
-                  color: "white",
-                }}
-              >
-                {i + 1}
-              </Text>
-            </View>
-            <Text
-              style={[
-                { fontSize: 16, color: theme.text, flex: 1, marginBottom: 0 },
-              ]}
-            >
-              {item}
-            </Text>
-          </View>
-        ))}
+        <JustifiedText
+          paragraphs={items}
+          fontSize={13}
+          lineHeight={20}
+          isOrderedList={true}
+        />
       </ScrollView>
     </View>
   );
@@ -208,55 +165,12 @@ function ObjectivesAndFocus() {
     <View style={[globalStyle.aboutCard, { width: screenWidth - 30 }]}>
       <Text style={globalStyle.sectionHeading}>Objectives & Focus Areas</Text>
       <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
-        {items.map((item, i) => (
-          <View
-            key={i}
-            style={{
-              flexDirection: "row",
-              alignItems: "flex-start",
-              gap: 12,
-              backgroundColor: theme.backgroundColorLight,
-              borderRadius: 12,
-              padding: 14,
-              marginBottom: 10,
-              // elevation: 1,
-              // shadowColor: "#000",
-              // shadowOffset: { width: 0, height: 1 },
-              // shadowOpacity: 0.06,
-              // shadowRadius: 3,
-            }}
-          >
-            <View
-              style={{
-                width: 18,
-                height: 18,
-                borderRadius: 14,
-                backgroundColor: theme.red + "18",
-                alignItems: "center",
-                justifyContent: "center",
-                flexShrink: 0,
-                marginTop: 5,
-              }}
-            >
-              <Text
-                style={{
-                  fontFamily: theme.fontBold,
-                  fontSize: 10,
-                  color: "white",
-                }}
-              >
-                {i + 1}
-              </Text>
-            </View>
-            <Text
-              style={[
-                { fontSize: 16, color: theme.text, flex: 1, marginBottom: 0 },
-              ]}
-            >
-              {item}
-            </Text>
-          </View>
-        ))}
+        <JustifiedText
+          paragraphs={items}
+          fontSize={13}
+          lineHeight={20}
+          isOrderedList={true}
+        />
       </ScrollView>
     </View>
   );

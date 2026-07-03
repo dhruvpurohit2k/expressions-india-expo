@@ -7,7 +7,7 @@ import {
   SafeAreaView,
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
-import Animated, { FadeInDown } from "react-native-reanimated";
+import Animated, { ZoomIn } from "react-native-reanimated";
 import { styleFactory } from "@/src/styleFactory";
 
 type Option = {
@@ -74,7 +74,7 @@ function BentoCard({
 }) {
   return (
     <Animated.View
-      entering={FadeInDown.duration(500).delay(delay)}
+      entering={ZoomIn.duration(500).delay(delay)}
       style={{ width: "47%", height: 160 }}
     >
       <Link href={`/audience/${option.code}`} asChild>

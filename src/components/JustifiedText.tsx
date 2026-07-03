@@ -13,6 +13,8 @@ interface JustifiedTextProps {
   color?: string;
   /** Background colour, defaults to white */
   backgroundColor?: string;
+  /** Whether to render as an ordered list with styled badges */
+  isOrderedList?: boolean;
 }
 
 /**
@@ -29,13 +31,18 @@ export default function JustifiedText({
   lineHeight = 22,
   color = theme.text,
   backgroundColor = theme.backgroundColorLight,
+  isOrderedList = false,
 }: JustifiedTextProps) {
   // Start with a safe minimum; will be updated once the page reports its real height.
   const [height, setHeight] = useState(paragraphs.length * 100);
 
-  const paragraphHtml = paragraphs
-    .map((p) => `<p>${escapeHtml(p)}</p>`)
-    .join("\n");
+  const paragraphHtml = isOrderedList
+    ? `<ol>\n` +
+      paragraphs
+        .map((p) => `  <li><span>${escapeHtml(p)}</span></li>`)
+        .join("\n") +
+      `\n</ol>`
+    : paragraphs.map((p) => `<p>${escapeHtml(p)}</p>`).join("\n");
 
   const html = `<!DOCTYPE html>
 <html>
@@ -56,6 +63,47 @@ export default function JustifiedText({
       margin-bottom: ${lineHeight * 0.8}px;
     }
     p:last-child { margin-bottom: 0; }
+    ol {
+      list-style: none;
+      counter-reset: item-counter;
+      padding: 0;
+      margin: 0;
+    }
+    li {
+      counter-increment: item-counter;
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+    li:last-child {
+      margin-bottom: 0;
+    }
+    li::before {
+      content: counter(item-counter);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 18px;
+      height: 18px;
+      border-radius: 9px;
+      background-color: rgba(229, 57, 53, 0.12);
+      color: #e53935;
+      font-family: -apple-system, 'Inter', sans-serif;
+      font-weight: bold;
+      font-size: 10px;
+      margin-right: 12px;
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+    span {
+      font-family: -apple-system, 'Inter', sans-serif;
+      font-size: ${fontSize}px;
+      line-height: ${lineHeight}px;
+      color: ${color};
+      text-align: justify;
+      flex: 1;
+    }
   </style>
 </head>
 <body>
